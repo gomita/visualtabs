@@ -5,7 +5,8 @@ var gWindowId;
 var gTabList;
 var gTabElt;
 var gPopup;
-var gLastDragOver;
+var gDragOverString;
+var gDragLeaveTimer;
 
 function init() {
 	gTabList = document.getElementById("tabList");
@@ -144,6 +145,8 @@ function onDragStart(event) {
 }
 
 function onDragOver(event) {
+	if (gDragLeaveTimer)
+		clearTimeout(gDragLeaveTimer);
 	event.preventDefault();
 	let dt = event.dataTransfer;
 	// source tabId
@@ -156,30 +159,33 @@ function onDragOver(event) {
 	if (!targetTabId)
 		return;
 	let target = getElementByTabId(targetTabId);
-	// cannot drop normal tab into pinned tab
+	// cannot drop unpinned tab into pinned tab
 	if (source.getAttribute("pinned") != "true" && target.getAttribute("pinned") == "true")
+		return;
+	// cannot drop pinned tab into unpinned tab
+	if (source.getAttribute("pinned") == "true" && target.getAttribute("pinned") != "true")
 		return;
 	// orient
 	let rect = target.getBoundingClientRect();
 	let orient = event.clientY < rect.top + rect.height / 2 ? "before" : "after";
 	// avoid too much call, by comparing last drag over string
-	let lastDragOver = `drop|${orient}|${targetTabId}`;
-	if (gLastDragOver == lastDragOver)
+	let dragOverString = `drop|${orient}|${targetTabId}`;
+	if (gDragOverString == dragOverString)
 		return;
-	gLastDragOver = lastDragOver;
+	gDragOverString = dragOverString;
 	// show drop indicator
 	let dropline = document.getElementById("dropline");
 	dropline.hidden = false;
 	dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) + "px";
-	// [ToDo] need to -3px when dragover on the last tab
-	console.log(gLastDragOver);
+	console.log(gDragOverString);
 }
 
 function onDragLeave(event) {
-	document.getElementById("dropline").hidden = true;
-	let elt = event.target.parentNode.querySelector("[dragover]");
-	if (elt) elt.removeAttribute("dragover");
-	gLastDragOver = "";
+	// avoid flickering when dragging over dropline
+	gDragLeaveTimer = setTimeout(() => {
+		document.getElementById("dropline").hidden = true;
+		gDragOverString = "";
+	}, 10);
 }
 
 async function onDrop(event) {
@@ -193,7 +199,7 @@ async function onDrop(event) {
 	let sourceTabId = dt.getData("text/x-tab-id");
 	if (!sourceTabId)
 		return;
-	let [, orient, targetTabId] = gLastDragOver.split("|");
+	let [, orient, targetTabId] = gDragOverString.split("|");
 	sourceTabId = parseInt(sourceTabId, 10);
 	targetTabId = parseInt(targetTabId, 10);
 	let sourceTab = await browser.tabs.get(sourceTabId);
@@ -346,13 +352,13 @@ async function rebuildTree() {
 	prefs.pinned = prefs.pinned || false;
 	prefs.height = prefs.height || 80;
 	// set user style
-	let elt = document.getElementById("userstyle");
-	if (elt)
-		elt.parentNode.removeChild(elt);
-	elt = document.createElement("style");
-	elt.id = "userstyle";
-	document.head.appendChild(elt);
-	elt.sheet.insertRule(".tab .thumbnail { height: " + prefs.height + "px; }");
+	let style = document.getElementById("userstyle");
+	if (style)
+		style.parentNode.removeChild(style);
+	style = document.createElement("style");
+	style.id = "userstyle";
+	document.head.appendChild(style);
+	style.sheet.insertRule(".tab .thumbnail { height: " + prefs.height + "px; }");
 	gTabList.setAttribute("pinned", prefs.pinned);
 	// remove all elements
 	while (gTabList.lastChild)
@@ -403,7 +409,7 @@ async function refreshThumbnail(aTabId) {
 	elt.style.backgroundImage = `url("${data}")`;
 }
 
-// f**kin' function to return tabId as integer for element, or parent of parent, or...
+// f**kin' function to return tabId as integer for element, or parent of element, or...
 function getTabIdByElement(aElt) {
 	let tabId = aElt.getAttribute("tabId");
 	if (tabId)
