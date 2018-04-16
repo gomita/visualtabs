@@ -244,10 +244,18 @@ function onUpdated(tabId, changeInfo, tab) {
 		return;
 	console.log("onUpdated: " + tabId + " " + changeInfo.toSource());
 	let elt = getElementByTabId(tabId);
+	// change tab title
+	if (changeInfo.title) {
+		elt.querySelector(".title").textContent = changeInfo.title;
+	}
+	// change icon when loading start
+	else if (changeInfo.status == "loading") {
+		elt.querySelector(".favicon").src = "/icons/tab-connecting.png";
+	}
 	// refresh a tab after loading complete
-	if (changeInfo.status == "complete") {
-		elt.querySelector(".title").textContent = tab.title;
+	else if (changeInfo.status == "complete") {
 		elt.querySelector(".favicon").src = tab.favIconUrl || "/icons/defaultFavicon.svg";
+		elt.setAttribute("url", tab.url);
 		refreshThumbnail(tabId);
 	}
 	// change pinned status
