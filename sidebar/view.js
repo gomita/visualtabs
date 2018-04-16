@@ -29,8 +29,8 @@ function init() {
 	browser.tabs.onReplaced.addListener(onReplaced);
 	browser.tabs.onZoomChange.addListener(onZoomChange);
 	browser.runtime.onMessage.addListener(onMessage);
-	localizeUI();
 	rebuildTree();
+	setTimeout(() => localizeUI(), 0);
 }
 
 function uninit() {
@@ -164,7 +164,8 @@ function onDragOver(event) {
 	// show drop indicator
 	let dropline = document.getElementById("dropline");
 	dropline.hidden = false;
-	dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) - 2 + "px";
+	dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) + "px";
+	// [ToDo] need to -3px when dragover on the last tab
 	console.log(gLastDragOver);
 }
 
@@ -207,7 +208,7 @@ function onActivated(activeInfo) {
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
-	elt.scrollIntoView();
+	elt.scrollIntoView({ block: "nearest" });
 }
 
 function onCreated(tab) {
@@ -339,7 +340,7 @@ async function rebuildTree() {
 	// first, create list without thumbnails
 	tabs.map(tab => gTabList.appendChild(elementForTab(tab)));
 	// ensure the selected tab is visible
-	gTabList.querySelector("[selected]").scrollIntoView();
+	gTabList.querySelector("[selected]").scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	tabs.map(tab => refreshThumbnail(tab.id));
 }

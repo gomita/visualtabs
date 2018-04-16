@@ -11,6 +11,7 @@ html, body {
 	font: caption;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 	-moz-user-select: none;
 }
 
@@ -32,9 +33,13 @@ body * {
 }
 
 .tab {
-	border-left: 2px solid transparent;
-	border-bottom: 1px solid ThreeDLightShadow;
+	border-left: 4px solid transparent;
+	border-bottom: 1px solid rgb(200,200,200);
 	opacity: 0.7;
+}
+
+.tab:hover {
+	opacity: 1;
 }
 
 .tab[selected] {
@@ -94,9 +99,6 @@ body * {
 
 .tab .thumbnail {
 	width: 100vw;
-/*
-	height: 80px;
-*/
 	background-size: cover;
 }
 
@@ -107,7 +109,7 @@ body * {
 #dropline {
 	position: absolute;
 	width: 100vw;
-	height: 2px;
+	height: 3px;
 	background-color: #000;
 }
 
