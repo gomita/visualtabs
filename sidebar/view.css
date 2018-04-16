@@ -102,6 +102,17 @@ body * {
 	background-size: cover;
 }
 
+.new-tab {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2px;
+}
+
+.new-tab img {
+	opacity: 0.7;
+}
+
 #tabList[pinned="false"] .tab[pinned] .thumbnail {
 	height: 0px;
 }

@@ -1,6 +1,8 @@
 {
 	// manifest
 	"extensionDescription": { "message": "Visualizes tabs as thumbnails." },
+	// sidebar
+	"newtab": { "message": "Open a new tab" },
 	// popup
 	"reload": { "message": "Reload Tab" },
 	"pin": { "message": "Pin Tab" },

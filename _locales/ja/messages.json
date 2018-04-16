@@ -1,6 +1,8 @@
 {
 	// manifest
 	"extensionDescription": { "message": "タブをサムネイルで一覧表示します。" },
+	// sidebar
+	"newtab": { "message": "新しいタブを開きます" },
 	// popup
 	"reload": { "message": "タブを再読み込み" },
 	"pin": { "message": "タブをピン留め" },

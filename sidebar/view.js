@@ -96,24 +96,30 @@ function onContextMenu(event) {
 function onClick(event) {
 	if (event.button == 2)
 		return;
+	let target = event.target;
 	// clicks on popup
 	if (!gPopup.hidden) {
-		if (event.target == gPopup || event.target.localName == "hr")
+		if (target == gPopup || target.localName == "hr")
 			return;
 		let tabId = getTabIdByElement(gPopup);
 		hidePopup();
-		doCommand(event.target.getAttribute("command"), tabId);
+		doCommand(target.getAttribute("command"), tabId);
 	}
 	// clicks on tab close button
-	else if (event.target.localName == "button") {
-		doCommand("close", getTabIdByElement(event.target));
+	else if (target.localName == "button") {
+		doCommand("close", getTabIdByElement(target));
+	}
+	// clicks on new tab button
+	else if (target.id == "newTab" || 
+	        (target.parentNode && target.parentNode.id == "newTab")) {
+		doCommand("create");
 	}
 	// clicks on tab list
 	else {
 		if (event.button == 0)
-			doCommand("select", getTabIdByElement(event.target));
+			doCommand("select", getTabIdByElement(target));
 		else if (event.button == 1)
-			doCommand("close", getTabIdByElement(event.target));
+			doCommand("close", getTabIdByElement(target));
 	}
 }
 
@@ -179,6 +185,10 @@ function onDragLeave(event) {
 async function onDrop(event) {
 	document.getElementById("dropline").hidden = true;
 	event.preventDefault();
+	// do nothing when dropping on new tab button
+	if (event.target.id == "newTab" || 
+	   (event.target.parentNode && event.target.parentNode.id == "newTab"))
+		return;
 	let dt = event.dataTransfer;
 	let sourceTabId = dt.getData("text/x-tab-id");
 	if (!sourceTabId)
@@ -208,6 +218,9 @@ function onActivated(activeInfo) {
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
+	// XXX when the last tab is activated, scroll into new tab button
+	if (elt.nextSibling.id == "newTab")
+		elt = elt.nextSibling;
 	elt.scrollIntoView({ block: "nearest" });
 }
 
@@ -297,6 +310,7 @@ async function onMessage(request, sender, sendResponse) {
 
 async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
+		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
 		case "reload"   : browser.tabs.reload(aTabId); break;
 		case "pin"      : browser.tabs.update(aTabId, { pinned: true }); break;
@@ -339,8 +353,17 @@ async function rebuildTree() {
 	gWindowId = tabs[0].windowId;
 	// first, create list without thumbnails
 	tabs.map(tab => gTabList.appendChild(elementForTab(tab)));
+	// add new tab button
+	let newTab = document.querySelector(".new-tab").cloneNode(true);
+	newTab.id = "newTab";
+	newTab.hidden = false;
+	gTabList.appendChild(newTab);
 	// ensure the selected tab is visible
-	gTabList.querySelector("[selected]").scrollIntoView({ block: "nearest" });
+	let elt = gTabList.querySelector("[selected]");
+	// XXX when the last tab is activated, scroll into new tab button
+	if (elt.nextSibling.id == "newTab")
+		elt = elt.nextSibling;
+	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	tabs.map(tab => refreshThumbnail(tab.id));
 }
