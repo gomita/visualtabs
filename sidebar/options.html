@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Visual Tabs - Options</title>
+	<style type="text/css">
+		.hbox {
+			display: flex;
+			align-items: center;
+		}
+		.hbox > * {
+			margin: 4px;
+		}
+	</style>
+</head>
+<body>
+<div class="hbox">
+	<input id="pinned" type="checkbox" name="pinned">
+	<label for="pinned" i18n="text:pinned"></label>
+</div>
+<div class="hbox">
+	<label for="height" i18n="text:height"></label>
+	<input id="height" type="number" name="height" min="10" max="200" step="10" style="width: 5em;">
+</div>
+<script src="options.js"></script>
+</body>
+</html>

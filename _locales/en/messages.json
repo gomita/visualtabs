@@ -1,0 +1,15 @@
+{
+	// manifest
+	"extensionDescription": { "message": "Visualizes tabs as thumbnails." },
+	// popup
+	"reload": { "message": "Reload Tab" },
+	"pin": { "message": "Pin Tab" },
+	"unpin": { "message": "Unpin Tab" },
+	"duplicate": { "message": "Duplicate Tab" },
+	"detach": { "message": "Move to New Window" },
+	"undoclose": { "message": "Undo Close Tab" },
+	"close": { "message": "Close Tab" },
+	// options
+	"pinned": { "message": "Show thumbnails for pinned tabs" },
+	"height": { "message": "Height of thumbnails (in pixel): " }
+}

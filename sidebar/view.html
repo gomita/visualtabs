@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Visual Tabs</title>
+	<link rel="stylesheet" href="view.css" />
+</head>
+<body>
+<div id="tabList"></div>
+<div id="tab" class="tab" hidden="true">
+	<div class="bar">
+		<img class="favicon" />
+		<span class="title"></span>
+		<button><img class="close" src="/icons/exit.png" /></button>
+	</div>
+	<div class="thumbnail"></div>
+</div>
+<div id="popup" hidden="true">
+	<div command="reload" i18n="text:reload"></div>
+	<hr />
+	<div command="pin" i18n="text:pin"></div>
+	<div command="unpin" i18n="text:unpin"></div>
+	<div command="duplicate" i18n="text:duplicate"></div>
+<!--
+	<div command="detach" i18n="text:detach"></div>
+-->
+	<hr />
+	<div command="undoclose" i18n="text:undoclose"></div>
+	<div command="close" i18n="text:close"></div>
+</div>
+<div id="dropline" hidden="true"></div>
+<script src="view.js"></script>
+</body>
+</html>

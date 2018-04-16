@@ -1,0 +1,152 @@
+/* ::::: common ::::: */
+
+/* derived from chrome://browser/content/extension.css */
+html, body {
+	box-sizing: border-box;
+	color: #222426;
+	background: white;
+	cursor: default;
+	display: flex;
+	flex-direction: column;
+	font: caption;
+	margin: 0;
+	padding: 0;
+	-moz-user-select: none;
+}
+
+body * {
+	box-sizing: border-box;
+	text-align: start;
+	font: caption;
+}
+
+/* ::::: list ::::: */
+
+#tabList {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.tab {
+	border-left: 2px solid transparent;
+	border-bottom: 1px solid ThreeDLightShadow;
+	opacity: 0.7;
+}
+
+.tab[selected] {
+	opacity: 1;
+	border-left-color: rgb(10,132,255);
+}
+
+.tab .bar {
+	padding: 2px;
+	display: flex;
+	justify-content: stretch;
+	align-items: center;
+}
+
+.tab .favicon {
+	width: 16px; height: 16px;
+}
+
+.tab .title {
+	flex: 1;
+	padding-left: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tab[selected] .title {
+	font-weight: bold;
+}
+
+.tab button {
+	border: unset;
+	background: unset;
+	margin: 0px;
+	padding: 2px 4px;
+	line-height: 0px;
+	border-radius: 2px;
+}
+
+.tab button > * {
+	vertical-align: middle;
+}
+
+.tab button img {
+	width: 14px;
+	height: 14px;
+	opacity: 0.7;
+}
+
+.tab button:hover {
+	background-color: rgba(12, 12, 13, 0.1);
+}
+
+.tab button:active, button[checked] {
+	background-color: rgba(12, 12, 13, 0.2);
+}
+
+.tab .thumbnail {
+	width: 100vw;
+/*
+	height: 80px;
+*/
+	background-size: cover;
+}
+
+#tabList[pinned="false"] .tab[pinned] .thumbnail {
+	height: 0px;
+}
+
+#dropline {
+	position: absolute;
+	width: 100vw;
+	height: 2px;
+	background-color: #000;
+}
+
+/* ::::: popup ::::: */
+
+#popup {
+	border: 1px solid ThreeDShadow;
+	background-color: ButtonFace;
+	padding: 2px;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+	position: absolute;
+	min-width: 10em;
+}
+
+#popup div {
+	padding: 3px 6px;
+	color: MenuText;
+	font: menu;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#popup div:hover {
+	background-color: rgb(144,200,246);
+}
+
+#popup div[disabled] {
+	color: GrayText;
+}
+
+#popup div[disabled]:hover {
+	background-color: ThreeDLightShadow;
+}
+
+#popup hr {
+	margin: 2px 1px;
+	padding: 0;
+	border-top: 1px solid ThreeDShadow;
+	border-bottom: 1px solid ThreeDHighlight;
+}
+

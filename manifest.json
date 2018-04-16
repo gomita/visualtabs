@@ -1,0 +1,41 @@
+{
+	"manifest_version": 2,
+	"name": "Visual Tabs",
+	"version": "0.1",
+	"description": "__MSG_extensionDescription__",
+//	"icons": {
+//		"48": "icons/icon-48.png",
+//		"96": "icons/icon-96.png"
+//	},
+	"default_locale": "en",
+	"applications": {
+		"gecko": {
+			"id": "visualtab@xuldev.org"
+		}
+	},
+	"background": {
+		"scripts": [
+			"background/service.js"
+		]
+	},
+	"browser_action": {
+		"default_title": "Visual Tabs",
+		"default_icon": "icons/tab-16.svg"
+	},
+	"sidebar_action": {
+		"browser_style": true,
+		"default_title": "Visual Tabs",
+		"default_panel": "sidebar/view.html",
+		"default_icon": "icons/tab-16.svg"
+	},
+	"options_ui": {
+		"page": "sidebar/options.html",
+		"open_in_tab": false
+	},
+	"permissions": [
+		"tabs",
+		"sessions",
+		"storage",
+		"<all_urls>"
+	]
+}

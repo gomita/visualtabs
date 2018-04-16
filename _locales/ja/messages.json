@@ -1,0 +1,15 @@
+{
+	// manifest
+	"extensionDescription": { "message": "タブをサムネイルで一覧表示します。" },
+	// popup
+	"reload": { "message": "タブを再読み込み" },
+	"pin": { "message": "タブをピン留め" },
+	"unpin": { "message": "タブのピン留めを外す" },
+	"duplicate": { "message": "タブを複製" },
+	"detach": { "message": "新しいウィンドウへ移動" },
+	"undoclose": { "message": "閉じたタブを元に戻す" },
+	"close": { "message": "タブを閉じる" },
+	// options
+	"pinned": { "message": "ピン留めしたタブのサムネイルを表示する" },
+	"height": { "message": "サムネイルの高さ（単位はピクセル）: " }
+}
