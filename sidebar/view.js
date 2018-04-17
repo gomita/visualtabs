@@ -260,7 +260,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// refresh a tab after loading complete
 	else if (changeInfo.status == "complete") {
-		elt.querySelector(".favicon").src = tab.favIconUrl || "/icons/defaultFavicon.svg";
+		elt.querySelector(".favicon").src = correctIconURL(tab.favIconUrl);
 		elt.setAttribute("url", tab.url);
 		drawThumbnail(tabId);
 	}
@@ -388,7 +388,7 @@ function elementForTab(aTab) {
 	elt.id = "tab:" + aTab.id;
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
-	elt.querySelector(".favicon").src = aTab.favIconUrl || "/icons/defaultFavicon.svg";
+	elt.querySelector(".favicon").src = correctIconURL(aTab.favIconUrl);
 	elt.querySelector(".title").textContent = aTab.title;
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
@@ -427,6 +427,14 @@ function getTabIdByElement(aElt) {
 
 function getElementByTabId(aTabId) {
 	return gTabList.querySelector(`[tabId="${aTabId}"]`);
+}
+
+function correctIconURL(aURL) {
+	if (!aURL)
+		return "/icons/defaultFavicon.svg";
+	if (aURL == "chrome://mozapps/skin/extensions/extensionGeneric-16.svg")
+		return "/icons/blankFavicon.png";
+	return aURL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
