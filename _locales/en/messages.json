@@ -13,5 +13,8 @@
 	"close": { "message": "Close Tab" },
 	// options
 	"pinned": { "message": "Show thumbnails for pinned tabs" },
-	"height": { "message": "Height of thumbnails (in pixel): " }
+	"height": { "message": "Height of thumbnails (in pixel): " },
+	"active": { "message": "Show highlight (blue line) for the selected tab: " },
+	"left": { "message": "Left-side" },
+	"right": { "message": "Right-side" }
 }

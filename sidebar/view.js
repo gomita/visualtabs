@@ -359,7 +359,8 @@ async function rebuildList() {
 	style.id = "userstyle";
 	document.head.appendChild(style);
 	style.sheet.insertRule(".tab .thumbnail { height: " + prefs.height + "px; }");
-	gTabList.setAttribute("pinned", prefs.pinned);
+	gTabList.setAttribute("option_pinned", prefs.pinned);
+	gTabList.setAttribute("option_active", prefs.active);
 	// remove all elements
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);

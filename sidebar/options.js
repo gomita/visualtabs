@@ -1,10 +1,11 @@
 async function init() {
 	localizeUI();
-	document.getElementById("pinned").onchange = onChange;
-	document.getElementById("height").onchange = onChange;
+	document.body.onchange = onChange;
 	let prefs = await browser.storage.local.get();
 	document.getElementById("pinned").checked = prefs.pinned || false;
 	document.getElementById("height").value = prefs.height || 80;
+	let active = prefs.active || "left";
+	document.getElementById("active:" + active).checked = true;
 }
 
 function uninit() {
@@ -26,7 +27,8 @@ function localizeUI() {
 function onChange(event) {
 	let pinned = document.getElementById("pinned").checked;
 	let height = document.getElementById("height").value;
-	browser.storage.local.set({ pinned, height });
+	let active = document.getElementById("active:left").checked ? "left" : "right";
+	browser.storage.local.set({ pinned, height, active });
 	browser.runtime.sendMessage({ value: "visualtabs:rebuild" });
 }
 
