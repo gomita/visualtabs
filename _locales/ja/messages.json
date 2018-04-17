@@ -5,6 +5,8 @@
 	"newtab": { "message": "新しいタブを開きます" },
 	// popup
 	"reload": { "message": "タブを再読み込み" },
+	"mute": { "message": "タブをミュート" },
+	"unmute": { "message": "タブのミュートを解除" },
 	"pin": { "message": "タブをピン留め" },
 	"unpin": { "message": "タブのピン留めを外す" },
 	"duplicate": { "message": "タブを複製" },

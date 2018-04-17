@@ -271,6 +271,13 @@ function onUpdated(tabId, changeInfo, tab) {
 		else
 			elt.removeAttribute("pinned");
 	}
+	// change muted status
+	else if (changeInfo.mutedInfo !== undefined) {
+		if (changeInfo.mutedInfo.muted)
+			elt.setAttribute("muted", "true");
+		else
+			elt.removeAttribute("muted");
+	}
 }
 
 function onMoved(tabId, moveInfo) {
@@ -327,6 +334,8 @@ async function doCommand(aCommand, aTabId) {
 		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
 		case "reload"   : browser.tabs.reload(aTabId); break;
+		case "mute"     : browser.tabs.update(aTabId, { muted: true }); break;
+		case "unmute"   : browser.tabs.update(aTabId, { muted: false }); break;
 		case "pin"      : browser.tabs.update(aTabId, { pinned: true }); break;
 		case "unpin"    : browser.tabs.update(aTabId, { pinned: false }); break;
 		case "duplicate": browser.tabs.duplicate(aTabId); break;
@@ -402,6 +411,8 @@ function elementForTab(aTab) {
 	}
 	if (aTab.pinned)
 		elt.setAttribute("pinned", "true");
+	if (aTab.muted)
+		elt.setAttribute("muted", "true");
 	return elt;
 }
 
@@ -448,10 +459,14 @@ function showPopup(event) {
 	let tabId = getTabIdByElement(event.target);
 	if (!tabId)
 		return;
-	let pinned = getElementByTabId(tabId).getAttribute("pinned") == "true";
+	let elt = getElementByTabId(tabId);
+	let pinned = elt.getAttribute("pinned") == "true";
+	let muted  = elt.getAttribute("muted") == "true";
 	gPopup.hidden = false;
 	gPopup.querySelector('[command="pin"]').hidden = pinned;
 	gPopup.querySelector('[command="unpin"]').hidden = !pinned;
+	gPopup.querySelector('[command="mute"]').hidden = muted;
+	gPopup.querySelector('[command="unmute"]').hidden = !muted;
 	gPopup.setAttribute("tabId", tabId);
 	var bodyWidth  = document.body.clientWidth;
 	var bodyHeight = document.body.clientHeight;

@@ -5,6 +5,8 @@
 	"newtab": { "message": "Open a new tab" },
 	// popup
 	"reload": { "message": "Reload Tab" },
+	"mute": { "message": "Mute Tab" },
+	"unmute": { "message": "Unmute Tab" },
 	"pin": { "message": "Pin Tab" },
 	"unpin": { "message": "Unpin Tab" },
 	"duplicate": { "message": "Duplicate Tab" },
