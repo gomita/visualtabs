@@ -338,7 +338,8 @@ async function doCommand(aCommand, aTabId) {
 			browser.sessions.restore(sessionInfos[0].tab.sessionId);
 			break;
 		case "detach": 
-			// [FIXME] not implemented
+			let tab = await browser.tabs.get(aTabId);
+			browser.windows.create({ tabId: aTabId, incognito: tab.incognito });
 			break;
 	}
 }
