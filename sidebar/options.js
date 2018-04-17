@@ -27,7 +27,7 @@ function onChange(event) {
 	let pinned = document.getElementById("pinned").checked;
 	let height = document.getElementById("height").value;
 	browser.storage.local.set({ pinned, height });
-	browser.runtime.sendMessage({ value: "VisualTabs:reload" });
+	browser.runtime.sendMessage({ value: "visualtabs:rebuild" });
 }
 
 window.addEventListener("load", init, { once: true });

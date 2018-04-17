@@ -30,7 +30,7 @@ function init() {
 	browser.tabs.onReplaced.addListener(onReplaced);
 	browser.tabs.onZoomChange.addListener(onZoomChange);
 	browser.runtime.onMessage.addListener(onMessage);
-	rebuildTree();
+	rebuildList();
 	setTimeout(() => localizeUI(), 0);
 }
 
@@ -262,7 +262,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	else if (changeInfo.status == "complete") {
 		elt.querySelector(".favicon").src = tab.favIconUrl || "/icons/defaultFavicon.svg";
 		elt.setAttribute("url", tab.url);
-		refreshThumbnail(tabId);
+		drawThumbnail(tabId);
 	}
 	// change pinned status
 	else if (changeInfo.pinned !== undefined) {
@@ -291,7 +291,7 @@ async function onAttached(tabId, attachInfo) {
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	let tab = tabs[attachInfo.newPosition];
 	gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
-	refreshThumbnail(tab.id);
+	drawThumbnail(tab.id);
 }
 
 function onDetached(tabId, detachInfo) {
@@ -311,12 +311,12 @@ function onZoomChange(ZoomChangeInfo) {
 	if (!elt)
 		return;
 	console.log("onZoomChange: " + ZoomChangeInfo.toSource());
-	refreshThumbnail(ZoomChangeInfo.tabId);
+	drawThumbnail(ZoomChangeInfo.tabId);
 }
 
 async function onMessage(request, sender, sendResponse) {
-	if (request.value == "VisualTabs:reload")
-		rebuildTree();
+	if (request.value == "visualtabs:rebuild")
+		rebuildList();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -344,9 +344,9 @@ async function doCommand(aCommand, aTabId) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// tree
+// list
 
-async function rebuildTree() {
+async function rebuildList() {
 	// read pref
 	let prefs = await browser.storage.local.get();
 	prefs.pinned = prefs.pinned || false;
@@ -379,7 +379,7 @@ async function rebuildTree() {
 		elt = elt.nextSibling;
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
-	tabs.map(tab => refreshThumbnail(tab.id));
+	tabs.map(tab => drawThumbnail(tab.id));
 }
 
 function elementForTab(aTab) {
@@ -403,7 +403,7 @@ function elementForTab(aTab) {
 	return elt;
 }
 
-async function refreshThumbnail(aTabId) {
+async function drawThumbnail(aTabId) {
 	let data = await browser.tabs.captureTab(aTabId);
 	let elt = getElementByTabId(aTabId).querySelector(".thumbnail");
 	elt.style.backgroundImage = `url("${data}")`;
