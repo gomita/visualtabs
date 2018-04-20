@@ -4,8 +4,10 @@ async function init() {
 	localizeUI();
 	document.body.onchange = onChange;
 	gPrefs = await browser.storage.local.get();
+	let mode = gPrefs.mode || "normal";
 	let activeLine = gPrefs.activeLine || "left";
 	let previewHeight = gPrefs.previewHeight  || 80;
+	document.getElementById(`mode:${mode}`).checked = true;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;
 	document.getElementById(`previewHeight`).value = previewHeight;
 }
@@ -28,6 +30,8 @@ function localizeUI() {
 
 function onChange(event) {
 	switch (event.target.id) {
+		case "mode:normal"     : gPrefs.mode = "normal"; break;
+		case "mode:compact"    : gPrefs.mode = "compact"; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;
 		case "activeLine:right": gPrefs.activeLine = "right"; break;
 		case "previewHeight"   : gPrefs.previewHeight = event.target.value; break;

@@ -361,6 +361,7 @@ async function doCommand(aCommand, aTabId) {
 async function rebuildList() {
 	// read prefs
 	gPrefs = await browser.storage.local.get();
+	gPrefs.mode          = gPrefs.mode          || "normal";
 	gPrefs.activeLine    = gPrefs.activeLine    || "left";
 	gPrefs.previewHeight = gPrefs.previewHeight || 80;
 	// set user style
@@ -414,12 +415,19 @@ function elementForTab(aTab) {
 		elt.setAttribute("pinned", "true");
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
+	// hide preview
+	if (gPrefs.mode == "compact") {
+		let img = elt.querySelector(".thumbnail");
+		elt.removeChild(img);
+	}
 	return elt;
 }
 
 async function drawThumbnail(aTabId) {
-	let data = await browser.tabs.captureTab(aTabId);
 	let elt = getElementByTabId(aTabId).querySelector(".thumbnail");
+	if (!elt)
+		return;
+	let data = await browser.tabs.captureTab(aTabId);
 	elt.style.backgroundImage = `url("${data}")`;
 }
 

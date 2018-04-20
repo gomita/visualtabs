@@ -14,6 +14,9 @@
 	"undoclose": { "message": "Undo Close Tab" },
 	"close": { "message": "Close Tab" },
 	// options
+	"mode": { "message": "Display mode: " },
+	"normal": { "message": "Normal" },
+	"compact": { "message": "Compact" },
 	"activeLine": { "message": "Show highlight (blue line) for the selected tab: " },
 	"left": { "message": "Left-side" },
 	"right": { "message": "Right-side" },
