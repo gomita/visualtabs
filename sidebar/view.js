@@ -136,6 +136,7 @@ function onKeyPress(event) {
 // drag and drop
 
 function onDragStart(event) {
+	hidePopup();
 	let tabId = getTabIdByElement(event.target);
 	if (!tabId)
 		return;
@@ -229,7 +230,7 @@ function onActivated(activeInfo) {
 	// XXX when the last tab is activated, scroll into new tab button
 	if (elt.nextSibling.id == "newTab")
 		elt = elt.nextSibling;
-	elt.scrollIntoView({ block: "nearest" });
+	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 function onCreated(tab) {
@@ -255,6 +256,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	// change tab title
 	if (changeInfo.title) {
 		elt.querySelector(".title").textContent = changeInfo.title;
+		elt.setAttribute("title", changeInfo.title);
 	}
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
@@ -400,6 +402,7 @@ function elementForTab(aTab) {
 	elt.hidden = false;
 	elt.id = "tab:" + aTab.id;
 	elt.setAttribute("tabId", aTab.id.toString());
+	elt.setAttribute("title", aTab.title);
 	elt.setAttribute("url", aTab.url);
 	elt.querySelector(".favicon").src = correctIconURL(aTab.favIconUrl);
 	elt.querySelector(".title").textContent = aTab.title;
@@ -416,7 +419,7 @@ function elementForTab(aTab) {
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
 	// hide preview
-	if (gPrefs.mode == "compact") {
+	if (gPrefs.mode == "compact" || aTab.pinned) {
 		let img = elt.querySelector(".thumbnail");
 		elt.removeChild(img);
 	}

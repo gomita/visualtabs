@@ -30,21 +30,18 @@ body * {
 	padding: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
+	--separator-color: rgb(200,200,200);
+	--active-line-color: rgb(10,132,255);
 }
 
 .tab {
-	border-left: 4px solid transparent;
-	border-bottom: 1px solid rgb(200,200,200);
+	border-bottom: 1px solid var(--separator-color);
+	padding: 2px;
 	opacity: 0.7;
 }
 
-.tab:hover {
+.tab:hover, .tab[selected] {
 	opacity: 1;
-}
-
-.tab[selected] {
-	opacity: 1;
-	border-left-color: rgb(10,132,255);
 }
 
 .tab .bar {
@@ -97,6 +94,10 @@ body * {
 	background-color: rgba(12, 12, 13, 0.2);
 }
 
+.tab[pinned] button {
+	display: none;
+}
+
 .tab .thumbnail {
 	background-size: cover;
 }
@@ -112,6 +113,8 @@ body * {
 	opacity: 0.7;
 }
 
+/* ::::: drop feedback ::::: */
+
 #dropline {
 	position: absolute;
 	width: 100vw;
@@ -119,19 +122,22 @@ body * {
 	background-color: #000;
 }
 
-/* ::::: options ::::: */
+/* ::::: active line ::::: */
+
+#tabList[activeLine="left"] .tab {
+	border-left: 5px solid transparent;
+}
+
+#tabList[activeLine="left"] .tab[selected] {
+	border-left-color: var(--active-line-color);
+}
 
 #tabList[activeLine="right"] .tab {
-	border-left-width: 0px;
-	border-right: 5px solid transparent;
+	border-right: 6px solid transparent;
 }
 
 #tabList[activeLine="right"] .tab[selected] {
-	border-right-color: rgb(10,132,255);
-}
-
-#tabList[activeLine="right"] .tab .favicon {
-	margin-left: 2px;
+	border-right-color: var(--active-line-color);
 }
 
 /* ::::: popup ::::: */
