@@ -6,7 +6,12 @@
 	<link rel="stylesheet" href="view.css" />
 </head>
 <body>
-<div id="tabList"></div>
+<div id="container">
+	<div id="tabList"></div>
+	<div id="newTab" style="visibility: hidden;" i18n="title:newtab">
+		<img src="/icons/new-16.svg" />
+	</div>
+</div>
 <div id="tab" class="tab" hidden="true">
 	<div class="bar">
 		<img class="favicon" />
@@ -14,9 +19,6 @@
 		<button><img class="close" src="/icons/exit.png" /></button>
 	</div>
 	<div class="thumbnail"></div>
-</div>
-<div class="tab new-tab" hidden="true" i18n="title:newtab">
-	<img src="/icons/new-16.svg" />
 </div>
 <div id="popup" hidden="true">
 	<div command="reload" i18n="text:reload"></div>

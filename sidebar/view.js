@@ -227,9 +227,6 @@ function onActivated(activeInfo) {
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
-	// XXX when the last tab is activated, scroll into new tab button
-	if (elt.nextSibling.id == "newTab")
-		elt = elt.nextSibling;
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
@@ -382,16 +379,10 @@ async function rebuildList() {
 	gWindowId = tabs[0].windowId;
 	// first, create list without thumbnails
 	tabs.map(tab => gTabList.appendChild(elementForTab(tab)));
-	// add new tab button
-	let newTab = document.querySelector(".new-tab").cloneNode(true);
-	newTab.id = "newTab";
-	newTab.hidden = false;
-	gTabList.appendChild(newTab);
+	// show new tab button after building all tabs
+	document.getElementById("newTab").style.visibility = "visible";
 	// ensure the selected tab is visible
 	let elt = gTabList.querySelector("[selected]");
-	// XXX when the last tab is activated, scroll into new tab button
-	if (elt.nextSibling.id == "newTab")
-		elt = elt.nextSibling;
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	tabs.map(tab => drawThumbnail(tab.id));
