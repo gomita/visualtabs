@@ -14,9 +14,8 @@
 	"undoclose": { "message": "閉じたタブを元に戻す" },
 	"close": { "message": "タブを閉じる" },
 	// options
-	"pinned": { "message": "ピン留めしたタブのサムネイルを表示する" },
-	"height": { "message": "サムネイルの高さ（単位はピクセル）: " },
-	"active": { "message": "選択しているタブの強調表示（青色の線）: " },
+	"activeLine": { "message": "選択しているタブの強調表示（青色の線）: " },
 	"left": { "message": "左側" },
-	"right": { "message": "右側" }
+	"right": { "message": "右側" },
+	"previewHeight": { "message": "プレビューの高さ（単位はピクセル）: " }
 }

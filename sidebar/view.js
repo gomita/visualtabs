@@ -5,6 +5,7 @@ var gWindowId;
 var gTabList;
 var gTabElt;
 var gPopup;
+var gPrefs;
 var gDragOverString;
 var gDragLeaveTimer;
 
@@ -56,6 +57,7 @@ function uninit() {
 	gTabList = null;
 	gTabElt  = null;
 	gPopup   = null;
+	gPrefs   = null;
 }
 
 function localizeUI() {
@@ -357,10 +359,10 @@ async function doCommand(aCommand, aTabId) {
 // list
 
 async function rebuildList() {
-	// read pref
-	let prefs = await browser.storage.local.get();
-	prefs.pinned = prefs.pinned || false;
-	prefs.height = prefs.height || 80;
+	// read prefs
+	gPrefs = await browser.storage.local.get();
+	gPrefs.activeLine    = gPrefs.activeLine    || "left";
+	gPrefs.previewHeight = gPrefs.previewHeight || 80;
 	// set user style
 	let style = document.getElementById("userstyle");
 	if (style)
@@ -368,9 +370,8 @@ async function rebuildList() {
 	style = document.createElement("style");
 	style.id = "userstyle";
 	document.head.appendChild(style);
-	style.sheet.insertRule(".tab .thumbnail { height: " + prefs.height + "px; }");
-	gTabList.setAttribute("option_pinned", prefs.pinned);
-	gTabList.setAttribute("option_active", prefs.active);
+	style.sheet.insertRule(".thumbnail { height: " + gPrefs.previewHeight + "px; }");
+	gTabList.setAttribute("activeLine", gPrefs.activeLine);
 	// remove all elements
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);

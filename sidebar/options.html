@@ -4,30 +4,32 @@
 	<meta charset="utf-8">
 	<title>Visual Tabs - Options</title>
 	<style type="text/css">
+		* {
+			font-size: 1em;
+		}
 		.hbox {
 			display: flex;
 			align-items: center;
-		}
-		.hbox > * {
 			margin: 4px;
+		}
+		.hbox > * + input {
+			margin-left: 20px;
 		}
 	</style>
 </head>
 <body>
 <div class="hbox">
-	<input id="pinned" type="checkbox" name="pinned">
-	<label for="pinned" i18n="text:pinned"></label>
 </div>
 <div class="hbox">
-	<label for="height" i18n="text:height"></label>
-	<input id="height" type="number" name="height" min="10" max="200" step="10" style="width: 5em;">
+	<label i18n="text:activeLine"></label>
+	<input id="activeLine:left" type="radio" name="activeLine">
+	<label for="activeLine:left" i18n="text:left"></label>
+	<input id="activeLine:right" type="radio" name="activeLine">
+	<label for="activeLine:right" i18n="text:right"></label>
 </div>
 <div class="hbox">
-	<label i18n="text:active"></label>
-	<input id="active:left" type="radio" name="active">
-	<label for="active:left" i18n="text:left"></label>
-	<input id="active:right" type="radio" name="active">
-	<label for="active:right" i18n="text:right"></label>
+	<label for="previewHeight" i18n="text:previewHeight"></label>
+	<input id="previewHeight" type="number" min="10" max="200" step="10" style="width: 5em;">
 </div>
 <script src="options.js"></script>
 </body>

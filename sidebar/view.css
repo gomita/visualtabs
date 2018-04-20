@@ -121,20 +121,16 @@ body * {
 
 /* ::::: options ::::: */
 
-#tabList[option_pinned="false"] .tab[pinned] .thumbnail {
-	height: 0px;
-}
-
-#tabList[option_active="right"] .tab {
+#tabList[activeLine="right"] .tab {
 	border-left-width: 0px;
 	border-right: 5px solid transparent;
 }
 
-#tabList[option_active="right"] .tab[selected] {
+#tabList[activeLine="right"] .tab[selected] {
 	border-right-color: rgb(10,132,255);
 }
 
-#tabList[option_active="right"] .tab .favicon {
+#tabList[activeLine="right"] .tab .favicon {
 	margin-left: 2px;
 }
 
