@@ -6,8 +6,8 @@ var gTabList;
 var gTabElt;
 var gPopup;
 var gPrefs;
-var gDragOverString;
-var gDragLeaveTimer;
+var gDragOverString = "";
+var gDragLeaveTimer = 0;
 
 function init() {
 	gTabList = document.getElementById("tabList");
@@ -113,8 +113,7 @@ function onClick(event) {
 		doCommand("close", getTabIdByElement(target));
 	}
 	// clicks on new tab button
-	else if (target.id == "newTab" || 
-	        (target.parentNode && target.parentNode.id == "newTab")) {
+	else if (getElementWithId(target).id == "newTab") {
 		doCommand("create");
 	}
 	// clicks on tab list
@@ -195,8 +194,7 @@ async function onDrop(event) {
 	document.getElementById("dropline").hidden = true;
 	event.preventDefault();
 	// do nothing when dropping on new tab button
-	if (event.target.id == "newTab" || 
-	   (event.target.parentNode && event.target.parentNode.id == "newTab"))
+	if (getElementWithId(event.target).id == "newTab")
 		return;
 	let dt = event.dataTransfer;
 	let sourceTabId = dt.getData("text/x-tab-id");
@@ -425,20 +423,21 @@ async function drawThumbnail(aTabId) {
 	elt.style.backgroundImage = `url("${data}")`;
 }
 
-// f**kin' function to return tabId as integer for element, or parent of element, or...
+// returns self or ascendant element which has id
+function getElementWithId(aElt) {
+	do {
+		if (aElt.id)
+			return aElt;
+		else
+			aElt = aElt.parentNode;
+	} while (aElt);
+}
+
+// returns tabId as integer for element, or acendant element
 function getTabIdByElement(aElt) {
+	aElt = getElementWithId(aElt);
 	let tabId = aElt.getAttribute("tabId");
-	if (tabId)
-		return parseInt(tabId, 10);
-	for (let i = 0; i < 3; i++) {
-		aElt = aElt.parentNode;
-		if (!aElt || aElt == document.documentElement)
-			return null;
-		tabId = aElt.getAttribute("tabId");
-		if (tabId)
-			return parseInt(tabId, 10);
-	}
-	return null;
+	return tabId ? parseInt(tabId, 10) : null;
 }
 
 function getElementByTabId(aTabId) {
