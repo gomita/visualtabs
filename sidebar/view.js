@@ -269,6 +269,7 @@ function onUpdated(tabId, changeInfo, tab) {
 			elt.setAttribute("pinned", "true");
 		else
 			elt.removeAttribute("pinned");
+		drawThumbnail(tabId);
 	}
 	// change muted status
 	else if (changeInfo.mutedInfo !== undefined) {
@@ -370,6 +371,7 @@ async function rebuildList() {
 	document.head.appendChild(style);
 	style.sheet.insertRule(".thumbnail { height: " + gPrefs.previewHeight + "px; }");
 	gTabList.setAttribute("activeLine", gPrefs.activeLine);
+	gTabList.setAttribute("mode", gPrefs.mode);
 	// remove all elements
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);
@@ -407,20 +409,15 @@ function elementForTab(aTab) {
 		elt.setAttribute("pinned", "true");
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
-	// hide preview
-	if (gPrefs.mode == "compact" || aTab.pinned) {
-		let img = elt.querySelector(".thumbnail");
-		elt.removeChild(img);
-	}
 	return elt;
 }
 
 async function drawThumbnail(aTabId) {
-	let elt = getElementByTabId(aTabId).querySelector(".thumbnail");
-	if (!elt)
+	let elt = getElementByTabId(aTabId);
+	if (gPrefs.mode == "compact" || elt.getAttribute("pinned") == "true")
 		return;
 	let data = await browser.tabs.captureTab(aTabId);
-	elt.style.backgroundImage = `url("${data}")`;
+	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;
 }
 
 // returns self or ascendant element which has id

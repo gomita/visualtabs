@@ -105,12 +105,17 @@ body {
 	background-color: rgba(12, 12, 13, 0.2);
 }
 
-.tab[pinned] button {
+.tab[pinned] button,
+.tab[pinned] .thumbnail {
 	display: none;
 }
 
 .tab .thumbnail {
 	background-size: cover;
+}
+
+#tabList[mode="compact"] .tab .thumbnail {
+	display: none;
 }
 
 /* ::::: new tab button ::::: */
