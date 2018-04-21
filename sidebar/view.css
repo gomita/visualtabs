@@ -112,6 +112,7 @@ body {
 
 .tab .thumbnail {
 	background-size: cover;
+	height: var(--preview-height);
 }
 
 #tabList[mode="compact"] .tab .thumbnail {
@@ -148,20 +149,27 @@ body {
 
 /* ::::: active line ::::: */
 
-#tabList[activeLine="left"] .tab {
+#tabList[activeline="left"] .tab {
 	border-left: 5px solid transparent;
 }
 
-#tabList[activeLine="left"] .tab[selected] {
+#tabList[activeline="left"] .tab[selected] {
 	border-left-color: var(--active-line-color);
 }
 
-#tabList[activeLine="right"] .tab {
+#tabList[activeline="right"] .tab {
 	border-right: 6px solid transparent;
 }
 
-#tabList[activeLine="right"] .tab[selected] {
+#tabList[activeline="right"] .tab[selected] {
 	border-right-color: var(--active-line-color);
+}
+
+/* ::::: hide scrollbar ::::: */
+
+#tabList[hidescroll="true"] {
+	overflow-y: scroll;
+	margin-right: calc(var(--scroll-width) * -1);
 }
 
 /* ::::: popup ::::: */

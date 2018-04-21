@@ -20,5 +20,8 @@
 	"activeLine": { "message": "Show highlight (blue line) for the selected tab: " },
 	"left": { "message": "Left-side" },
 	"right": { "message": "Right-side" },
-	"previewHeight": { "message": "Height of previews (in pixel): " }
+	"previewHeight": { "message": "Height of previews (in pixel): " },
+	"hideScroll": { "message": "Hide scrollbar" },
+	"scrollWidth": { "message": "Width of scrollbar (in pixel): " },
+	"void": { "message": "" }
 }

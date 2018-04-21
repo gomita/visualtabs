@@ -362,6 +362,8 @@ async function rebuildList() {
 	gPrefs.mode          = gPrefs.mode          || "normal";
 	gPrefs.activeLine    = gPrefs.activeLine    || "left";
 	gPrefs.previewHeight = gPrefs.previewHeight || 80;
+	gPrefs.hideScroll    = gPrefs.hideScroll    || false;
+	gPrefs.scrollWidth   = gPrefs.scrollWidth   || 16;
 	// set user style
 	let style = document.getElementById("userstyle");
 	if (style)
@@ -369,9 +371,11 @@ async function rebuildList() {
 	style = document.createElement("style");
 	style.id = "userstyle";
 	document.head.appendChild(style);
-	style.sheet.insertRule(".thumbnail { height: " + gPrefs.previewHeight + "px; }");
-	gTabList.setAttribute("activeLine", gPrefs.activeLine);
+	style.sheet.insertRule("#tabList { --preview-height: " + gPrefs.previewHeight + "px; }");
+	style.sheet.insertRule("#tabList { --scroll-width: " + gPrefs.scrollWidth + "px; }");
 	gTabList.setAttribute("mode", gPrefs.mode);
+	gTabList.setAttribute("activeline", gPrefs.activeLine);
+	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
 	// remove all elements
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);
