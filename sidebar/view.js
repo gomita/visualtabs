@@ -16,6 +16,7 @@ function init() {
 	document.addEventListener("mousedown", onMouseDown);
 	document.addEventListener("contextmenu", onContextMenu);
 	document.addEventListener("click", onClick);
+	document.addEventListener("dblclick", onDblClick);
 	document.addEventListener("keypress", onKeyPress);
 	document.addEventListener("dragstart", onDragStart);
 	document.addEventListener("dragover", onDragOver);
@@ -92,6 +93,9 @@ function onContextMenu(event) {
 	// ignore right-click on popup
 	if (event.target == gPopup || event.target.parentNode == gPopup)
 		return;
+	// ignore right-click on blank space
+	if (event.target == document.body)
+		return;
 	// show popup
 	showPopup(event);
 }
@@ -108,6 +112,10 @@ function onClick(event) {
 		hidePopup();
 		doCommand(target.getAttribute("command"), tabId);
 	}
+	// clicks on blank space
+	else if (target == document.body) {
+		return;
+	}
 	// clicks on tab close button
 	else if (target.localName == "button") {
 		doCommand("close", getTabIdByElement(target));
@@ -123,6 +131,12 @@ function onClick(event) {
 		else if (event.button == 1)
 			doCommand("close", getTabIdByElement(target));
 	}
+}
+
+function onDblClick(event) {
+	// double-clicks on blank space
+	if (event.button == 0 && event.target == document.body)
+		doCommand("create");
 }
 
 function onKeyPress(event) {
