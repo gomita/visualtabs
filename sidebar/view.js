@@ -226,6 +226,7 @@ function onActivated(activeInfo) {
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
+	drawThumbnail(activeInfo.tabId);
 }
 
 function onCreated(tab) {
