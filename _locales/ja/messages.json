@@ -14,6 +14,8 @@
 	"undoclose": { "message": "閉じたタブを元に戻す" },
 	"close": { "message": "タブを閉じる" },
 	// options
+	"theme": { "message": "テーマ: " },
+	"default": { "message": "デフォルト" },
 	"mode": { "message": "表示モード: " },
 	"normal": { "message": "通常" },
 	"compact": { "message": "コンパクト" },

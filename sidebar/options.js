@@ -4,11 +4,13 @@ async function init() {
 	localizeUI();
 	document.body.onchange = onChange;
 	gPrefs = await browser.storage.local.get();
+	let theme         = gPrefs.theme         || "default";
 	let mode          = gPrefs.mode          || "normal";
 	let activeLine    = gPrefs.activeLine    || "left";
 	let previewHeight = gPrefs.previewHeight || 80;
 	let hideScroll    = gPrefs.hideScroll    || false;
 	let scrollWidth   = gPrefs.scrollWidth   || 16;
+	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;
 	document.getElementById(`previewHeight`).value = previewHeight;
@@ -45,6 +47,9 @@ function updateUI() {
 
 function onChange(event) {
 	switch (event.target.id) {
+		case "theme:default"   : gPrefs.theme = "default"; break;
+		case "theme:light"     : gPrefs.theme = "light"; break;
+		case "theme:dark"      : gPrefs.theme = "dark"; break;
 		case "mode:normal"     : gPrefs.mode = "normal"; break;
 		case "mode:compact"    : gPrefs.mode = "compact"; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;

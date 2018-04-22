@@ -14,6 +14,8 @@
 	"undoclose": { "message": "Undo Close Tab" },
 	"close": { "message": "Close Tab" },
 	// options
+	"theme": { "message": "Theme: " },
+	"default": { "message": "Default" },
 	"mode": { "message": "Display mode: " },
 	"normal": { "message": "Normal" },
 	"compact": { "message": "Compact" },

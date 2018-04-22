@@ -3,8 +3,6 @@
 /* derived from chrome://browser/content/extension.css */
 html, body {
 	box-sizing: border-box;
-	color: #222426;
-	background: white;
 	cursor: default;
 	display: flex;
 	flex-direction: column;
@@ -15,15 +13,59 @@ html, body {
 	-moz-user-select: none;
 }
 
-body * {
-	box-sizing: border-box;
-	text-align: start;
-	font: caption;
-}
+/* ::::: theme ::::: */
 
-body {
+:root {
 	width: 100vw;
 	height: 100vh;
+	--active-line-color: rgb(10,132,255);
+}
+
+/* ::::: theme:default ::::: */
+
+:root[theme="default"] {
+	background-color: white;
+	--separator-color: rgb(200,200,200);
+}
+
+:root[theme="default"] .title {
+	color: #737373;
+}
+
+:root[theme="default"] .tab:hover .title,
+:root[theme="default"] .tab[selected] .title {
+	color: #0c0c0d;
+}
+
+/* ::::: theme:light ::::: */
+
+:root[theme="light"] {
+	background-color: #f9f9fa;
+	--separator-color: rgb(164,164,167);
+}
+
+:root[theme="light"] .tab[selected] {
+	background-color: #d7d7db;
+}
+
+/* ::::: theme:dark ::::: */
+
+:root[theme="dark"] {
+	background-color: #38383d;
+	--separator-color: rgb(98,100,120);
+}
+
+:root[theme="dark"] .tab[selected] {
+	background-color: #4a4a4f;
+}
+
+:root[theme="dark"] .title {
+	color: #8d8e9d;
+}
+
+:root[theme="dark"] .tab:hover .title,
+:root[theme="dark"] .tab[selected] .title {
+	color: #ffffff;
 }
 
 /* ::::: list ::::: */
@@ -32,8 +74,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	max-height: 100vh;
-	--separator-color: rgb(200,200,200);
-	--active-line-color: rgb(10,132,255);
 }
 
 #tabList {
@@ -44,15 +84,10 @@ body {
 .tab {
 	border-bottom: 1px solid var(--separator-color);
 	padding: 2px;
-	opacity: 0.7;
 }
 
 .tab:last-child {
 	border-bottom-width: 0px;
-}
-
-.tab:hover, .tab[selected] {
-	opacity: 1;
 }
 
 .tab .bar {
@@ -115,6 +150,17 @@ body {
 	height: var(--preview-height);
 }
 
+.tab .thumbnail {
+	opacity: 0.7;
+}
+
+.tab:hover .thumbnail,
+.tab[selected] .thumbnail {
+	opacity: 1;
+}
+
+/* ::::: mode ::::: */
+
 #tabList[mode="compact"] .tab .thumbnail {
 	display: none;
 }
@@ -138,13 +184,21 @@ body {
 	opacity: 1;
 }
 
+:root[theme="dark"] #newTab img {
+	filter: invert(1);
+}
+
 /* ::::: drop feedback ::::: */
 
 #dropline {
 	position: absolute;
 	width: 100vw;
-	height: 3px;
+	height: 2px;
 	background-color: #000;
+}
+
+:root[theme="dark"] #dropline {
+	background-color: #FFF;
 }
 
 /* ::::: active line ::::: */

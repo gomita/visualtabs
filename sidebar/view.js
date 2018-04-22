@@ -36,7 +36,9 @@ function init() {
 	setTimeout(() => localizeUI(), 0);
 }
 
-function uninit() {
+async function uninit() {
+	console.log("uninit");
+	await browser.runtime.sendMessage({ value: "visualtabs:uninit", winId: gWindowId });
 	document.removeEventListener("mousedown", onMouseDown);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
@@ -374,6 +376,7 @@ async function doCommand(aCommand, aTabId) {
 async function rebuildList() {
 	// read prefs
 	gPrefs = await browser.storage.local.get();
+	gPrefs.theme         = gPrefs.theme         || "default";
 	gPrefs.mode          = gPrefs.mode          || "normal";
 	gPrefs.activeLine    = gPrefs.activeLine    || "left";
 	gPrefs.previewHeight = gPrefs.previewHeight || 80;
@@ -388,6 +391,7 @@ async function rebuildList() {
 	document.head.appendChild(style);
 	style.sheet.insertRule("#tabList { --preview-height: " + gPrefs.previewHeight + "px; }");
 	style.sheet.insertRule("#tabList { --scroll-width: " + gPrefs.scrollWidth + "px; }");
+	document.documentElement.setAttribute("theme", gPrefs.theme);
 	gTabList.setAttribute("mode", gPrefs.mode);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
@@ -405,6 +409,8 @@ async function rebuildList() {
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	tabs.map(tab => drawThumbnail(tab.id));
+	// tell windowId to background service
+	browser.runtime.sendMessage({ value: "visualtabs:init", winId: gWindowId });
 }
 
 function elementForTab(aTab) {
