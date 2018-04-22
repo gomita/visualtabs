@@ -21,7 +21,12 @@
 	},
 	"browser_action": {
 		"default_title": "Visual Tabs",
-		"default_icon": "icons/tab-16.svg"
+		"default_icon": "icons/tab-16.svg",
+		"theme_icons": [{
+			"light": "icons/tab-16-light.svg",
+			"dark": "icons/tab-16-dark.svg",
+			"size": 16
+		}]
 	},
 	"sidebar_action": {
 		"browser_style": true,
