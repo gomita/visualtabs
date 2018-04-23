@@ -276,6 +276,10 @@ function onUpdated(tabId, changeInfo, tab) {
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
 		elt.querySelector(".favicon").src = "/icons/tab-connecting.png";
+		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
+			elt.setAttribute("url", changeInfo.url);
+			drawThumbnail(tabId);
+		}
 	}
 	// refresh a tab after loading complete
 	else if (changeInfo.status == "complete") {
