@@ -36,9 +36,7 @@ function init() {
 	setTimeout(() => localizeUI(), 0);
 }
 
-async function uninit() {
-	console.log("uninit");
-	await browser.runtime.sendMessage({ value: "visualtabs:uninit", winId: gWindowId });
+function uninit() {
 	document.removeEventListener("mousedown", onMouseDown);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
@@ -217,6 +215,11 @@ async function onDrop(event) {
 	if (!sourceTabId)
 		return;
 	let [, orient, targetTabId] = gDragOverString.split("|");
+	if (!gDragOverString) {
+		// drop on blank space
+		orient = "after";
+		targetTabId = gTabList.lastChild.getAttribute("tabId");
+	}
 	sourceTabId = parseInt(sourceTabId, 10);
 	targetTabId = parseInt(targetTabId, 10);
 	let sourceTab = await browser.tabs.get(sourceTabId);
@@ -338,7 +341,7 @@ function onZoomChange(ZoomChangeInfo) {
 	drawThumbnail(ZoomChangeInfo.tabId);
 }
 
-async function onMessage(request, sender, sendResponse) {
+function onMessage(request, sender, sendResponse) {
 	if (request.value == "visualtabs:rebuild")
 		rebuildList();
 }
