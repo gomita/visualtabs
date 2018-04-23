@@ -91,7 +91,7 @@ function onContextMenu(event) {
 	event.preventDefault();
 	event.stopPropagation();
 	// ignore right-click on popup
-	if (event.target == gPopup || event.target.parentNode == gPopup)
+	if (event.target.closest("#popup"))
 		return;
 	// ignore right-click on blank space
 	if (event.target == document.body)
@@ -121,7 +121,7 @@ function onClick(event) {
 		doCommand("close", getTabIdByElement(target));
 	}
 	// clicks on new tab button
-	else if (getElementWithId(target).id == "newTab") {
+	else if (target.closest("#newTab")) {
 		doCommand("create");
 	}
 	// clicks on tab list
@@ -208,7 +208,7 @@ async function onDrop(event) {
 	document.getElementById("dropline").hidden = true;
 	event.preventDefault();
 	// do nothing when dropping on new tab button
-	if (getElementWithId(event.target).id == "newTab")
+	if (event.target.closest("#newTab"))
 		return;
 	let dt = event.dataTransfer;
 	let sourceTabId = dt.getData("text/x-tab-id");
@@ -448,21 +448,10 @@ async function drawThumbnail(aTabId) {
 	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;
 }
 
-// returns self or ascendant element which has id
-function getElementWithId(aElt) {
-	do {
-		if (aElt.id)
-			return aElt;
-		else
-			aElt = aElt.parentNode;
-	} while (aElt);
-}
-
 // returns tabId as integer for element, or acendant element
 function getTabIdByElement(aElt) {
-	aElt = getElementWithId(aElt);
-	let tabId = aElt.getAttribute("tabId");
-	return tabId ? parseInt(tabId, 10) : null;
+	aElt = aElt.closest("[tabId]");
+	return aElt ? parseInt(aElt.getAttribute("tabId"), 10) : null;
 }
 
 function getElementByTabId(aTabId) {
