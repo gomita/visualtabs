@@ -13,11 +13,12 @@ html, body {
 	-moz-user-select: none;
 }
 
-/* ::::: theme ::::: */
-
-:root {
+body {
 	width: 100vw;
 	height: 100vh;
+}
+
+:root {
 	--active-line-color: rgb(10,132,255);
 }
 
@@ -60,7 +61,7 @@ html, body {
 }
 
 :root[theme="dark"] .title {
-	color: #8d8e9d;
+	color: #b1b1b3;
 }
 
 :root[theme="dark"] .tab:hover .title,
@@ -148,15 +149,6 @@ html, body {
 .tab .thumbnail {
 	background-size: cover;
 	height: var(--preview-height);
-}
-
-.tab .thumbnail {
-	opacity: 0.7;
-}
-
-.tab:hover .thumbnail,
-.tab[selected] .thumbnail {
-	opacity: 1;
 }
 
 /* ::::: mode ::::: */
