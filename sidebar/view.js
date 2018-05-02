@@ -6,6 +6,7 @@ var gTabList;
 var gTabElt;
 var gPopup;
 var gPrefs;
+var gScrollTop = 0;
 var gDragOverString = "";
 var gDragLeaveTimer = 0;
 
@@ -22,6 +23,7 @@ function init() {
 	document.addEventListener("dragover", onDragOver);
 	document.addEventListener("dragleave", onDragLeave);
 	document.addEventListener("drop", onDrop);
+	gTabList.addEventListener("scroll", onScroll);
 	browser.tabs.onActivated.addListener(onActivated);
 	browser.tabs.onCreated.addListener(onCreated);
 	browser.tabs.onRemoved.addListener(onRemoved);
@@ -45,6 +47,7 @@ function uninit() {
 	document.removeEventListener("dragover", onDragOver);
 	document.removeEventListener("dragleave", onDragLeave);
 	document.removeEventListener("drop", onDrop);
+	gTabList.removeEventListener("scroll", onScroll);
 	browser.tabs.onActivated.removeListener(onActivated);
 	browser.tabs.onCreated.removeListener(onCreated);
 	browser.tabs.onRemoved.removeListener(onRemoved);
@@ -143,6 +146,15 @@ function onKeyPress(event) {
 	// Esc key to close on popup
 	if (!gPopup.hidden && event.keyCode == event.DOM_VK_ESCAPE)
 		hidePopup();
+}
+
+function onScroll(event) {
+	let scrollTop = event.target.scrollTop;
+	if (gScrollTop > 0 && scrollTop == 0)
+		gTabList.removeAttribute("overflow");
+	else if (gScrollTop == 0 && scrollTop > 0)
+		gTabList.setAttribute("overflow", "true");
+	gScrollTop = scrollTop;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
