@@ -19,7 +19,7 @@ body {
 }
 
 :root {
-	--active-line-color: rgb(10,132,255);
+	--active-color: rgb(10,132,255);
 }
 
 /* ::::: theme:default ::::: */
@@ -184,6 +184,12 @@ button:active, button[checked] {
 	padding: 2px;
 	border-top: 1px solid var(--separator-color);
 	border-bottom: 1px solid var(--separator-color);
+	transition: 1s;
+}
+
+#newTab[flash] {
+	background-color: var(--active-color);
+	transition: 0.01s;
 }
 
 #newTab img {
@@ -214,7 +220,7 @@ button:active, button[checked] {
 }
 
 #tabList[activeline="left"] .tab[selected] {
-	border-left-color: var(--active-line-color);
+	border-left-color: var(--active-color);
 }
 
 #tabList[activeline="right"] .tab {
@@ -222,7 +228,7 @@ button:active, button[checked] {
 }
 
 #tabList[activeline="right"] .tab[selected] {
-	border-right-color: var(--active-line-color);
+	border-right-color: var(--active-color);
 }
 
 /* ::::: hide scrollbar ::::: */
