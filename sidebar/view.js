@@ -464,7 +464,7 @@ function correctIconURL(aURL) {
 	if (!aURL)
 		return "/icons/defaultFavicon.svg";
 	if (aURL == "chrome://mozapps/skin/extensions/extensionGeneric-16.svg")
-		return "/icons/blankFavicon.png";
+		return "/icons/extensions-16.svg";
 	return aURL;
 }
 
