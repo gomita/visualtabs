@@ -25,8 +25,11 @@ body {
 /* ::::: theme:default ::::: */
 
 :root[theme="default"] {
-	background-color: white;
+	--background-color: white;
 	--separator-color: rgb(200,200,200);
+	--shadow-color: rgba(12,12,13,0.1);
+	--shadow-color2: rgba(12,12,13,0.2);
+	background-color: var(--background-color);
 }
 
 :root[theme="default"] .title {
@@ -41,8 +44,11 @@ body {
 /* ::::: theme:light ::::: */
 
 :root[theme="light"] {
-	background-color: #f9f9fa;
+	--background-color: #f9f9fa;
 	--separator-color: rgb(164,164,167);
+	--shadow-color: rgba(12,12,13,0.1);
+	--shadow-color2: rgba(12,12,13,0.2);
+	background-color: var(--background-color);
 }
 
 :root[theme="light"] .tab[selected] {
@@ -52,8 +58,11 @@ body {
 /* ::::: theme:dark ::::: */
 
 :root[theme="dark"] {
-	background-color: #38383d;
+	--background-color: #38383d;
 	--separator-color: rgb(98,100,120);
+	--shadow-color: rgba(243,243,242,0.1);
+	--shadow-color2: rgba(243,243,242,0.2);
+	background-color: var(--background-color);
 }
 
 :root[theme="dark"] .tab[selected] {
@@ -67,6 +76,11 @@ body {
 :root[theme="dark"] .tab:hover .title,
 :root[theme="dark"] .tab[selected] .title {
 	color: #ffffff;
+}
+
+:root[theme="dark"] button img,
+:root[theme="dark"] #newTab img {
+	filter: invert(1);
 }
 
 /* ::::: list ::::: */
@@ -114,7 +128,7 @@ body {
 	font-weight: bold;
 }
 
-.tab button {
+button {
 	border: unset;
 	background: unset;
 	margin: 0px;
@@ -123,22 +137,22 @@ body {
 	border-radius: 2px;
 }
 
-.tab button > * {
+button > * {
 	vertical-align: middle;
 }
 
-.tab button img {
+button img {
 	width: 14px;
 	height: 14px;
 	opacity: 0.7;
 }
 
-.tab button:hover {
-	background-color: rgba(12, 12, 13, 0.1);
+button:hover {
+	background-color: var(--shadow-color);
 }
 
-.tab button:active, button[checked] {
-	background-color: rgba(12, 12, 13, 0.2);
+button:active, button[checked] {
+	background-color: var(--shadow-color2);
 }
 
 .tab[pinned] button,
@@ -174,10 +188,6 @@ body {
 
 #newTab:hover img {
 	opacity: 1;
-}
-
-:root[theme="dark"] #newTab img {
-	filter: invert(1);
 }
 
 /* ::::: drop feedback ::::: */
