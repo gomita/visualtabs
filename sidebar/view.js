@@ -127,6 +127,20 @@ function onClick(event) {
 	else if (target.closest("#newTab")) {
 		doCommand("create");
 	}
+	// clicks on menu_show button
+	else if (target.id == "menu_show") {
+		doCommand("menu");
+	}
+	// clicks on menu_mode button
+	else if (target.id == "menu_mode") {
+		gPrefs.mode = gPrefs.mode == "normal" ? "compact" : "normal";
+		browser.storage.local.set(gPrefs);
+		rebuildList();
+	}
+	// clicks on menu_options button
+	else if (target.id == "menu_options") {
+		browser.runtime.openOptionsPage();
+	}
 	// clicks on tab list
 	else {
 		if (event.button == 0)
@@ -404,6 +418,18 @@ async function doCommand(aCommand, aTabId) {
 			    !window.confirm(browser.i18n.getMessage("closeConfirm", [tabs.length])))
 				return;
 			tabs.map(tab => browser.tabs.remove(tab.id));
+			break;
+		case "menu": 
+			let menu = document.getElementById("menu");
+			let img = document.getElementById("menu_show").firstChild;
+			if (menu.hasAttribute("open")) {
+				menu.removeAttribute("open");
+				img.src = "/icons/arrowhead-up-16.svg";
+			}
+			else {
+				menu.setAttribute("open", "true");
+				img.src = "/icons/arrowhead-down-16.svg";
+			}
 			break;
 	}
 }

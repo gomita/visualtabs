@@ -136,7 +136,7 @@ button {
 	border: unset;
 	background: unset;
 	margin: 0px;
-	padding: 2px 4px;
+	padding: 2px;
 	line-height: 0px;
 	border-radius: 2px;
 }
@@ -145,7 +145,7 @@ button > * {
 	vertical-align: middle;
 }
 
-button img {
+button.close img {
 	width: 14px;
 	height: 14px;
 	opacity: 0.7;
@@ -269,5 +269,34 @@ button:active, button[checked] {
 	padding: 0;
 	border-top: 1px solid ThreeDShadow;
 	border-bottom: 1px solid ThreeDHighlight;
+}
+
+/* ::::: menu ::::: */
+
+#menu {
+	position: absolute;
+	bottom: 0px;
+	padding: 1px;
+	background-color: var(--background-color);
+	border: 1px 1px 0px 0px solid var(--separator-color);
+	border-top-right-radius: 6px;
+	box-shadow: 2px -2px 2px var(--shadow-color);
+}
+
+#menu button {
+	display: block;
+	margin: 1px 0px;
+}
+
+#menu:not([open]) button:not(#menu_show) {
+	display: none;
+}
+
+#menu button img {
+	opacity: 0.5;
+}
+
+#menu button:hover img {
+	opacity: 1;
 }
 
