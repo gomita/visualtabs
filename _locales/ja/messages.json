@@ -11,7 +11,7 @@
 	"unpin": { "message": "タブのピン留めを外す" },
 	"duplicate": { "message": "タブを複製" },
 	"detach": { "message": "新しいウィンドウへ移動" },
-	"undoclose": { "message": "閉じたタブを元に戻す" },
+	"undoClose": { "message": "閉じたタブを元に戻す" },
 	"close": { "message": "タブを閉じる" },
 	// options
 	"theme": { "message": "テーマ: " },

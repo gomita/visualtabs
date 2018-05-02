@@ -117,7 +117,7 @@ function onClick(event) {
 		return;
 	}
 	// clicks on tab close button
-	else if (target.localName == "button") {
+	else if (target.closest(".close")) {
 		doCommand("close", getTabIdByElement(target));
 	}
 	// clicks on new tab button
@@ -364,7 +364,7 @@ async function doCommand(aCommand, aTabId) {
 		case "unpin"    : browser.tabs.update(aTabId, { pinned: false }); break;
 		case "duplicate": browser.tabs.duplicate(aTabId); break;
 		case "close"    : browser.tabs.remove(aTabId); break;
-		case "undoclose": 
+		case "undoClose": 
 			let sessionInfos = await browser.sessions.getRecentlyClosed({ maxResults: 1 });
 			if (sessionInfos.length == 0)
 				return;
@@ -416,8 +416,6 @@ async function rebuildList() {
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	tabs.map(tab => drawThumbnail(tab.id));
-	// tell windowId to background service
-	browser.runtime.sendMessage({ value: "visualtabs:init", winId: gWindowId });
 }
 
 function elementForTab(aTab) {

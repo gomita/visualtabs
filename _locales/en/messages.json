@@ -11,7 +11,7 @@
 	"unpin": { "message": "Unpin Tab" },
 	"duplicate": { "message": "Duplicate Tab" },
 	"detach": { "message": "Move to New Window" },
-	"undoclose": { "message": "Undo Close Tab" },
+	"undoClose": { "message": "Undo Close Tab" },
 	"close": { "message": "Close Tab" },
 	// options
 	"theme": { "message": "Theme: " },
