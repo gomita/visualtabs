@@ -11,8 +11,12 @@
 	"unpin": { "message": "Unpin Tab" },
 	"duplicate": { "message": "Duplicate Tab" },
 	"detach": { "message": "Move to New Window" },
+	"reloadAll": { "message": "Reload All Tabs" },
+	"closeToEnd": { "message": "Close Tabs to the End" },
+	"closeOther": { "message": "Close Other Tabs" },
 	"undoClose": { "message": "Undo Close Tab" },
 	"close": { "message": "Close Tab" },
+	"closeConfirm": { "message": "You are about to close $1 tabs. Are you sure you want to continue?" },
 	// options
 	"theme": { "message": "Theme: " },
 	"default": { "message": "Default" },

@@ -11,8 +11,12 @@
 	"unpin": { "message": "タブのピン留めを外す" },
 	"duplicate": { "message": "タブを複製" },
 	"detach": { "message": "新しいウィンドウへ移動" },
+	"reloadAll": { "message": "すべてのタブを再読み込み" },
+	"closeToEnd": { "message": "下のタブをすべて閉じる" },
+	"closeOther": { "message": "他のタブをすべて閉じる" },
 	"undoClose": { "message": "閉じたタブを元に戻す" },
 	"close": { "message": "タブを閉じる" },
+	"closeConfirm": { "message": "複数 ($1) のタブを閉じようとしています。すべてのタブを閉じてよろしいですか？" },
 	// options
 	"theme": { "message": "テーマ: " },
 	"default": { "message": "デフォルト" },

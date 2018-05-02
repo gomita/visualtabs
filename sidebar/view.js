@@ -386,6 +386,25 @@ async function doCommand(aCommand, aTabId) {
 			let tab = await browser.tabs.get(aTabId);
 			browser.windows.create({ tabId: aTabId, incognito: tab.incognito });
 			break;
+		case "reloadAll": 
+			var tabs = await browser.tabs.query({ currentWindow: true });
+			tabs = tabs.filter(tab => !tab.hidden);
+			tabs.map(tab => browser.tabs.reload(tab.id));
+			break;
+		case "closeToEnd": 
+		case "closeOther": 
+			let ref = await browser.tabs.get(aTabId);
+			var tabs = await browser.tabs.query({ currentWindow: true });
+			tabs = tabs.filter(tab => !tab.hidden && !tab.pinned);
+			if (aCommand == "closeToEnd")
+				tabs = tabs.filter(tab => tab.index > ref.index);
+			else if (aCommand == "closeOther")
+				tabs = tabs.filter(tab => tab.id != ref.id);
+			if (tabs.length > 1 && 
+			    !window.confirm(browser.i18n.getMessage("closeConfirm", [tabs.length])))
+				return;
+			tabs.map(tab => browser.tabs.remove(tab.id));
+			break;
 	}
 }
 
