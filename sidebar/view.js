@@ -451,16 +451,9 @@ async function rebuildList() {
 	gPrefs.previewHeight = gPrefs.previewHeight || 80;
 	gPrefs.hideScroll    = gPrefs.hideScroll    || false;
 	gPrefs.scrollWidth   = gPrefs.scrollWidth   || 16;
-	// set user style
-	let style = document.getElementById("userstyle");
-	if (style)
-		style.parentNode.removeChild(style);
-	style = document.createElement("style");
-	style.id = "userstyle";
-	document.head.appendChild(style);
-	style.sheet.insertRule("#tabList { --preview-height: " + gPrefs.previewHeight + "px; }");
-	style.sheet.insertRule("#tabList { --scroll-width: " + gPrefs.scrollWidth + "px; }");
 	document.documentElement.setAttribute("theme", gPrefs.theme);
+	gTabList.style.setProperty("--preview-height", gPrefs.previewHeight + "px");
+	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
 	gTabList.setAttribute("mode", gPrefs.mode);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
