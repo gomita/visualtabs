@@ -81,8 +81,12 @@ function localizeUI() {
 // DOM event handlers
 
 function onMouseDown(event) {
+	// select tab on mouse down
+	if (event.button == 0 && gPopup.hidden) {
+		doCommand("select", getTabIdByElement(event.target));
+	}
 	// prevent autoscroll with middle-button
-	if (event.button == 1) {
+	else if (event.button == 1) {
 		event.preventDefault();
 		event.stopPropagation();
 		return;
@@ -141,12 +145,9 @@ function onClick(event) {
 	else if (target.id == "menu_options") {
 		browser.runtime.openOptionsPage();
 	}
-	// clicks on tab list
-	else {
-		if (event.button == 0)
-			doCommand("select", getTabIdByElement(target));
-		else if (event.button == 1)
-			doCommand("close", getTabIdByElement(target));
+	// middle-clicks on tab list
+	else if (event.button == 1) {
+		doCommand("close", getTabIdByElement(target));
 	}
 }
 
