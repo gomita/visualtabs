@@ -315,7 +315,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// refresh a tab after loading complete
 	else if (changeInfo.status == "complete") {
-		elt.querySelector(".favicon").src = correctIconURL(tab.favIconUrl);
+		elt.querySelector(".favicon").src = getFaviconForTab(tab);
 		elt.setAttribute("url", tab.url);
 		drawThumbnail(tabId);
 	}
@@ -481,7 +481,7 @@ function elementForTab(aTab) {
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("title", aTab.title);
 	elt.setAttribute("url", aTab.url);
-	elt.querySelector(".favicon").src = correctIconURL(aTab.favIconUrl);
+	elt.querySelector(".favicon").src = getFaviconForTab(aTab);
 	elt.querySelector(".title").textContent = aTab.title;
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
@@ -516,12 +516,12 @@ function getElementByTabId(aTabId) {
 	return gTabList.querySelector(`[tabId="${aTabId}"]`);
 }
 
-function correctIconURL(aURL) {
-	if (!aURL)
+function getFaviconForTab(aTab) {
+	if ("favIconUrl" in aTab === false)
 		return "/icons/defaultFavicon.svg";
-	if (aURL == "chrome://mozapps/skin/extensions/extensionGeneric-16.svg")
+	if (aTab.favIconUrl == "chrome://mozapps/skin/extensions/extensionGeneric-16.svg")
 		return "/icons/extensions-16.svg";
-	return aURL;
+	return aTab.favIconUrl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
