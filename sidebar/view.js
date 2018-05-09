@@ -34,6 +34,9 @@ function init() {
 	browser.tabs.onReplaced.addListener(onReplaced);
 	browser.tabs.onZoomChange.addListener(onZoomChange);
 	browser.runtime.onMessage.addListener(onMessage);
+	browser.contextualIdentities.onCreated.addListener(onContextChanged);
+	browser.contextualIdentities.onRemoved.addListener(onContextChanged);
+	browser.contextualIdentities.onUpdated.addListener(onContextChanged);
 	rebuildList();
 	setTimeout(() => localizeUI(), 0);
 }
@@ -58,6 +61,9 @@ function uninit() {
 	browser.tabs.onReplaced.removeListener(onReplaced);
 	browser.tabs.onZoomChange.removeListener(onZoomChange);
 	browser.runtime.onMessage.removeListener(onMessage);
+	browser.contextualIdentities.onCreated.removeListener(onContextChanged);
+	browser.contextualIdentities.onRemoved.removeListener(onContextChanged);
+	browser.contextualIdentities.onUpdated.removeListener(onContextChanged);
 	gTabList = null;
 	gTabElt  = null;
 	gPopup   = null;
@@ -377,9 +383,17 @@ function onZoomChange(ZoomChangeInfo) {
 	drawThumbnail(ZoomChangeInfo.tabId);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// other listeners
+
 function onMessage(request, sender, sendResponse) {
 	if (request.value == "visualtabs:rebuild")
 		rebuildList();
+}
+
+async function onContextChanged(ctx) {
+	console.log("context changed: " + ctx.toSource());
+	rebuildList();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -495,6 +509,14 @@ function elementForTab(aTab) {
 		elt.setAttribute("pinned", "true");
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
+	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {
+		// get context for container tab async
+		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
+			elt.style.setProperty("--active-color", ctx.colorCode);
+			elt.setAttribute("data-context", aTab.cookieStoreId);
+			elt.setAttribute("title", `[${ctx.name}] ${aTab.title}`);
+		});
+	}
 	return elt;
 }
 

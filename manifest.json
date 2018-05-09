@@ -42,6 +42,8 @@
 		"tabs",
 		"sessions",
 		"storage",
+		"cookies",
+		"contextualIdentities",
 		"<all_urls>"
 	]
 }
