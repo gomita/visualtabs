@@ -2,6 +2,7 @@
 // global
 
 var gWindowId;
+var gIncognito;
 var gTabList;
 var gTabElt;
 var gPopup;
@@ -459,6 +460,9 @@ async function doCommand(aCommand, aTabId) {
 				img.src = "/icons/arrowhead-down-16.svg";
 				rebuildContexts();
 			}
+			// if in-private-browsing, hide menu_containers button
+			if (gIncognito)
+				document.getElementById("menu_contexts").style.display = "none";
 			break;
 		case "menu_contexts": 
 			let list = document.getElementById("ctxList");
@@ -513,6 +517,7 @@ async function rebuildList() {
 		gTabList.removeChild(gTabList.lastChild);
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	gWindowId = tabs[0].windowId;
+	gIncognito = tabs[0].incognito;
 	// first, create list without thumbnails
 	tabs.map(tab => gTabList.appendChild(elementForTab(tab)));
 	// show new tab button after building all tabs
