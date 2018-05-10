@@ -74,13 +74,18 @@ body {
 }
 
 :root[theme="dark"] .tab:hover .title,
-:root[theme="dark"] .tab[selected] .title {
+:root[theme="dark"] .tab[selected] .title,
+:root[theme="dark"] label {
 	color: #ffffff;
 }
 
 :root[theme="dark"] button img,
 :root[theme="dark"] #newTab img {
 	filter: invert(1);
+}
+
+:root[theme="dark"] #ctxList button img {
+	filter: unset;
 }
 
 /* ::::: list ::::: */
@@ -288,6 +293,9 @@ button:active, button[checked] {
 #menu {
 	position: absolute;
 	bottom: 0px;
+	display: flex;
+	flex-direction: raw;
+	align-items: end;
 	padding: 1px;
 	background-color: var(--background-color);
 	border: 1px 1px 0px 0px solid var(--separator-color);
@@ -297,10 +305,12 @@ button:active, button[checked] {
 
 #menu button {
 	display: block;
-	margin: 1px 0px;
+	margin: 1px;
+	line-height: unset;
 }
 
-#menu:not([open]) button:not(#menu_show) {
+#menu:not([open]) button:not(#menu_show),
+#menu:not([open]) #ctxList {
 	display: none;
 }
 
@@ -308,7 +318,36 @@ button:active, button[checked] {
 	opacity: 0.5;
 }
 
-#menu button:hover img {
+#menu button:hover img,
+#menu button:hover label {
 	opacity: 1;
+}
+
+#ctxList {
+	align-self: flex-start;
+	margin-left: 2px;
+	padding: 0px 2px;
+	border-left: 1px solid var(--separator-color);
+}
+
+#ctxList button {
+	width: 100%;
+}
+
+#ctxList button img {
+	width: 16px;
+	height: 16px;
+	-moz-context-properties: fill;
+	opacity: unset;
+}
+
+#ctxList button label {
+	font: caption;
+	opacity: 0.7;
+	margin: 0px 4px;
+}
+
+#ctx {
+	display: none !important;
 }
 

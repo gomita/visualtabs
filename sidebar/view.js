@@ -151,6 +151,14 @@ function onClick(event) {
 	else if (target.id == "menu_options") {
 		browser.runtime.openOptionsPage();
 	}
+	// clicks on menu_contexts button
+	else if (target.id == "menu_contexts") {
+		doCommand("menu_contexts");
+	}
+	// clicks on menu_contexts button
+	else if (target.closest("[id^=firefox-container-]")) {
+		doCommand("container", target.id);
+	}
 	// middle-clicks on tab list
 	else if (event.button == 1) {
 		doCommand("close", getTabIdByElement(target));
@@ -449,8 +457,36 @@ async function doCommand(aCommand, aTabId) {
 			else {
 				menu.setAttribute("open", "true");
 				img.src = "/icons/arrowhead-down-16.svg";
+				rebuildContexts();
 			}
 			break;
+		case "menu_contexts": 
+			let list = document.getElementById("ctxList");
+			list.hidden = !list.hidden;
+			rebuildContexts();
+			break;
+		case "container": 
+			browser.tabs.create({ active: true, cookieStoreId: aTabId });
+			doCommand("menu");
+			break;
+	}
+}
+
+async function rebuildContexts() {
+	let list = document.getElementById("ctxList");
+	if (list.hidden)
+		return;
+	while (list.lastChild)
+		list.removeChild(list.lastChild);
+	let ctxs = await browser.contextualIdentities.query({});
+	for (let ctx of ctxs) {
+		let elt = document.getElementById("ctx").cloneNode(true);
+		elt.hidden = false;
+		elt.id = ctx.cookieStoreId;
+		elt.querySelector("img").src = ctx.iconUrl;
+		elt.querySelector("img").style.fill = ctx.colorCode;
+		elt.querySelector("label").textContent = ctx.name;
+		list.appendChild(elt);
 	}
 }
 
