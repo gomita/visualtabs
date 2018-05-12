@@ -28,6 +28,7 @@
 	"mode": { "message": "表示モード: " },
 	"compact": { "message": "コンパクト" },
 	"full": { "message": "フル" },
+	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で更新する" },
 	"activeLine": { "message": "選択しているタブの強調表示（青色の線）: " },
 	"left": { "message": "左側" },
 	"right": { "message": "右側" },

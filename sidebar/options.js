@@ -12,12 +12,14 @@ async function init() {
 	}
 	let theme         = getPref("theme", "default");
 	let mode          = getPref("mode", "compact");
+	let autoUpdate    = getPref("autoUpdate", 0);
 	let activeLine    = getPref("activeLine", "left");
 	let previewHeight = getPref("previewHeight", 80);
 	let hideScroll    = getPref("hideScroll", false);
 	let scrollWidth   = getPref("scrollWidth", 16);
 	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
+	document.getElementById(`autoUpdate`).checked = autoUpdate > 0;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;
 	document.getElementById(`previewHeight`).value = previewHeight;
 	document.getElementById(`hideScroll`).checked = hideScroll;
@@ -58,6 +60,7 @@ function onChange(event) {
 		case "theme:dark"      : gPrefs.theme = "dark"; break;
 		case "mode:compact"    : gPrefs.mode = "compact"; break;
 		case "mode:full"       : gPrefs.mode = "full"; break;
+		case "autoUpdate"      : gPrefs.autoUpdate = event.target.checked ? 1000 : 0; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;
 		case "activeLine:right": gPrefs.activeLine = "right"; break;
 		case "previewHeight"   : gPrefs.previewHeight = event.target.value; break;

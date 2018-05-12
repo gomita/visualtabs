@@ -106,7 +106,7 @@ function onMouseDown(event) {
 }
 
 function onMouseOver(event) {
-	if (gPrefs.mode == "full")
+	if (gPrefs.mode == "full" && gPrefs.autoUpdate == 0)
 		return;
 	// do nothing when mouse is over blank area or same tab
 	let tabId = getTabIdByElement(event.target);
@@ -134,6 +134,15 @@ function onMouseOver(event) {
 		// keep previewing while mouse points to the same tab
 		let elt = gTabList.querySelector(".tab:hover");
 		if (elt && getTabIdByElement(elt) == gMouseOverTabId) {
+			if (gPrefs.autoUpdate > 0) {
+				// add elapsed time to age and redraw thumbnail at specified interval
+				let age = parseInt(elt.getAttribute("data-draw-age"), 10);
+				if ((age += 100) >= gPrefs.autoUpdate) {
+					age = 0;
+					drawThumbnail(gMouseOverTabId);
+				}
+				elt.setAttribute("data-draw-age", age);
+			}
 			return;
 		}
 		// stop previewing and cancel timer when outside the tab
@@ -555,6 +564,7 @@ async function rebuildList() {
 	}
 	gPrefs.theme         = getPref("theme", "default");
 	gPrefs.mode          = getPref("mode", "compact");
+	gPrefs.autoUpdate    = getPref("autoUpdate", 0);
 	gPrefs.activeLine    = getPref("activeLine", "left");
 	gPrefs.previewHeight = getPref("previewHeight", 80);
 	gPrefs.hideScroll    = getPref("hideScroll", false);
