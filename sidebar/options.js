@@ -7,12 +7,15 @@ async function init() {
 	// for compatibility with ver 0.9 or former
 	if (gPrefs.mode == "normal")
 		gPrefs.mode = "full";
-	let theme         = gPrefs.theme         || "default";
-	let mode          = gPrefs.mode          || "compact";
-	let activeLine    = gPrefs.activeLine    || "left";
-	let previewHeight = gPrefs.previewHeight || 80;
-	let hideScroll    = gPrefs.hideScroll    || false;
-	let scrollWidth   = gPrefs.scrollWidth   || 16;
+	const getPref = function(aName, aDefaultValue) {
+		return aName in gPrefs ? gPrefs[aName] : aDefaultValue;
+	}
+	let theme         = getPref("theme", "default");
+	let mode          = getPref("mode", "compact");
+	let activeLine    = getPref("activeLine", "left");
+	let previewHeight = getPref("previewHeight", 80);
+	let hideScroll    = getPref("hideScroll", false);
+	let scrollWidth   = getPref("scrollWidth", 16);
 	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;

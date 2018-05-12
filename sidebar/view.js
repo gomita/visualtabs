@@ -243,9 +243,9 @@ function onDragStart(event) {
 	if (!tabId)
 		return;
 	let dt = event.dataTransfer;
-	let tab = getElementByTabId(tabId);
+	let elt = getElementByTabId(tabId);
 	dt.setData("text/x-tab-id", tabId);
-	dt.setData("text/x-moz-url", tab.getAttribute("url"));
+	dt.setData("text/x-moz-url", elt.getAttribute("url"));
 	dt.dropEffect = "move";
 }
 
@@ -550,12 +550,15 @@ async function rebuildList() {
 	// for compatibility with ver 0.9 or former
 	if (gPrefs.mode == "normal")
 		gPrefs.mode = "full";
-	gPrefs.theme         = gPrefs.theme         || "default";
-	gPrefs.mode          = gPrefs.mode          || "compact";
-	gPrefs.activeLine    = gPrefs.activeLine    || "left";
-	gPrefs.previewHeight = gPrefs.previewHeight || 80;
-	gPrefs.hideScroll    = gPrefs.hideScroll    || false;
-	gPrefs.scrollWidth   = gPrefs.scrollWidth   || 16;
+	const getPref = function(aName, aDefaultValue) {
+		return aName in gPrefs ? gPrefs[aName] : aDefaultValue;
+	}
+	gPrefs.theme         = getPref("theme", "default");
+	gPrefs.mode          = getPref("mode", "compact");
+	gPrefs.activeLine    = getPref("activeLine", "left");
+	gPrefs.previewHeight = getPref("previewHeight", 80);
+	gPrefs.hideScroll    = getPref("hideScroll", false);
+	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
 	document.documentElement.setAttribute("theme", gPrefs.theme);
 	gTabList.style.setProperty("--preview-height", gPrefs.previewHeight + "px");
 	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
