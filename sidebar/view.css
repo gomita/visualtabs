@@ -164,9 +164,12 @@ button:active, button[checked] {
 	background-color: var(--shadow-color2);
 }
 
-.tab[pinned] button,
-.tab[pinned] .thumbnail {
+.tab[pinned] button {
 	display: none;
+}
+
+.tab[pinned] .thumbnail {
+	height: 0;
 }
 
 .tab .thumbnail {
@@ -177,7 +180,12 @@ button:active, button[checked] {
 /* ::::: mode ::::: */
 
 #tabList[mode="compact"] .tab .thumbnail {
-	display: none;
+	height: 0;
+	transition: 0.1s ease-out;
+}
+
+#tabList[mode="compact"] .tab[focus] .thumbnail {
+	height: var(--preview-height);
 }
 
 /* ::::: new tab button ::::: */

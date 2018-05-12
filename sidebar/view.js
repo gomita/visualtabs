@@ -10,12 +10,15 @@ var gPrefs;
 var gScrollTop = 0;
 var gDragOverString = "";
 var gDragLeaveTimer = 0;
+var gMouseOverTabId;
+var gMouseOverTimer;
 
 function init() {
 	gTabList = document.getElementById("tabList");
 	gTabElt  = document.getElementById("tab");
 	gPopup   = document.getElementById("popup");
 	document.addEventListener("mousedown", onMouseDown);
+	document.addEventListener("mouseover", onMouseOver);
 	document.addEventListener("contextmenu", onContextMenu);
 	document.addEventListener("click", onClick);
 	document.addEventListener("dblclick", onDblClick);
@@ -44,6 +47,7 @@ function init() {
 
 function uninit() {
 	document.removeEventListener("mousedown", onMouseDown);
+	document.removeEventListener("mouseover", onMouseOver);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
 	document.removeEventListener("keypress", onKeyPress);
@@ -65,6 +69,7 @@ function uninit() {
 	browser.contextualIdentities.onCreated.removeListener(onContextChanged);
 	browser.contextualIdentities.onRemoved.removeListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.removeListener(onContextChanged);
+	clearInterval(gMouseOverTimer);
 	gTabList = null;
 	gTabElt  = null;
 	gPopup   = null;
@@ -98,6 +103,48 @@ function onMouseDown(event) {
 		event.stopPropagation();
 		return;
 	}
+}
+
+function onMouseOver(event) {
+	if (gPrefs.mode == "full")
+		return;
+	// do nothing when mouse is over blank area or same tab
+	let tabId = getTabIdByElement(event.target);
+	if (!tabId || tabId == gMouseOverTabId)
+		return;
+	// mouse is over on different tab
+	gMouseOverTabId = tabId;
+	let oldElt = gTabList.querySelector(".tab[focus]");
+	if (oldElt) {
+		oldElt.removeAttribute("focus");
+		oldElt.setAttribute("data-draw-age", 0);
+	}
+	if (!gPopup.hidden)
+		hidePopup();
+	let elt = getElementByTabId(tabId);
+	elt.setAttribute("focus", "true");
+	if (!elt.hasAttribute("data-draw-age"))
+		drawThumbnail(tabId);
+	// set repeating timer
+	clearInterval(gMouseOverTimer);
+	gMouseOverTimer = setInterval(() => {
+		// keep previewing while popup is showing
+		if (!gPopup.hidden)
+			return;
+		// keep previewing while mouse points to the same tab
+		let elt = gTabList.querySelector(".tab:hover");
+		if (elt && getTabIdByElement(elt) == gMouseOverTabId) {
+			return;
+		}
+		// stop previewing and cancel timer when outside the tab
+		let oldElt = gTabList.querySelector(".tab[focus]");
+		if (oldElt) {
+			oldElt.removeAttribute("focus");
+			oldElt.setAttribute("data-draw-age", 0);
+		}
+		clearInterval(gMouseOverTimer);
+		gMouseOverTabId = null;
+	}, 100);
 }
 
 function onContextMenu(event) {
@@ -571,6 +618,8 @@ async function drawThumbnail(aTabId) {
 		return;
 	let data = await browser.tabs.captureTab(aTabId);
 	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;
+	elt.setAttribute("data-draw-age", 0);
+	console.log("drawThumbnail: " + aTabId);
 }
 
 // returns tabId as integer for element, or acendant element
