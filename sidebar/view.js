@@ -27,6 +27,7 @@ function init() {
 	document.addEventListener("dragover", onDragOver);
 	document.addEventListener("dragleave", onDragLeave);
 	document.addEventListener("drop", onDrop);
+	document.addEventListener("wheel", onWheel);
 	gTabList.addEventListener("scroll", onScroll);
 	browser.tabs.onActivated.addListener(onActivated);
 	browser.tabs.onCreated.addListener(onCreated);
@@ -55,6 +56,7 @@ function uninit() {
 	document.removeEventListener("dragover", onDragOver);
 	document.removeEventListener("dragleave", onDragLeave);
 	document.removeEventListener("drop", onDrop);
+	document.removeEventListener("wheel", onWheel);
 	gTabList.removeEventListener("scroll", onScroll);
 	browser.tabs.onActivated.removeListener(onActivated);
 	browser.tabs.onCreated.removeListener(onCreated);
@@ -232,6 +234,12 @@ function onKeyPress(event) {
 	// Esc key to close on popup
 	if (!gPopup.hidden && event.keyCode == event.DOM_VK_ESCAPE)
 		hidePopup();
+}
+
+function onWheel(event) {
+	// prevent zoom-in/out with mouse wheel
+	if (event.ctrlKey || event.metaKey)
+		event.preventDefault();
 }
 
 function onScroll(event) {
