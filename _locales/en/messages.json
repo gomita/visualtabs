@@ -29,7 +29,7 @@
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },
 	"effect": { "message": "Enable visual effect for previews" },
-	"autoUpdate": { "message": "Automatically update preview which the mouse pointer is hovering over." },
+	"autoUpdate": { "message": "Automatically redraw preview while the mouse pointer is hovering over." },
 	"activeLine": { "message": "Show highlight (blue line) for the selected tab: " },
 	"left": { "message": "Left-side" },
 	"right": { "message": "Right-side" },

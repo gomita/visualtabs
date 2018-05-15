@@ -53,8 +53,8 @@ function updateUI() {
 		else
 			elt.setAttribute("disabled", "true");
 	});
-	[...document.querySelectorAll('#scrollWidth, [for="scrollWidth"]')]
-	.map(elt => {
+	// if hide scroll is enabled, make scroll width option grayed-out
+	[...document.querySelectorAll('#scrollWidth, [for="scrollWidth"]')].map(elt => {
 		if (gPrefs.hideScroll)
 			elt.removeAttribute("disabled");
 		else
@@ -73,9 +73,9 @@ function onChange(event) {
 		case "autoUpdate"      : gPrefs.autoUpdate = event.target.checked ? 1000 : 0; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;
 		case "activeLine:right": gPrefs.activeLine = "right"; break;
-		case "previewHeight"   : gPrefs.previewHeight = event.target.value; break;
+		case "previewHeight"   : gPrefs.previewHeight = parseInt(event.target.value, 10); break;
 		case "hideScroll"      : gPrefs.hideScroll = event.target.checked; updateUI(); break;
-		case "scrollWidth"     : gPrefs.scrollWidth = event.target.value; break;
+		case "scrollWidth"     : gPrefs.scrollWidth = parseInt(event.target.value, 10); break;
 	}
 	browser.storage.local.set(gPrefs);
 	browser.runtime.sendMessage({ value: "visualtabs:rebuild" });

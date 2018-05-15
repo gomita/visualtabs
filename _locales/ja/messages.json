@@ -29,7 +29,7 @@
 	"compact": { "message": "コンパクト" },
 	"full": { "message": "フル" },
 	"effect": { "message": "視覚効果を有効にする" },
-	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で更新する" },
+	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で再描画する" },
 	"activeLine": { "message": "選択しているタブの強調表示（青色の線）: " },
 	"left": { "message": "左側" },
 	"right": { "message": "右側" },
