@@ -18,7 +18,7 @@
 	"close": { "message": "タブを閉じる" },
 	"closeConfirm": { "message": "複数 ($1) のタブを閉じようとしています。すべてのタブを閉じてよろしいですか？" },
 	// menu
-	"menu_show": { "message": "メニュー" },
+	"menu_toggle": { "message": "メニュー" },
 	"menu_mode": { "message": "表示モードを切替" },
 	"menu_options": { "message": "設定" },
 	"menu_contexts": { "message": "新しいコンテナータブを開く" },

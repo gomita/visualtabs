@@ -196,9 +196,9 @@ function onClick(event) {
 	else if (target.closest("#newTab")) {
 		doCommand("create");
 	}
-	// clicks on menu_show button
-	else if (target.id == "menu_show") {
-		doCommand("menu");
+	// clicks on menu_toggle button
+	else if (target.id == "menu_toggle") {
+		doCommand("menu_toggle");
 	}
 	// clicks on menu_mode button
 	else if (target.id == "menu_mode") {
@@ -512,21 +512,10 @@ async function doCommand(aCommand, aTabId) {
 				return;
 			tabs.map(tab => browser.tabs.remove(tab.id));
 			break;
-		case "menu": 
-			let menu = document.getElementById("menu");
-			let img = document.getElementById("menu_show").firstChild;
-			if (menu.hasAttribute("open")) {
-				menu.removeAttribute("open");
-				img.src = "/icons/arrowhead-up-16.svg";
-			}
-			else {
-				menu.setAttribute("open", "true");
-				img.src = "/icons/arrowhead-down-16.svg";
-				rebuildContexts();
-			}
-			// if in-private-browsing, hide menu_containers button
-			if (gIncognito)
-				document.getElementById("menu_contexts").style.display = "none";
+		case "menu_toggle": 
+			gPrefs.menu = !gPrefs.menu;
+			browser.storage.local.set(gPrefs);
+			rebuildMenu();
 			break;
 		case "menu_contexts": 
 			let list = document.getElementById("ctxList");
@@ -535,9 +524,25 @@ async function doCommand(aCommand, aTabId) {
 			break;
 		case "container": 
 			browser.tabs.create({ active: true, cookieStoreId: aTabId });
-			doCommand("menu");
+			doCommand("menu_toggle");
 			break;
 	}
+}
+
+function rebuildMenu() {
+	let menu = document.getElementById("menu");
+	let img = document.getElementById("menu_toggle").firstChild;
+	menu.setAttribute("open", gPrefs.menu);
+	if (gPrefs.menu) {
+		img.src = "/icons/arrowhead-down-16.svg";
+		rebuildContexts();
+	}
+	else {
+		img.src = "/icons/arrowhead-up-16.svg";
+	}
+	// if in-private-browsing, hide menu_contexts button
+	if (gIncognito)
+		document.getElementById("menu_contexts").style.display = "none";
 }
 
 async function rebuildContexts() {
@@ -577,6 +582,7 @@ async function rebuildList() {
 	gPrefs.previewHeight = getPref("previewHeight", 80);
 	gPrefs.hideScroll    = getPref("hideScroll", false);
 	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
+	gPrefs.menu          = getPref("menu", true);
 	document.documentElement.setAttribute("theme", gPrefs.theme);
 	gTabList.style.setProperty("--preview-height", gPrefs.previewHeight + "px");
 	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
@@ -599,6 +605,8 @@ async function rebuildList() {
 	// then, update thumbnails async
 	if (gPrefs.mode == "full")
 		tabs.map(tab => drawThumbnail(tab.id));
+	// finally, rebuild menu
+	rebuildMenu();
 }
 
 function elementForTab(aTab) {

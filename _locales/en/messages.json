@@ -18,7 +18,7 @@
 	"close": { "message": "Close Tab" },
 	"closeConfirm": { "message": "You are about to close $1 tabs. Are you sure you want to continue?" },
 	// menu
-	"menu_show": { "message": "Menu" },
+	"menu_toggle": { "message": "Menu" },
 	"menu_mode": { "message": "Change display mode" },
 	"menu_options": { "message": "Options" },
 	"menu_contexts": { "message": "Open a new container tab" },

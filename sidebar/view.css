@@ -298,6 +298,10 @@ button:active, button[checked] {
 
 /* ::::: menu ::::: */
 
+#menu:not([open]) {
+	display: none;
+}
+
 #menu {
 	position: absolute;
 	bottom: 0px;
@@ -317,8 +321,8 @@ button:active, button[checked] {
 	line-height: unset;
 }
 
-#menu:not([open]) button:not(#menu_show),
-#menu:not([open]) #ctxList {
+#menu[open="false"] button:not(#menu_toggle),
+#menu[open="false"] #ctxList {
 	display: none;
 }
 
