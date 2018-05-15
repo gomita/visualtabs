@@ -181,11 +181,20 @@ button:active, button[checked] {
 
 #tabList[mode="compact"] .tab .thumbnail {
 	height: 0;
-	transition: 0.1s ease-out;
+	transition: 0.2s ease-out;
 }
 
 #tabList[mode="compact"] .tab[focus] .thumbnail {
 	height: var(--preview-height);
+}
+
+#tabList[mode="compact"][effect="true"] .tab .thumbnail {
+	transform-origin: 0% 0%;
+	transform: skew(45deg);
+}
+
+#tabList[mode="compact"][effect="true"] .tab[focus] .thumbnail {
+	transform: skew(0deg);
 }
 
 /* ::::: new tab button ::::: */

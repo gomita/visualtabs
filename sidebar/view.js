@@ -577,6 +577,7 @@ async function rebuildList() {
 	}
 	gPrefs.theme         = getPref("theme", "default");
 	gPrefs.mode          = getPref("mode", "compact");
+	gPrefs.effect        = getPref("effect", true);
 	gPrefs.autoUpdate    = getPref("autoUpdate", 0);
 	gPrefs.activeLine    = getPref("activeLine", "left");
 	gPrefs.previewHeight = getPref("previewHeight", 80);
@@ -587,6 +588,7 @@ async function rebuildList() {
 	gTabList.style.setProperty("--preview-height", gPrefs.previewHeight + "px");
 	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
 	gTabList.setAttribute("mode", gPrefs.mode);
+	gTabList.setAttribute("effect", gPrefs.effect);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
 	// remove all elements

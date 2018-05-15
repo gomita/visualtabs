@@ -12,6 +12,7 @@ async function init() {
 	}
 	let theme         = getPref("theme", "default");
 	let mode          = getPref("mode", "compact");
+	let effect        = getPref("effect", true);
 	let autoUpdate    = getPref("autoUpdate", 0);
 	let activeLine    = getPref("activeLine", "left");
 	let previewHeight = getPref("previewHeight", 80);
@@ -19,6 +20,7 @@ async function init() {
 	let scrollWidth   = getPref("scrollWidth", 16);
 	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
+	document.getElementById(`effect`).checked = effect;
 	document.getElementById(`autoUpdate`).checked = autoUpdate > 0;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;
 	document.getElementById(`previewHeight`).value = previewHeight;
@@ -44,6 +46,13 @@ function localizeUI() {
 }
 
 function updateUI() {
+	// if display mode is 'Full', make effect option grayed-out
+	[...document.querySelectorAll('#effect, [for="effect"]')].map(elt => {
+		if (gPrefs.mode == "compact")
+			elt.removeAttribute("disabled");
+		else
+			elt.setAttribute("disabled", "true");
+	});
 	[...document.querySelectorAll('#scrollWidth, [for="scrollWidth"]')]
 	.map(elt => {
 		if (gPrefs.hideScroll)
@@ -58,8 +67,9 @@ function onChange(event) {
 		case "theme:default"   : gPrefs.theme = "default"; break;
 		case "theme:light"     : gPrefs.theme = "light"; break;
 		case "theme:dark"      : gPrefs.theme = "dark"; break;
-		case "mode:compact"    : gPrefs.mode = "compact"; break;
-		case "mode:full"       : gPrefs.mode = "full"; break;
+		case "mode:compact"    : gPrefs.mode = "compact"; updateUI(); break;
+		case "mode:full"       : gPrefs.mode = "full";    updateUI(); break;
+		case "effect"          : gPrefs.effect = event.target.checked; break;
 		case "autoUpdate"      : gPrefs.autoUpdate = event.target.checked ? 1000 : 0; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;
 		case "activeLine:right": gPrefs.activeLine = "right"; break;
