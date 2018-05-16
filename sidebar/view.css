@@ -168,32 +168,38 @@ button:active, button[checked] {
 	display: none;
 }
 
+/* ::::: thumbnail ::::: */
+
+.tab .thumbnail {
+	background-size: cover;
+}
+
 .tab[pinned] .thumbnail {
 	height: 0;
 }
 
-.tab .thumbnail {
-	background-size: cover;
-	height: var(--preview-height);
-}
-
-/* ::::: mode ::::: */
-
-#tabList[mode="compact"] .tab .thumbnail {
+#tabList[mode="minimal"] .tab .thumbnail {
 	height: 0;
 	transition: 0.2s ease-out;
 }
 
-#tabList[mode="compact"] .tab[focus] .thumbnail {
+#tabList[mode="compact"] .tab:not([pinned]) .thumbnail {
+	height: calc(var(--preview-height) * 0.2);
+	transition: 0.2s ease-out;
+}
+
+#tabList[mode="minimal"] .tab[focus] .thumbnail,
+#tabList[mode="compact"] .tab[focus]:not([pinned]) .thumbnail,
+#tabList[mode="full"] .tab:not([pinned]) .thumbnail {
 	height: var(--preview-height);
 }
 
-#tabList[mode="compact"][effect="true"] .tab .thumbnail {
+#tabList:not([mode="full"])[effect="true"] .tab .thumbnail {
 	transform-origin: 0% 0%;
 	transform: skew(45deg);
 }
 
-#tabList[mode="compact"][effect="true"] .tab[focus] .thumbnail {
+#tabList:not([mode="full"])[effect="true"] .tab[focus] .thumbnail {
 	transform: skew(0deg);
 }
 

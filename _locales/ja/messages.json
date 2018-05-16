@@ -26,6 +26,7 @@
 	"theme": { "message": "テーマ: " },
 	"default": { "message": "デフォルト" },
 	"mode": { "message": "表示モード: " },
+	"minimal": { "message": "ミニマル" },
 	"compact": { "message": "コンパクト" },
 	"full": { "message": "フル" },
 	"effect": { "message": "視覚効果を有効にする" },

@@ -202,7 +202,11 @@ function onClick(event) {
 	}
 	// clicks on menu_mode button
 	else if (target.id == "menu_mode") {
-		gPrefs.mode = gPrefs.mode == "compact" ? "full" : "compact";
+		switch (gPrefs.mode) {
+			case "minimal": gPrefs.mode = "compact"; break;
+			case "compact": gPrefs.mode = "full"; break;
+			case "full"   : gPrefs.mode = "minimal"; break;
+		}
 		browser.storage.local.set(gPrefs);
 		rebuildList();
 	}
@@ -605,7 +609,7 @@ async function rebuildList() {
 	let elt = gTabList.querySelector("[selected]");
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
-	if (gPrefs.mode == "full")
+	if (gPrefs.mode != "minimal")
 		tabs.map(tab => drawThumbnail(tab.id));
 	// finally, rebuild menu
 	rebuildMenu();
@@ -645,7 +649,7 @@ function elementForTab(aTab) {
 
 async function drawThumbnail(aTabId) {
 	let elt = getElementByTabId(aTabId);
-	if (gPrefs.mode == "full" && elt.getAttribute("pinned") == "true")
+	if (gPrefs.mode != "minimal" && elt.getAttribute("pinned") == "true")
 		return;
 	let data = await browser.tabs.captureTab(aTabId);
 	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;

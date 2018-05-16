@@ -26,6 +26,7 @@
 	"theme": { "message": "Theme: " },
 	"default": { "message": "Default" },
 	"mode": { "message": "Display mode: " },
+	"minimal": { "message": "Minimal" },
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },
 	"effect": { "message": "Enable visual effect for previews" },
