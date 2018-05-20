@@ -172,6 +172,7 @@ button:active, button[checked] {
 
 .tab .thumbnail {
 	background-size: cover;
+	z-index: -1;
 }
 
 .tab[pinned] .thumbnail {
