@@ -218,7 +218,7 @@ button:active, button[checked] {
 
 #newTab[flash] {
 	background-color: var(--active-color);
-	transition: 0.01s;
+	transition: 0.1s;
 }
 
 #newTab img {

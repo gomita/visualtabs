@@ -365,8 +365,9 @@ function onCreated(tab) {
 	let elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
 	let newTab = document.querySelector("#newTab");
 	if (newTab.getBoundingClientRect().top <= elt.getBoundingClientRect().top) {
+		newTab.removeAttribute("flash");
 		newTab.setAttribute("flash", "true");
-		setTimeout(() => newTab.removeAttribute("flash"), 10);
+		setTimeout(() => newTab.removeAttribute("flash"), 100);
 	}
 }
 
