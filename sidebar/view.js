@@ -386,7 +386,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	// change tab title
 	if (changeInfo.title) {
 		elt.querySelector(".title").textContent = changeInfo.title;
-		elt.setAttribute("title", changeInfo.title);
+		elt.querySelector(".title").setAttribute("title", changeInfo.title);
 	}
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
@@ -620,10 +620,10 @@ function elementForTab(aTab) {
 	elt.hidden = false;
 	elt.id = "tab:" + aTab.id;
 	elt.setAttribute("tabId", aTab.id.toString());
-	elt.setAttribute("title", aTab.title);
 	elt.setAttribute("url", aTab.url);
 	elt.querySelector(".favicon").src = getFaviconForTab(aTab);
 	elt.querySelector(".title").textContent = aTab.title;
+	elt.querySelector(".title").setAttribute("title", aTab.title);
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
 		// remove [selected] from current selected element
@@ -641,7 +641,7 @@ function elementForTab(aTab) {
 		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
 			elt.style.setProperty("--active-color", ctx.colorCode);
 			elt.setAttribute("data-context", aTab.cookieStoreId);
-			elt.setAttribute("title", `[${ctx.name}] ${aTab.title}`);
+			elt.querySelector(".title").setAttribute("title", `[${ctx.name}] ${aTab.title}`);
 		});
 	}
 	return elt;
