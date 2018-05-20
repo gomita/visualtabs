@@ -162,11 +162,8 @@ function onContextMenu(event) {
 	// prevent default contextmenu
 	event.preventDefault();
 	event.stopPropagation();
-	// ignore right-click on popup
-	if (event.target.closest("#popup"))
-		return;
-	// ignore right-click on blank space
-	if (event.target == document.body)
+	// ignore right-click on menu and popup
+	if (event.target.closest("#menu, #popup"))
 		return;
 	// show popup
 	showPopup(event);
@@ -683,17 +680,22 @@ function showPopup(event) {
 	if (!gPopup.hidden)
 		hidePopup();
 	let tabId = getTabIdByElement(event.target);
-	if (!tabId)
-		return;
-	let elt = getElementByTabId(tabId);
-	let pinned = elt.getAttribute("pinned") == "true";
-	let muted  = elt.getAttribute("muted") == "true";
+	if (tabId) {
+		// popup on a tab
+		let elt = getElementByTabId(tabId);
+		let pinned = elt.getAttribute("pinned") == "true";
+		let muted  = elt.getAttribute("muted") == "true";
+		gPopup.querySelector(pinned ? '[command="pin"]':'[command="unpin"]').hidden = true;
+		gPopup.querySelector(muted ? '[command="mute"]':'[command="unmute"]').hidden = true;
+		gPopup.setAttribute("tabId", tabId);
+	}
+	else {
+		// popup on new tab button or blank area
+		[...gPopup.childNodes].map(child => child.hidden = true);
+		gPopup.querySelector('[command="reloadAll"]').hidden = false;
+		gPopup.querySelector('[command="undoClose"]').hidden = false;
+	}
 	gPopup.hidden = false;
-	gPopup.querySelector('[command="pin"]').hidden = pinned;
-	gPopup.querySelector('[command="unpin"]').hidden = !pinned;
-	gPopup.querySelector('[command="mute"]').hidden = muted;
-	gPopup.querySelector('[command="unmute"]').hidden = !muted;
-	gPopup.setAttribute("tabId", tabId);
 	var bodyWidth  = document.body.clientWidth;
 	var bodyHeight = document.body.clientHeight;
 	var x = Math.min(event.clientX, bodyWidth - gPopup.clientWidth - 6);
@@ -704,6 +706,7 @@ function showPopup(event) {
 
 function hidePopup() {
 	window.removeEventListener("blur", hidePopup);
+	[...gPopup.childNodes].map(child => child.hidden = false);
 	gPopup.removeAttribute("tabId");
 	gPopup.hidden = true;
 }
