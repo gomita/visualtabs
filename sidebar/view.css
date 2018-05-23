@@ -22,6 +22,10 @@ body {
 	--active-color: rgb(10,132,255);
 }
 
+img, span {
+	pointer-events: none;
+}
+
 /* ::::: theme:default ::::: */
 
 :root[theme="default"] {

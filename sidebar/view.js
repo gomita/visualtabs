@@ -186,11 +186,11 @@ function onClick(event) {
 		return;
 	}
 	// clicks on tab close button
-	else if (target.closest(".close")) {
+	else if (target.classList.contains("close")) {
 		doCommand("close", getTabIdByElement(target));
 	}
 	// clicks on new tab button
-	else if (target.closest("#newTab")) {
+	else if (target.id == "newTab") {
 		doCommand("create");
 	}
 	// clicks on menu_toggle button
@@ -216,7 +216,7 @@ function onClick(event) {
 		doCommand("menu_contexts");
 	}
 	// clicks on menu_contexts button
-	else if (target.closest("[id^=firefox-container-]")) {
+	else if (target.id.startsWith("firefox-container-")) {
 		doCommand("container", target.id);
 	}
 	// middle-clicks on tab list
@@ -315,7 +315,7 @@ async function onDrop(event) {
 	document.getElementById("dropline").hidden = true;
 	event.preventDefault();
 	// do nothing when dropping on new tab button
-	if (event.target.closest("#newTab"))
+	if (event.target.id == "newTab")
 		return;
 	let dt = event.dataTransfer;
 	let sourceTabId = dt.getData("text/x-tab-id");
