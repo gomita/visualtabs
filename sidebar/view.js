@@ -29,6 +29,7 @@ function init() {
 	document.addEventListener("drop", onDrop);
 	document.addEventListener("wheel", onWheel);
 	gTabList.addEventListener("scroll", onScroll);
+	gTabList.addEventListener("animationend", onAnimationEnd);
 	browser.tabs.onActivated.addListener(onActivated);
 	browser.tabs.onCreated.addListener(onCreated);
 	browser.tabs.onRemoved.addListener(onRemoved);
@@ -58,6 +59,7 @@ function uninit() {
 	document.removeEventListener("drop", onDrop);
 	document.removeEventListener("wheel", onWheel);
 	gTabList.removeEventListener("scroll", onScroll);
+	gTabList.removeEventListener("animationend", onAnimationEnd);
 	browser.tabs.onActivated.removeListener(onActivated);
 	browser.tabs.onCreated.removeListener(onCreated);
 	browser.tabs.onRemoved.removeListener(onRemoved);
@@ -252,6 +254,10 @@ function onScroll(event) {
 	gScrollTop = scrollTop;
 }
 
+function onAnimationEnd(event) {
+	event.target.removeAttribute("bursting");
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // drag and drop
 
@@ -389,6 +395,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
 		elt.querySelector(".favicon").src = "/icons/tab-connecting.png";
+		elt.querySelector(".burst").removeAttribute("bursting");
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
 			drawThumbnail(tabId);
@@ -398,6 +405,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	else if (changeInfo.status == "complete") {
 		elt.querySelector(".favicon").src = getFaviconForTab(tab);
 		elt.setAttribute("url", tab.url);
+		elt.querySelector(".burst").setAttribute("bursting", "true");
 		drawThumbnail(tabId);
 	}
 	// change pinned status
