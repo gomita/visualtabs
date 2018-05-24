@@ -534,7 +534,7 @@ async function doCommand(aCommand, aTabId) {
 			break;
 		case "container": 
 			browser.tabs.create({ active: true, cookieStoreId: aTabId });
-			doCommand("menu_toggle");
+			document.getElementById("ctxList").hidden = true;
 			break;
 	}
 }
