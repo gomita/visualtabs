@@ -217,7 +217,7 @@ button:active, button[checked] {
 
 .tab .thumbnail {
 	background-size: cover;
-	z-index: 1;
+	z-index: -1;
 }
 
 .tab[pinned] .thumbnail {
@@ -375,6 +375,7 @@ button:active, button[checked] {
 	border: 1px 1px 0px 0px solid var(--separator-color);
 	border-top-right-radius: 6px;
 	box-shadow: 2px -2px 2px var(--shadow-color);
+	z-index: 99;
 }
 
 #menu button {
