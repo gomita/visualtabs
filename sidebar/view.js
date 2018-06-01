@@ -416,6 +416,13 @@ function onUpdated(tabId, changeInfo, tab) {
 			elt.removeAttribute("pinned");
 		drawThumbnail(tabId);
 	}
+	// change discarded status
+	else if (changeInfo.discarded !== undefined) {
+		if (changeInfo.discarded)
+			elt.setAttribute("discarded", "true");
+		else
+			elt.removeAttribute("discarded");
+	}
 	// change muted status
 	else if (changeInfo.mutedInfo !== undefined) {
 		if (changeInfo.mutedInfo.muted)
@@ -640,6 +647,8 @@ function elementForTab(aTab) {
 	}
 	if (aTab.pinned)
 		elt.setAttribute("pinned", "true");
+	if (aTab.discarded)
+		elt.setAttribute("discarded", "true");
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
 	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {

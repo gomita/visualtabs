@@ -234,8 +234,8 @@ button:active, button[checked] {
 	transition: 0.2s ease-out;
 }
 
-#tabList[mode="minimal"] .tab[focus] .thumbnail,
-#tabList[mode="compact"] .tab[focus]:not([pinned]) .thumbnail,
+#tabList[mode="minimal"] .tab[focus]:not([discarded]):not([url="about:blank"]) .thumbnail,
+#tabList[mode="compact"] .tab[focus]:not([pinned]):not([discarded]):not([url="about:blank"]) .thumbnail,
 #tabList[mode="full"] .tab:not([pinned]) .thumbnail {
 	height: var(--preview-height);
 }
