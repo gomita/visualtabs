@@ -270,7 +270,7 @@ function onDragStart(event) {
 	let elt = getElementByTabId(tabId);
 	let pinned = elt.getAttribute("pinned") == "true";
 	dt.setData("text/x-visualtabs", [gWindowId, tabId, pinned].join("|"));
-	dt.setData("text/x-moz-url", elt.getAttribute("url"));
+	dt.setData("text/x-moz-url", elt.getAttribute("url") + "\n" + elt.getAttribute("title"));
 	dt.dropEffect = "move";
 }
 
@@ -644,6 +644,7 @@ function elementForTab(aTab) {
 	elt.id = "tab:" + aTab.id;
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
+	elt.setAttribute("title", aTab.title);
 	elt.querySelector(".favicon").src = getFaviconForTab(aTab);
 	elt.querySelector(".title").textContent = aTab.title;
 	elt.querySelector(".title").setAttribute("title", aTab.title);
