@@ -279,24 +279,28 @@ function onDragOver(event) {
 		clearTimeout(gDragLeaveTimer);
 	event.preventDefault();
 	let dt = event.dataTransfer;
-	// source tabId
-	let [sourceWinId, sourceTabId, sourcePinned] = dt.getData("text/x-visualtabs").split("|");
-	sourceWinId = parseInt(sourceWinId, 10);
-	sourceTabId = parseInt(sourceTabId, 10);
-	sourcePinned = sourcePinned == "true";
-	if (!sourceTabId)
+	// [...dt.mozTypesAt(0)].map(type => console.log(type + "\t" + dt.getData(type)));
+	let type = "text/x-visualtabs", data = dt.getData(type);
+	if (!data && !dt.mozTypesAt(0).contains("text/x-moz-url"))
 		return;
 	// target tabId
 	let targetTabId = getTabIdByElement(event.target);
 	if (!targetTabId)
 		return;
 	let target = getElementByTabId(targetTabId);
-	// cannot drop unpinned tab into pinned tab
-	if (!sourcePinned && target.getAttribute("pinned") == "true")
-		return;
-	// cannot drop pinned tab into unpinned tab
-	if (sourcePinned && target.getAttribute("pinned") != "true")
-		return;
+	if (data) {
+		// source tabId
+		let [sourceWinId, sourceTabId, sourcePinned] = data.split("|");
+		sourceWinId = parseInt(sourceWinId, 10);
+		sourceTabId = parseInt(sourceTabId, 10);
+		sourcePinned = sourcePinned == "true";
+		// cannot drop unpinned tab into pinned tab
+		if (!sourcePinned && target.getAttribute("pinned") == "true")
+			return;
+		// cannot drop pinned tab into unpinned tab
+		if (sourcePinned && target.getAttribute("pinned") != "true")
+			return;
+	}
 	// orient
 	let rect = target.getBoundingClientRect();
 	let orient = event.clientY < rect.top + rect.height / 2 ? "before" : "after";
@@ -323,14 +327,12 @@ function onDragLeave(event) {
 async function onDrop(event) {
 	document.getElementById("dropline").hidden = true;
 	event.preventDefault();
-	// do nothing when dropping on new tab button
-	if (event.target.id == "newTab")
-		return;
+	// get first accepted flavor
 	let dt = event.dataTransfer;
-	let [sourceWinId, sourceTabId, sourcePinned] = dt.getData("text/x-visualtabs").split("|");
-	sourceTabId = parseInt(sourceTabId, 10);
-	sourceWinId = parseInt(sourceWinId, 10);
-	sourcePinned = sourcePinned == "true";
+	let type = "text/x-visualtabs", data = dt.getData(type);
+	if (!data) type = "text/x-moz-url", data = dt.getData(type);
+	if (!data) return;
+	// target
 	let [, orient, targetTabId] = gDragOverString.split("|");
 	if (!gDragOverString) {
 		// drop on blank space
@@ -338,20 +340,31 @@ async function onDrop(event) {
 		targetTabId = gTabList.lastChild.getAttribute("tabId");
 	}
 	targetTabId = parseInt(targetTabId, 10);
-	let sourceTab = await browser.tabs.get(sourceTabId);
 	let targetTab = await browser.tabs.get(targetTabId);
 	let targetIndex = targetTab.index;
 	if (orient == "after")
 		targetIndex++;
-	if (sourceWinId == gWindowId) {
-		// move a tab in same window
-		if (sourceTab.index < targetIndex)
-			targetIndex--;
-		browser.tabs.move(sourceTabId, { index: targetIndex });
+	if (type == "text/x-visualtabs") {
+		// source
+		let [sourceWinId, sourceTabId, sourcePinned] = data.split("|");
+		sourceTabId = parseInt(sourceTabId, 10);
+		sourceWinId = parseInt(sourceWinId, 10);
+		sourcePinned = sourcePinned == "true";
+		let sourceTab = await browser.tabs.get(sourceTabId);
+		if (sourceWinId == gWindowId) {
+			// move a tab in same window
+			if (sourceTab.index < targetIndex)
+				targetIndex--;
+			browser.tabs.move(sourceTabId, { index: targetIndex });
+		}
+		else {
+			// attach a tab from another window
+			browser.tabs.move(sourceTabId, { windowId: gWindowId, index: targetIndex });
+		}
 	}
-	else {
-		// attach a tab from another window
-		browser.tabs.move(sourceTabId, { windowId: gWindowId, index: targetIndex });
+	else if (type == "text/x-moz-url") {
+		// open URL in tab
+		browser.tabs.create({ url: data.split("\n")[0], index: targetIndex});
 	}
 }
 
