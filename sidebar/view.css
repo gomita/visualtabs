@@ -220,6 +220,11 @@ button:active, button[checked] {
 	z-index: -1;
 }
 
+/* workaround for issue #1 */
+:root:not([theme="default"]) .tab .thumbnail {
+	z-index: unset;
+}
+
 .tab[pinned] .thumbnail {
 	height: 0;
 }
