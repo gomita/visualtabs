@@ -417,7 +417,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
-		elt.querySelector(".favicon").src = "/icons/tab-connecting.png";
+		elt.querySelector(".favicon").style.backgroundImage = "url('/icons/tab-connecting.png')";
 		elt.querySelector(".burst").removeAttribute("bursting");
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
@@ -426,7 +426,7 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// refresh a tab after loading complete
 	else if (changeInfo.status == "complete") {
-		elt.querySelector(".favicon").src = getFaviconForTab(tab);
+		elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(tab) + "')";
 		elt.setAttribute("url", tab.url);
 		elt.querySelector(".burst").setAttribute("bursting", "true");
 		drawThumbnail(tabId);
@@ -658,7 +658,7 @@ function elementForTab(aTab) {
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
 	elt.setAttribute("title", aTab.title);
-	elt.querySelector(".favicon").src = getFaviconForTab(aTab);
+	elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(aTab) + "')";
 	elt.querySelector(".title").textContent = aTab.title;
 	elt.querySelector(".title").setAttribute("title", aTab.title);
 	elt.setAttribute("draggable", "true");
