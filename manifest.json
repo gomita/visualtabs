@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Visual Tabs",
-	"version": "0.12.7",
+	"version": "0.12.8",
 	"description": "__MSG_extensionDescription__",
 //	"icons": {
 //		"48": "icons/icon-48.png",
