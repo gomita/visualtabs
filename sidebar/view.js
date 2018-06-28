@@ -22,7 +22,7 @@ function init() {
 	document.addEventListener("contextmenu", onContextMenu);
 	document.addEventListener("click", onClick);
 	document.addEventListener("dblclick", onDblClick);
-	document.addEventListener("keypress", onKeyPress);
+	document.addEventListener("keydown", onKeyDown);
 	document.addEventListener("dragstart", onDragStart);
 	document.addEventListener("dragover", onDragOver);
 	document.addEventListener("dragleave", onDragLeave);
@@ -52,7 +52,7 @@ function uninit() {
 	document.removeEventListener("mouseover", onMouseOver);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
-	document.removeEventListener("keypress", onKeyPress);
+	document.removeEventListener("keydown", onKeyDown);
 	document.removeEventListener("dragstart", onDragStart);
 	document.removeEventListener("dragover", onDragOver);
 	document.removeEventListener("dragleave", onDragLeave);
@@ -233,10 +233,12 @@ function onDblClick(event) {
 		doCommand("create");
 }
 
-function onKeyPress(event) {
+function onKeyDown(event) {
 	// Esc key to close on popup
-	if (!gPopup.hidden && event.keyCode == event.DOM_VK_ESCAPE)
+	if (!gPopup.hidden && event.key == "Escape") {
+		event.preventDefault();
 		hidePopup();
+	}
 }
 
 function onWheel(event) {
