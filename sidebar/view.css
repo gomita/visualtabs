@@ -22,7 +22,7 @@ body {
 	--active-color: rgb(10,132,255);
 }
 
-img, span {
+img {
 	pointer-events: none;
 }
 
@@ -130,6 +130,7 @@ img, span {
 	width: 16px; height: 16px;
 	background-image: url("/icons/defaultFavicon.svg");
 	background-size: 16px 16px;
+	z-index: 5;
 }
 
 .tab .title {
@@ -137,6 +138,7 @@ img, span {
 	padding-left: 4px;
 	overflow: hidden;
 	white-space: nowrap;
+	z-index: 4;
 }
 
 .tab[selected] .title {

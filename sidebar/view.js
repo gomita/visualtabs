@@ -271,8 +271,9 @@ function onDragStart(event) {
 	let dt = event.dataTransfer;
 	let elt = getElementByTabId(tabId);
 	let pinned = elt.getAttribute("pinned") == "true";
+	let title = elt.querySelector(".title").getAttribute("title");
 	dt.setData("text/x-visualtabs", [gWindowId, tabId, pinned].join("|"));
-	dt.setData("text/x-moz-url", elt.getAttribute("url") + "\n" + elt.getAttribute("title"));
+	dt.setData("text/x-moz-url", elt.getAttribute("url") + "\n" + title);
 	dt.dropEffect = "move";
 }
 
@@ -659,7 +660,6 @@ function elementForTab(aTab) {
 	elt.id = "tab:" + aTab.id;
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
-	elt.setAttribute("title", aTab.title);
 	elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(aTab) + "')";
 	elt.querySelector(".title").textContent = aTab.title;
 	elt.querySelector(".title").setAttribute("title", aTab.title);
@@ -682,7 +682,6 @@ function elementForTab(aTab) {
 		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
 			elt.style.setProperty("--active-color", ctx.colorCode);
 			elt.setAttribute("data-context", aTab.cookieStoreId);
-			elt.querySelector(".title").setAttribute("title", `[${ctx.name}] ${aTab.title}`);
 		});
 	}
 	return elt;
