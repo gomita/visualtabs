@@ -316,7 +316,7 @@ function onDragOver(event) {
 	let dropline = document.getElementById("dropline");
 	dropline.hidden = false;
 	dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) + "px";
-	console.log(gDragOverString);
+//	console.log(gDragOverString);
 }
 
 function onDragLeave(event) {
@@ -378,7 +378,7 @@ function onActivated(activeInfo) {
 	let elt = getElementByTabId(activeInfo.tabId);
 	if (!elt)
 		return;
-	console.log("onActivated: " + activeInfo.toSource());
+//	console.log("onActivated: " + JSON.stringify(activeInfo));
 	let old = gTabList.querySelector("[selected]");
 	if (old)
 		old.removeAttribute("selected");
@@ -390,7 +390,7 @@ function onActivated(activeInfo) {
 function onCreated(tab) {
 	if (tab.windowId != gWindowId)
 		return;
-	console.log("onCreated: " + tab.toSource());
+//	console.log("onCreated: " + JSON.stringify(tab));
 	let elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
 	let newTab = document.querySelector("#newTab");
 	if (newTab.getBoundingClientRect().top <= elt.getBoundingClientRect().top) {
@@ -404,14 +404,14 @@ function onRemoved(tabId, removeInfo) {
 	let elt = getElementByTabId(tabId);
 	if (!elt)
 		return;
-	console.log("onRemoved: " + tabId + " " + removeInfo.toSource());
+//	console.log("onRemoved: " + tabId + " " + JSON.stringify(removeInfo));
 	gTabList.removeChild(elt);
 }
 
 function onUpdated(tabId, changeInfo, tab) {
 	if (tab.windowId != gWindowId)
 		return;
-	console.log("onUpdated: " + tabId + " " + changeInfo.toSource());
+//	console.log("onUpdated: " + tabId + " " + JSON.stringify(changeInfo));
 	let elt = getElementByTabId(tabId);
 	// change tab title
 	if (changeInfo.title) {
@@ -462,7 +462,7 @@ function onMoved(tabId, moveInfo) {
 	let elt = getElementByTabId(tabId);
 	if (!elt)
 		return;
-	console.log("onMoved: " + tabId + " " + moveInfo.toSource());
+//	console.log("onMoved: " + tabId + " " + JSON.stringify(moveInfo));
 	let refIndex = moveInfo.toIndex;
 	if (moveInfo.fromIndex < moveInfo.toIndex)
 		refIndex++;
@@ -472,7 +472,7 @@ function onMoved(tabId, moveInfo) {
 async function onAttached(tabId, attachInfo) {
 	if (attachInfo.newWindowId != gWindowId)
 		return;
-	console.log("onAttached: " + tabId + " " + attachInfo.toSource());
+//	console.log("onAttached: " + tabId + " " + JSON.stringify(attachInfo));
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	let tab = tabs[attachInfo.newPosition];
 	gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
@@ -482,20 +482,20 @@ async function onAttached(tabId, attachInfo) {
 function onDetached(tabId, detachInfo) {
 	if (detachInfo.oldWindowId != gWindowId)
 		return;
-	console.log("onDetached: " + tabId + " " + detachInfo.toSource());
+//	console.log("onDetached: " + tabId + " " + JSON.stringify(detachInfo));
 	let elt = [...gTabList.childNodes][detachInfo.oldPosition];
 	gTabList.removeChild(elt);
 }
 
 function onReplaced(addedTabId, removedTabId) {
-	console.log("onReplaced: " + addedTabId + " " + removedTabId);
+//	console.log("onReplaced: " + addedTabId + " " + removedTabId);
 }
 
 function onZoomChange(ZoomChangeInfo) {
 	let elt = getElementByTabId(ZoomChangeInfo.tabId);
 	if (!elt)
 		return;
-	console.log("onZoomChange: " + ZoomChangeInfo.toSource());
+//	console.log("onZoomChange: " + JSON.stringify(ZoomChangeInfo));
 	drawThumbnail(ZoomChangeInfo.tabId);
 }
 
@@ -508,7 +508,7 @@ function onMessage(request, sender, sendResponse) {
 }
 
 async function onContextChanged(ctx) {
-	console.log("context changed: " + ctx.toSource());
+//	console.log("context changed: " + JSON.stringify(ctx));
 	rebuildList();
 }
 
@@ -694,7 +694,7 @@ async function drawThumbnail(aTabId) {
 	let data = await browser.tabs.captureTab(aTabId);
 	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;
 	elt.setAttribute("data-draw-age", 0);
-	console.log("drawThumbnail: " + aTabId);
+//	console.log("drawThumbnail: " + aTabId);
 }
 
 // returns tabId as integer for element, or acendant element
