@@ -29,6 +29,7 @@ function init() {
 	document.addEventListener("drop", onDrop);
 	document.addEventListener("wheel", onWheel);
 	gTabList.addEventListener("scroll", onScroll);
+	gTabList.addEventListener("auxclick", onAuxClick);
 	gTabList.addEventListener("animationend", onAnimationEnd);
 	browser.tabs.onActivated.addListener(onActivated);
 	browser.tabs.onCreated.addListener(onCreated);
@@ -52,6 +53,7 @@ function uninit() {
 	document.removeEventListener("mouseover", onMouseOver);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
+	document.removeEventListener("dblclick", onDblClick);
 	document.removeEventListener("keydown", onKeyDown);
 	document.removeEventListener("dragstart", onDragStart);
 	document.removeEventListener("dragover", onDragOver);
@@ -59,6 +61,7 @@ function uninit() {
 	document.removeEventListener("drop", onDrop);
 	document.removeEventListener("wheel", onWheel);
 	gTabList.removeEventListener("scroll", onScroll);
+	gTabList.removeEventListener("auxclick", onAuxClick);
 	gTabList.removeEventListener("animationend", onAnimationEnd);
 	browser.tabs.onActivated.removeListener(onActivated);
 	browser.tabs.onCreated.removeListener(onCreated);
@@ -221,10 +224,11 @@ function onClick(event) {
 	else if (target.id.startsWith("firefox-container-")) {
 		doCommand("container", target.id);
 	}
+}
+
+function onAuxClick(event) {
 	// middle-clicks on tab list
-	else if (event.button == 1) {
-		doCommand("close", getTabIdByElement(target));
-	}
+	doCommand("close", getTabIdByElement(event.target));
 }
 
 function onDblClick(event) {
