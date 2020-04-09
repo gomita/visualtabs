@@ -228,7 +228,8 @@ function onClick(event) {
 
 function onAuxClick(event) {
 	// middle-clicks on tab list
-	doCommand("close", getTabIdByElement(event.target));
+	if (event.button == 1)
+		doCommand("close", getTabIdByElement(event.target));
 }
 
 function onDblClick(event) {
