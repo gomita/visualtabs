@@ -584,6 +584,7 @@ async function doCommand(aCommand, aTabId) {
 			tabs = tabs.filter(tab => !tab.hidden);
 			tabs.map(tab => browser.tabs.reload(tab.id));
 			break;
+		case "closeToTop": 
 		case "closeToEnd": 
 		case "closeOther": 
 			let ref = await browser.tabs.get(aTabId);
@@ -591,6 +592,8 @@ async function doCommand(aCommand, aTabId) {
 			tabs = tabs.filter(tab => !tab.hidden && !tab.pinned);
 			if (aCommand == "closeToEnd")
 				tabs = tabs.filter(tab => tab.index > ref.index);
+			else if (aCommand == "closeToTop")
+				tabs = tabs.filter(tab => tab.index < ref.index);
 			else if (aCommand == "closeOther")
 				tabs = tabs.filter(tab => tab.id != ref.id);
 			if (tabs.length > 1 && 
@@ -776,6 +779,7 @@ function showPopup(event) {
 		let muted  = elt.getAttribute("muted") == "true";
 		gPopup.querySelector(pinned ? '[command="pin"]':'[command="unpin"]').hidden = true;
 		gPopup.querySelector(muted ? '[command="mute"]':'[command="unmute"]').hidden = true;
+		gPopup.querySelector('[command="closeToTop"]').hidden = !gPrefs.stacking;
 		gPopup.setAttribute("tabId", tabId);
 	}
 	else {

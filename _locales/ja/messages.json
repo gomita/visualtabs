@@ -12,6 +12,7 @@
 	"duplicate": { "message": "タブを複製" },
 	"detach": { "message": "新しいウィンドウへ移動" },
 	"reloadAll": { "message": "すべてのタブを再読み込み" },
+	"closeToTop": { "message": "上のタブをすべて閉じる" },
 	"closeToEnd": { "message": "下のタブをすべて閉じる" },
 	"closeOther": { "message": "他のタブをすべて閉じる" },
 	"undoClose": { "message": "閉じたタブを元に戻す" },

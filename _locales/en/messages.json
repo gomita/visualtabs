@@ -12,6 +12,7 @@
 	"duplicate": { "message": "Duplicate Tab" },
 	"detach": { "message": "Move to New Window" },
 	"reloadAll": { "message": "Reload All Tabs" },
+	"closeToTop": { "message": "Close Tabs to the Top" },
 	"closeToEnd": { "message": "Close Tabs to the End" },
 	"closeOther": { "message": "Close Other Tabs" },
 	"undoClose": { "message": "Undo Close Tab" },
