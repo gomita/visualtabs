@@ -37,5 +37,6 @@
 	"previewHeight": { "message": "プレビューの高さ（単位はピクセル）: " },
 	"hideScroll": { "message": "スクロールバーを非表示にする" },
 	"scrollWidth": { "message": "スクロールバーの幅（単位はピクセル）: " },
+	"stacking": { "message": "新しいタブを一番上に開く" },
 	"void": { "message": "" }
 }

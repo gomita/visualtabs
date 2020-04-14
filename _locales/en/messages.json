@@ -37,5 +37,6 @@
 	"previewHeight": { "message": "Height of previews (in pixel): " },
 	"hideScroll": { "message": "Hide scrollbar" },
 	"scrollWidth": { "message": "Width of scrollbar (in pixel): " },
+	"stacking": { "message": "Open a new tab in the top-most position." },
 	"void": { "message": "" }
 }

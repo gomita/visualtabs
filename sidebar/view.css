@@ -115,7 +115,7 @@ img {
 	padding: 2px;
 }
 
-.tab:last-child {
+#container[stacking="false"] #tabList .tab:last-child {
 	border-bottom-width: 0px;
 }
 
@@ -280,6 +280,18 @@ button:active, button[checked] {
 
 #newTab:hover img {
 	opacity: 1;
+}
+
+#container[stacking="true"] #newTab {
+	order: 1;
+}
+
+#container[stacking="true"] #pinList {
+	order: 2;
+}
+
+#container[stacking="true"] #tabList {
+	order: 3;
 }
 
 /* ::::: drop feedback ::::: */

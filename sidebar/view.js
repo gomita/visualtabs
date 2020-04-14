@@ -552,7 +552,15 @@ async function onContextChanged(ctx) {
 
 async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
-		case "create"   : browser.tabs.create({ active: true }); break;
+		case "create"   : 
+			if (!gPrefs.stacking) {
+				browser.tabs.create({ active: true });
+			}
+			else {
+				browser.tabs.create({ active: true, index: 0 });
+				gTabList.scrollTo(0, 0);
+			}
+			break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
 		case "reload"   : browser.tabs.reload(aTabId); break;
 		case "mute"     : browser.tabs.update(aTabId, { muted: true }); break;
@@ -655,6 +663,7 @@ async function rebuildList() {
 	}
 	gPrefs.theme         = getPref("theme", "default");
 	gPrefs.mode          = getPref("mode", "compact");
+	gPrefs.stacking      = getPref("stacking", false);
 	gPrefs.effect        = getPref("effect", true);
 	gPrefs.autoUpdate    = getPref("autoUpdate", 0);
 	gPrefs.activeLine    = getPref("activeLine", "left");
@@ -668,6 +677,7 @@ async function rebuildList() {
 	gTabList.setAttribute("mode", gPrefs.mode);
 	gTabList.setAttribute("effect", gPrefs.effect);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
+	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
 	gTabList.parentNode.setAttribute("activeline", gPrefs.activeLine);
 	// remove all elements
 	while (gPinList.lastChild)

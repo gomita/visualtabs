@@ -12,6 +12,7 @@ async function init() {
 	}
 	let theme         = getPref("theme", "default");
 	let mode          = getPref("mode", "compact");
+	let stacking      = getPref("stacking", false);
 	let effect        = getPref("effect", true);
 	let autoUpdate    = getPref("autoUpdate", 0);
 	let activeLine    = getPref("activeLine", "left");
@@ -20,6 +21,7 @@ async function init() {
 	let scrollWidth   = getPref("scrollWidth", 16);
 	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
+	document.getElementById(`stacking`).checked = stacking;
 	document.getElementById(`effect`).checked = effect;
 	document.getElementById(`autoUpdate`).checked = autoUpdate > 0;
 	document.getElementById(`activeLine:${activeLine}`).checked = true;
@@ -63,6 +65,7 @@ function onChange(event) {
 		case "mode:minimal"    : gPrefs.mode = "minimal"; break;
 		case "mode:compact"    : gPrefs.mode = "compact"; break;
 		case "mode:full"       : gPrefs.mode = "full"; break;
+		case "stacking"        : gPrefs.stacking = event.target.checked; break;
 		case "effect"          : gPrefs.effect = event.target.checked; break;
 		case "autoUpdate"      : gPrefs.autoUpdate = event.target.checked ? 1000 : 0; break;
 		case "activeLine:left" : gPrefs.activeLine = "left"; break;
