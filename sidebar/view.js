@@ -3,6 +3,7 @@
 
 var gWindowId;
 var gIncognito;
+var gPinList;
 var gTabList;
 var gTabElt;
 var gPopup;
@@ -14,6 +15,7 @@ var gMouseOverTabId;
 var gMouseOverTimer;
 
 function init() {
+	gPinList = document.getElementById("pinList");
 	gTabList = document.getElementById("tabList");
 	gTabElt  = document.getElementById("tab");
 	gPopup   = document.getElementById("popup");
@@ -28,6 +30,7 @@ function init() {
 	document.addEventListener("dragleave", onDragLeave);
 	document.addEventListener("drop", onDrop);
 	document.addEventListener("wheel", onWheel);
+	gPinList.addEventListener("auxclick", onAuxClick);
 	gTabList.addEventListener("scroll", onScroll);
 	gTabList.addEventListener("auxclick", onAuxClick);
 	gTabList.addEventListener("animationend", onAnimationEnd);
@@ -60,6 +63,7 @@ function uninit() {
 	document.removeEventListener("dragleave", onDragLeave);
 	document.removeEventListener("drop", onDrop);
 	document.removeEventListener("wheel", onWheel);
+	gPinList.removeEventListener("auxclick", onAuxClick);
 	gTabList.removeEventListener("scroll", onScroll);
 	gTabList.removeEventListener("auxclick", onAuxClick);
 	gTabList.removeEventListener("animationend", onAnimationEnd);
@@ -77,6 +81,7 @@ function uninit() {
 	browser.contextualIdentities.onRemoved.removeListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.removeListener(onContextChanged);
 	clearInterval(gMouseOverTimer);
+	gPinList = null;
 	gTabList = null;
 	gTabElt  = null;
 	gPopup   = null;
@@ -121,7 +126,7 @@ function onMouseOver(event) {
 		return;
 	// mouse is over on different tab
 	gMouseOverTabId = tabId;
-	let oldElt = gTabList.querySelector(".tab[focus]");
+	let oldElt = gTabList.parentNode.querySelector(".tab[focus]");
 	if (oldElt) {
 		oldElt.removeAttribute("focus");
 		oldElt.setAttribute("data-draw-age", 0);
@@ -139,7 +144,7 @@ function onMouseOver(event) {
 		if (!gPopup.hidden)
 			return;
 		// keep previewing while mouse points to the same tab
-		let elt = gTabList.querySelector(".tab:hover");
+		let elt = gTabList.parentNode.querySelector(".tab:hover");
 		if (elt && getTabIdByElement(elt) == gMouseOverTabId) {
 			if (gPrefs.autoUpdate > 0) {
 				// add elapsed time to age and redraw thumbnail at specified interval
@@ -153,7 +158,7 @@ function onMouseOver(event) {
 			return;
 		}
 		// stop previewing and cancel timer when outside the tab
-		let oldElt = gTabList.querySelector(".tab[focus]");
+		let oldElt = gTabList.parentNode.querySelector(".tab[focus]");
 		if (oldElt) {
 			oldElt.removeAttribute("focus");
 			oldElt.setAttribute("data-draw-age", 0);
@@ -384,7 +389,7 @@ function onActivated(activeInfo) {
 	if (!elt)
 		return;
 //	console.log("onActivated: " + JSON.stringify(activeInfo));
-	let old = gTabList.querySelector("[selected]");
+	let old = gTabList.parentNode.querySelector("[selected]");
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
@@ -396,7 +401,14 @@ function onCreated(tab) {
 	if (tab.windowId != gWindowId)
 		return;
 //	console.log("onCreated: " + JSON.stringify(tab));
-	let elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
+	let elt;
+	if (tab.pinned) {
+		elt = gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
+	}
+	else {
+		let index = tab.index - gPinList.childNodes.length;
+		elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
+	}
 	let newTab = document.querySelector("#newTab");
 	if (newTab.getBoundingClientRect().top <= elt.getBoundingClientRect().top) {
 		newTab.removeAttribute("flash");
@@ -410,7 +422,8 @@ function onRemoved(tabId, removeInfo) {
 	if (!elt)
 		return;
 //	console.log("onRemoved: " + tabId + " " + JSON.stringify(removeInfo));
-	gTabList.removeChild(elt);
+	let list = elt.getAttribute("pinned") == "true" ? gPinList : gTabList;
+	list.removeChild(elt);
 }
 
 function onUpdated(tabId, changeInfo, tab) {
@@ -441,10 +454,14 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// change pinned status
 	else if (changeInfo.pinned !== undefined) {
-		if (changeInfo.pinned)
+		if (changeInfo.pinned) {
 			elt.setAttribute("pinned", "true");
-		else
+			gPinList.appendChild(elt);
+		}
+		else {
 			elt.removeAttribute("pinned");
+			gTabList.insertBefore(elt, gTabList.firstChild);
+		}
 		drawThumbnail(tabId);
 	}
 	// change discarded status
@@ -471,7 +488,13 @@ function onMoved(tabId, moveInfo) {
 	let refIndex = moveInfo.toIndex;
 	if (moveInfo.fromIndex < moveInfo.toIndex)
 		refIndex++;
-	gTabList.insertBefore(elt, [...gTabList.childNodes][refIndex]);
+	if (elt.getAttribute("pinned") == "true") {
+		gPinList.insertBefore(elt, [...gPinList.childNodes][refIndex]);
+	}
+	else {
+		refIndex -= gPinList.childNodes.length;
+		gTabList.insertBefore(elt, [...gTabList.childNodes][refIndex]);
+	}
 }
 
 async function onAttached(tabId, attachInfo) {
@@ -480,16 +503,23 @@ async function onAttached(tabId, attachInfo) {
 //	console.log("onAttached: " + tabId + " " + JSON.stringify(attachInfo));
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	let tab = tabs[attachInfo.newPosition];
-	gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][tab.index]);
-	drawThumbnail(tab.id);
+	if (tab.pinned) {
+		gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
+	}
+	else {
+		let index = tab.index - gPinList.childNodes.length;
+		gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
+		drawThumbnail(tab.id);
+	}
 }
 
 function onDetached(tabId, detachInfo) {
 	if (detachInfo.oldWindowId != gWindowId)
 		return;
 //	console.log("onDetached: " + tabId + " " + JSON.stringify(detachInfo));
-	let elt = [...gTabList.childNodes][detachInfo.oldPosition];
-	gTabList.removeChild(elt);
+	let elt = getElementByTabId(tabId);
+	let list = elt.getAttribute("pinned") == "true" ? gPinList : gTabList;
+	list.removeChild(elt);
 }
 
 function onReplaced(addedTabId, removedTabId) {
@@ -637,20 +667,22 @@ async function rebuildList() {
 	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
 	gTabList.setAttribute("mode", gPrefs.mode);
 	gTabList.setAttribute("effect", gPrefs.effect);
-	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
+	gTabList.parentNode.setAttribute("activeline", gPrefs.activeLine);
 	// remove all elements
+	while (gPinList.lastChild)
+		gPinList.removeChild(gPinList.lastChild);
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	gWindowId = tabs[0].windowId;
 	gIncognito = tabs[0].incognito;
 	// first, create list without thumbnails
-	tabs.map(tab => gTabList.appendChild(elementForTab(tab)));
+	tabs.map(tab => (tab.pinned ? gPinList : gTabList).appendChild(elementForTab(tab)));
 	// show new tab button after building all tabs
 	document.getElementById("newTab").style.visibility = "visible";
 	// ensure the selected tab is visible
-	let elt = gTabList.querySelector("[selected]");
+	let elt = gTabList.parentNode.querySelector("[selected]");
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	if (gPrefs.mode != "minimal")
@@ -671,7 +703,7 @@ function elementForTab(aTab) {
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
 		// remove [selected] from current selected element
-		let old = gTabList.querySelector("[selected]");
+		let old = gTabList.parentNode.querySelector("[selected]");
 		if (old)
 			old.removeAttribute("selected");
 		elt.setAttribute("selected", "true");
@@ -709,7 +741,7 @@ function getTabIdByElement(aElt) {
 }
 
 function getElementByTabId(aTabId) {
-	return gTabList.querySelector(`[tabId="${aTabId}"]`);
+	return gTabList.parentNode.querySelector(`[tabId="${aTabId}"]`);
 }
 
 function getFaviconForTab(aTab) {
