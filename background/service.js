@@ -12,7 +12,10 @@ var VisualTabs = {
 	},
 
 	_handleBrowserAction: async function(tab) {
-		browser.sidebarAction.open();
+		if ("toggle" in browser.sidebarAction)
+			browser.sidebarAction.toggle();
+		else
+			browser.sidebarAction.open();
 	},
 
 };
