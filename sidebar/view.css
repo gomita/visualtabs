@@ -33,6 +33,7 @@ img {
 	--separator-color: rgb(200,200,200);
 	--shadow-color: rgba(12,12,13,0.1);
 	--shadow-color2: rgba(12,12,13,0.2);
+	--hover-color: rgb(210,210,210);
 	background-color: var(--background-color);
 }
 
@@ -52,6 +53,7 @@ img {
 	--separator-color: rgb(164,164,167);
 	--shadow-color: rgba(12,12,13,0.1);
 	--shadow-color2: rgba(12,12,13,0.2);
+	--hover-color: rgb(210,210,210);
 	background-color: var(--background-color);
 }
 
@@ -66,6 +68,7 @@ img {
 	--separator-color: rgb(98,100,120);
 	--shadow-color: rgba(243,243,242,0.1);
 	--shadow-color2: rgba(243,243,242,0.2);
+	--hover-color: rgb(90,90,90);
 	background-color: var(--background-color);
 }
 
@@ -112,7 +115,7 @@ img {
 .tab {
 	position: relative;
 	border-bottom: 1px solid var(--separator-color);
-	padding: 2px;
+	padding: 4px 2px;
 }
 
 #container[stacking="false"] #tabList .tab:last-child {
@@ -221,6 +224,7 @@ button:active, button[checked] {
 .tab .thumbnail {
 	background-size: cover;
 	z-index: -1;
+	margin: 2px;
 }
 
 /* workaround for issue #1 */
@@ -234,12 +238,12 @@ button:active, button[checked] {
 
 #tabList[mode="minimal"] .tab .thumbnail {
 	height: 0;
-	transition: 0.2s ease-out;
+	transition: 0.2s ease-out 0.1s;
 }
 
 #tabList[mode="compact"] .tab:not([pinned]) .thumbnail {
 	height: calc(var(--preview-height) * 0.2);
-	transition: 0.2s ease-out;
+	transition: 0.2s ease-out 0.1s;
 }
 
 #tabList[mode="minimal"] .tab[focus]:not([discarded]):not([url="about:blank"]) .thumbnail,
@@ -263,7 +267,7 @@ button:active, button[checked] {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 2px;
+	padding: 4px 2px;
 	border-top: 1px solid var(--separator-color);
 	border-bottom: 1px solid var(--separator-color);
 	transition: 1s;
@@ -314,6 +318,10 @@ button:active, button[checked] {
 	background-repeat: no-repeat;
 }
 
+#container[activeline="left"] .tab:hover {
+	border-left-color: var(--hover-color);
+}
+
 #container[activeline="left"] .tab[selected] {
 	border-left-color: var(--active-color);
 }
@@ -322,6 +330,10 @@ button:active, button[checked] {
 	border-right: 6px solid transparent;
 	background-repeat: no-repeat;
 	padding-right: 0;
+}
+
+#container[activeline="right"] .tab:hover {
+	border-right-color: var(--hover-color);
 }
 
 #container[activeline="right"] .tab[selected] {
