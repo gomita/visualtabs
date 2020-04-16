@@ -22,7 +22,7 @@ body {
 	--active-color: rgb(10,132,255);
 }
 
-img {
+img, label {
 	pointer-events: none;
 }
 
