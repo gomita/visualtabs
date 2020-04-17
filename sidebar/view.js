@@ -401,9 +401,17 @@ function onCreated(tab) {
 	if (tab.windowId != gWindowId)
 		return;
 //	console.log("onCreated: " + JSON.stringify(tab));
+	let moveToTop = gPrefs.stacking && tab.openerTabId === undefined;
+	if (moveToTop) {
+		browser.tabs.move(tab.id, { index: gPinList.childNodes.length });
+	}
 	let elt;
 	if (tab.pinned) {
 		elt = gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
+	}
+	else if (moveToTop) {
+		elt = gTabList.insertBefore(elementForTab(tab), gTabList.firstChild);
+		gTabList.scrollTo(0, 0);
 	}
 	else {
 		let index = tab.index - gPinList.childNodes.length;
@@ -552,15 +560,7 @@ async function onContextChanged(ctx) {
 
 async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
-		case "create"   : 
-			if (!gPrefs.stacking) {
-				browser.tabs.create({ active: true });
-			}
-			else {
-				browser.tabs.create({ active: true, index: 0 });
-				gTabList.scrollTo(0, 0);
-			}
-			break;
+		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
 		case "reload"   : browser.tabs.reload(aTabId); break;
 		case "mute"     : browser.tabs.update(aTabId, { muted: true }); break;
