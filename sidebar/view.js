@@ -137,6 +137,9 @@ function onMouseOver(event) {
 	elt.setAttribute("focus", "true");
 	if (!elt.hasAttribute("data-draw-age"))
 		drawThumbnail(tabId);
+	if (gPrefs.mode == "compact") {
+		setTimeout(() => { elt.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 300);
+	}
 	// set repeating timer
 	clearInterval(gMouseOverTimer);
 	gMouseOverTimer = setInterval(() => {
@@ -416,6 +419,8 @@ function onCreated(tab) {
 	else {
 		let index = tab.index - gPinList.childNodes.length;
 		elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
+		let sel = gTabList.parentNode.querySelector("[selected]");
+		sel.scrollIntoView({ block: "start", behavior: "smooth" });
 	}
 	let newTab = document.querySelector("#newTab");
 	if (newTab.getBoundingClientRect().top <= elt.getBoundingClientRect().top) {
