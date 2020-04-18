@@ -47,6 +47,7 @@ function init() {
 	browser.contextualIdentities.onCreated.addListener(onContextChanged);
 	browser.contextualIdentities.onRemoved.addListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.addListener(onContextChanged);
+	window.matchMedia("(prefers-color-scheme: dark)").addListener(rebuildList);
 	rebuildList();
 	setTimeout(() => localizeUI(), 0);
 }
@@ -80,6 +81,7 @@ function uninit() {
 	browser.contextualIdentities.onCreated.removeListener(onContextChanged);
 	browser.contextualIdentities.onRemoved.removeListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.removeListener(onContextChanged);
+	window.matchMedia("(prefers-color-scheme: dark)").removeListener(rebuildList);
 	clearInterval(gMouseOverTimer);
 	gPinList = null;
 	gTabList = null;
@@ -679,7 +681,10 @@ async function rebuildList() {
 	gPrefs.hideScroll    = getPref("hideScroll", false);
 	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
 	gPrefs.menu          = getPref("menu", true);
-	document.documentElement.setAttribute("theme", gPrefs.theme);
+	let theme = gPrefs.theme;
+	if (theme == "default")
+		theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+	document.documentElement.setAttribute("theme", theme);
 	gTabList.style.setProperty("--preview-height", gPrefs.previewHeight + "px");
 	gTabList.style.setProperty("--scroll-width", gPrefs.scrollWidth + "px");
 	gTabList.setAttribute("mode", gPrefs.mode);

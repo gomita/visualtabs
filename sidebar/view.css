@@ -26,9 +26,9 @@ img, label {
 	pointer-events: none;
 }
 
-/* ::::: theme:default ::::: */
+/* ::::: theme:light ::::: */
 
-:root[theme="default"] {
+:root[theme="light"] {
 	--background-color: white;
 	--separator-color: rgb(200,200,200);
 	--shadow-color: rgba(12,12,13,0.1);
@@ -37,28 +37,13 @@ img, label {
 	background-color: var(--background-color);
 }
 
-:root[theme="default"] .title {
+:root[theme="light"] .title {
 	color: #737373;
 }
 
-:root[theme="default"] .tab:hover .title,
-:root[theme="default"] .tab[selected] .title {
+:root[theme="light"] .tab:hover .title,
+:root[theme="light"] .tab[selected] .title {
 	color: #0c0c0d;
-}
-
-/* ::::: theme:light ::::: */
-
-:root[theme="light"] {
-	--background-color: #f9f9fa;
-	--separator-color: rgb(164,164,167);
-	--shadow-color: rgba(12,12,13,0.1);
-	--shadow-color2: rgba(12,12,13,0.2);
-	--hover-color: rgb(210,210,210);
-	background-color: var(--background-color);
-}
-
-:root[theme="light"] .tab[selected] {
-	background-color: #d7d7db;
 }
 
 /* ::::: theme:dark ::::: */
