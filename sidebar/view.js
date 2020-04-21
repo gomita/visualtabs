@@ -457,8 +457,9 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// change icon when loading start
 	else if (changeInfo.status == "loading") {
-		elt.querySelector(".favicon").style.backgroundImage = "url('/icons/tab-connecting.png')";
+		elt.querySelector(".favicon").style.backgroundImage = "";
 		elt.querySelector(".burst").removeAttribute("bursting");
+		elt.setAttribute("loading", "true");
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
 			drawThumbnail(tabId);
@@ -469,6 +470,7 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(tab) + "')";
 		elt.setAttribute("url", tab.url);
 		elt.querySelector(".burst").setAttribute("bursting", "true");
+		elt.removeAttribute("loading");
 		drawThumbnail(tabId);
 	}
 	// change pinned status

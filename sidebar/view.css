@@ -141,6 +141,14 @@ img, label {
 	z-index: 5;
 }
 
+.tab[loading] .favicon {
+	background-image: url("/icons/tab-connecting.png");
+}
+
+:root[theme="dark"] .tab[loading] .favicon {
+	filter: invert(1);
+}
+
 .tab .title {
 	flex: 1;
 	padding-left: 4px;
