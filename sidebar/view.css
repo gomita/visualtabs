@@ -241,7 +241,7 @@ button:active, button[checked] {
 }
 
 /* workaround for issue #1 */
-:root:not([theme="default"]) .tab .thumbnail {
+.tab .thumbnail {
 	z-index: unset;
 }
 

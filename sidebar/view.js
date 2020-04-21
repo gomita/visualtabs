@@ -410,6 +410,7 @@ function onCreated(tab) {
 	if (tab.windowId != gWindowId)
 		return;
 //	console.log("onCreated: " + JSON.stringify(tab));
+	// if stacking option is enabled and tab has no opener, move it at the top
 	let moveToTop = gPrefs.stacking && tab.openerTabId === undefined;
 	if (moveToTop) {
 		browser.tabs.move(tab.id, { index: gPinList.childNodes.length });
