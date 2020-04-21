@@ -139,7 +139,7 @@ function onMouseOver(event) {
 	elt.setAttribute("focus", "true");
 	if (!elt.hasAttribute("data-draw-age"))
 		drawThumbnail(tabId);
-	if (gPrefs.mode == "compact") {
+	if (gPrefs.mode != "full") {
 		setTimeout(() => { elt.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 300);
 	}
 	// set repeating timer
