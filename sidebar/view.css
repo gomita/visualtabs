@@ -361,21 +361,6 @@ button:active, button[checked] {
 	background-color: rgb(144,200,246);
 }
 
-#popup div[disabled] {
-	color: GrayText;
-}
-
-#popup div[disabled]:hover {
-	background-color: ThreeDLightShadow;
-}
-
-#popup hr {
-	margin: 2px 1px;
-	padding: 0;
-	border-top: 1px solid ThreeDShadow;
-	border-bottom: 1px solid ThreeDHighlight;
-}
-
 /* ::::: menu ::::: */
 
 #menu:not([open]) {

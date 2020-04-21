@@ -44,6 +44,8 @@
 		"storage",
 		"cookies",
 		"contextualIdentities",
+		"menus",
+		"menus.overrideContext",
 		"<all_urls>"
 	]
 }

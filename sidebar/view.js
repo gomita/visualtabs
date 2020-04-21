@@ -174,14 +174,19 @@ function onMouseOver(event) {
 }
 
 function onContextMenu(event) {
-	// prevent default contextmenu
-	event.preventDefault();
-	event.stopPropagation();
 	// ignore right-click on menu and popup
 	if (event.target.closest("#menu, #popup"))
-		return;
-	// show popup
-	showPopup(event);
+		event.preventDefault();
+	let tabId = getTabIdByElement(event.target);
+	if (tabId) {
+		// show built-in tab context menu
+		browser.menus.overrideContext({ context: "tab", tabId });
+	}
+	else {
+		// show popup
+		event.preventDefault();
+		showPopup(event);
+	}
 }
 
 function onClick(event) {
@@ -190,11 +195,10 @@ function onClick(event) {
 	let target = event.target;
 	// clicks on popup
 	if (!gPopup.hidden) {
-		if (target == gPopup || target.localName == "hr")
+		if (target == gPopup)
 			return;
-		let tabId = getTabIdByElement(gPopup);
 		hidePopup();
-		doCommand(target.getAttribute("command"), tabId);
+		doCommand(target.getAttribute("command"));
 	}
 	// clicks on blank space
 	else if (target == document.body) {
@@ -569,44 +573,12 @@ async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
 		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
-		case "reload"   : browser.tabs.reload(aTabId); break;
-		case "mute"     : browser.tabs.update(aTabId, { muted: true }); break;
-		case "unmute"   : browser.tabs.update(aTabId, { muted: false }); break;
-		case "pin"      : browser.tabs.update(aTabId, { pinned: true }); break;
-		case "unpin"    : browser.tabs.update(aTabId, { pinned: false }); break;
-		case "duplicate": browser.tabs.duplicate(aTabId); break;
 		case "close"    : browser.tabs.remove(aTabId); break;
 		case "undoClose": 
 			let sessionInfos = await browser.sessions.getRecentlyClosed({ maxResults: 1 });
 			if (sessionInfos.length == 0)
 				return;
 			browser.sessions.restore(sessionInfos[0].tab.sessionId);
-			break;
-		case "detach": 
-			let tab = await browser.tabs.get(aTabId);
-			browser.windows.create({ tabId: aTabId, incognito: tab.incognito });
-			break;
-		case "reloadAll": 
-			var tabs = await browser.tabs.query({ currentWindow: true });
-			tabs = tabs.filter(tab => !tab.hidden);
-			tabs.map(tab => browser.tabs.reload(tab.id));
-			break;
-		case "closeToTop": 
-		case "closeToEnd": 
-		case "closeOther": 
-			let ref = await browser.tabs.get(aTabId);
-			var tabs = await browser.tabs.query({ currentWindow: true });
-			tabs = tabs.filter(tab => !tab.hidden && !tab.pinned);
-			if (aCommand == "closeToEnd")
-				tabs = tabs.filter(tab => tab.index > ref.index);
-			else if (aCommand == "closeToTop")
-				tabs = tabs.filter(tab => tab.index < ref.index);
-			else if (aCommand == "closeOther")
-				tabs = tabs.filter(tab => tab.id != ref.id);
-			if (tabs.length > 1 && 
-			    !window.confirm(browser.i18n.getMessage("closeConfirm", [tabs.length])))
-				return;
-			tabs.map(tab => browser.tabs.remove(tab.id));
 			break;
 		case "menu_toggle": 
 			gPrefs.menu = !gPrefs.menu;
@@ -781,23 +753,6 @@ function getFaviconForTab(aTab) {
 function showPopup(event) {
 	if (!gPopup.hidden)
 		hidePopup();
-	let tabId = getTabIdByElement(event.target);
-	if (tabId) {
-		// popup on a tab
-		let elt = getElementByTabId(tabId);
-		let pinned = elt.getAttribute("pinned") == "true";
-		let muted  = elt.getAttribute("muted") == "true";
-		gPopup.querySelector(pinned ? '[command="pin"]':'[command="unpin"]').hidden = true;
-		gPopup.querySelector(muted ? '[command="mute"]':'[command="unmute"]').hidden = true;
-		gPopup.querySelector('[command="closeToTop"]').hidden = !gPrefs.stacking;
-		gPopup.setAttribute("tabId", tabId);
-	}
-	else {
-		// popup on new tab button or blank area
-		[...gPopup.childNodes].map(child => child.hidden = true);
-		gPopup.querySelector('[command="reloadAll"]').hidden = false;
-		gPopup.querySelector('[command="undoClose"]').hidden = false;
-	}
 	gPopup.hidden = false;
 	var bodyWidth  = document.body.clientWidth;
 	var bodyHeight = document.body.clientHeight;
@@ -809,8 +764,6 @@ function showPopup(event) {
 
 function hidePopup() {
 	window.removeEventListener("blur", hidePopup);
-	[...gPopup.childNodes].map(child => child.hidden = false);
-	gPopup.removeAttribute("tabId");
 	gPopup.hidden = true;
 }
 
