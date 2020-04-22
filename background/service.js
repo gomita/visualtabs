@@ -55,12 +55,23 @@ async function handleBrowserAction(tab) {
 		browser.sidebarAction.open();
 }
 
-function handleMenuShown(info, tab) {
+async function handleMenuShown(info, tab) {
 //	console.log("onShown: " + JSON.stringify(info) + "\n\n"+ JSON.stringify(tab));
 	browser.menus.update("mute",   { visible: !tab.mutedInfo.muted });
 	browser.menus.update("unmute", { visible: tab.mutedInfo.muted });
 	browser.menus.update("pin",    { visible: !tab.pinned });
 	browser.menus.update("unpin",  { visible: tab.pinned });
+	// enable/disable move and close menu items
+	let tabs = await browser.tabs.query({ currentWindow: true });
+	let pins = tabs.filter(_tab => _tab.pinned);
+	let top    = tab.index == 0 || tab.index == pins.length;
+	let bottom = tab.index == pins.length -1 || tab.index == tabs.length - 1;
+	browser.menus.update("moveToTop",     { enabled: !top });
+	browser.menus.update("moveToBottom",  { enabled: !bottom });
+	browser.menus.update("closeToTop",    { enabled: tab.index > pins.length });
+	browser.menus.update("closeToBottom", { enabled: tab.index < tabs.length - 1 });
+	browser.menus.update("closeOther",    { enabled: tabs.length > 1 });
+	// finally refresh menu
 	browser.menus.refresh();
 }
 
@@ -74,10 +85,23 @@ async function handleMenuClick(info, tab) {
 		case "unpin"        : browser.tabs.update(tab.id, { pinned: false }); break;
 		case "duplicate"    : browser.tabs.duplicate(tab.id); break;
 		case "moveToTop"    : 
-			let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
-			browser.tabs.move(tab.id, { index: pins.length });
+			if (tab.pinned) {
+				browser.tabs.move(tab.id, { index: 0 });
+			}
+			else {
+				let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
+				browser.tabs.move(tab.id, { index: pins.length });
+			}
 			break;
-		case "moveToBottom" : browser.tabs.move(tab.id, { index: -1 }); break;
+		case "moveToBottom" : 
+			if (tab.pinned) {
+				let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
+				browser.tabs.move(tab.id, { index: pins.length - 1});
+			}
+			else {
+				browser.tabs.move(tab.id, { index: -1 });
+			}
+			break;
 		case "detach"       : browser.windows.create({ tabId: tab.id, incognito: tab.incognito }); break;
 		case "closeToTop"   : 
 		case "closeToBottom": 
