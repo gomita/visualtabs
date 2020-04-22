@@ -10,6 +10,8 @@
 	"pin": { "message": "タブをピン留め" },
 	"unpin": { "message": "タブのピン留めを外す" },
 	"duplicate": { "message": "タブを複製" },
+	"reopen": { "message": "コンテナーを開きなおす" },
+	"reopen:default": { "message": "コンテナーなし" },
 	"move": { "message": "タブを移動" },
 	"moveToTop": { "message": "一番上のタブへ移動" },
 	"moveToBottom": { "message": "一番下のタブへ移動" },

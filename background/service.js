@@ -10,6 +10,8 @@ var gMenuDefs = [
 	{ id: "duplicate" },
 	{ id: "sep1", type: "separator" },
 	{ id: "reopen" },
+	{ id: "reopen:default", parentId: "reopen" },
+	{ id: "reopen:sep", type: "separator", parentId: "reopen" },
 	{ id: "move" },
 	{ id: "moveToTop", parentId: "move" },
 	{ id: "moveToBottom", parentId: "move" },
@@ -21,6 +23,7 @@ var gMenuDefs = [
 	{ id: "undoClose" },
 	{ id: "close" }
 ];
+var gCookieStoreIds = [];
 
 async function init() {
 	browser.browserAction.onClicked.addListener(handleBrowserAction);
@@ -37,6 +40,10 @@ async function init() {
 	}
 	browser.menus.onShown.addListener(handleMenuShown);
 	browser.menus.onClicked.addListener(handleMenuClick);
+	rebuildReopenMenu();
+	browser.contextualIdentities.onCreated.addListener(rebuildReopenMenu);
+	browser.contextualIdentities.onRemoved.addListener(rebuildReopenMenu);
+	browser.contextualIdentities.onUpdated.addListener(rebuildReopenMenu);
 }
 
 function uninit() {
@@ -46,6 +53,12 @@ function uninit() {
 	}
 	browser.menus.onShown.removeListener(handleMenuShown);
 	browser.menus.onClicked.removeListener(handleMenuClick);
+	for (let id of gCookieStoreIds) {
+		browser.menus.remove("reopen:" + id);
+	}
+	browser.contextualIdentities.onCreated.removeListener(rebuildReopenMenu);
+	browser.contextualIdentities.onRemoved.removeListener(rebuildReopenMenu);
+	browser.contextualIdentities.onUpdated.removeListener(rebuildReopenMenu);
 }
 
 async function handleBrowserAction(tab) {
@@ -61,6 +74,16 @@ async function handleMenuShown(info, tab) {
 	browser.menus.update("unmute", { visible: tab.mutedInfo.muted });
 	browser.menus.update("pin",    { visible: !tab.pinned });
 	browser.menus.update("unpin",  { visible: tab.pinned });
+	browser.menus.update("reopen:default", { visible: tab.cookieStoreId != "firefox-default" });
+	browser.menus.update("reopen:sep",     { visible: tab.cookieStoreId != "firefox-default" });
+	// disable reopen menu items for privileged URL
+	let enabled = tab.url.startsWith("http") || tab.url == "about:blank" || tab.url == "about:newtab";
+	browser.menus.update("reopen", { enabled });
+	// hide reopen menu items in private-browsing
+	browser.menus.update("reopen", { visible: !tab.incognito });
+	for (let id of gCookieStoreIds) {
+		browser.menus.update("reopen:" + id, { visible: id != tab.cookieStoreId });
+	}
 	// enable/disable move and close menu items
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	let pins = tabs.filter(_tab => _tab.pinned);
@@ -127,9 +150,39 @@ async function handleMenuClick(info, tab) {
 			browser.sessions.restore(sessionInfos[0].tab.sessionId);
 			break;
 		case "close": browser.tabs.remove(tab.id); break;
+		default: 
+			if (!/^reopen:(.+)$/.test(info.menuItemId))
+				break;
+			browser.tabs.create({
+				url: tab.url, index: ++tab.index, pinned: tab.pinned, active: true, 
+				cookieStoreId: RegExp.$1 == "default" ? undefined : RegExp.$1
+			});
+			break;
 	}
 }
 
+async function rebuildReopenMenu() {
+	// remove reopen menu items
+	for (let id of gCookieStoreIds) {
+		browser.menus.remove("reopen:" + id);
+	}
+	gCookieStoreIds = [];
+	// create reopen menu items
+	let details = await browser.contextualIdentities.query({});
+	for (let detail of details) {
+		gCookieStoreIds.push(detail.cookieStoreId);
+		browser.menus.create({
+			id: "reopen:" + detail.cookieStoreId,
+			title: detail.name,
+			type: "normal",
+			icons: { "16": detail.iconUrl },
+			parentId: "reopen",
+			contexts: ["tab"],
+			viewTypes: ["sidebar"],
+			documentUrlPatterns: [`moz-extension://${location.host}/*`]
+		});
+	}
+}
 
 // entry point
 window.addEventListener("load", init, { once: true });

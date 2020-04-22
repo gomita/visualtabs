@@ -10,6 +10,8 @@
 	"pin": { "message": "Pin Tab" },
 	"unpin": { "message": "Unpin Tab" },
 	"duplicate": { "message": "Duplicate Tab" },
+	"reopen": { "message": "Reopen in Container" },
+	"reopen:default": { "message": "No Container" },
 	"move": { "message": "Move Tab" },
 	"moveToTop": { "message": "Move to Top" },
 	"moveToBottom": { "message": "Move to Bottom" },

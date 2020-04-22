@@ -449,8 +449,10 @@ function onRemoved(tabId, removeInfo) {
 function onUpdated(tabId, changeInfo, tab) {
 	if (tab.windowId != gWindowId)
 		return;
-//	console.log("onUpdated: " + tabId + " " + JSON.stringify(changeInfo));
+//	console.log("onUpdated: " + tabId + " " + JSON.stringify(changeInfo) + JSON.stringify(tab));
 	let elt = getElementByTabId(tabId);
+	if (!elt)
+		return;
 	// change tab title
 	if (changeInfo.title) {
 		elt.querySelector(".title").textContent = changeInfo.title;
@@ -478,11 +480,11 @@ function onUpdated(tabId, changeInfo, tab) {
 	else if (changeInfo.pinned !== undefined) {
 		if (changeInfo.pinned) {
 			elt.setAttribute("pinned", "true");
-			gPinList.appendChild(elt);
+			gPinList.insertBefore(elt, [...gPinList.childNodes][tab.index]);
 		}
 		else {
 			elt.removeAttribute("pinned");
-			gTabList.insertBefore(elt, gTabList.firstChild);
+			gTabList.insertBefore(elt, [...gTabList.childNodes][tab.index]);
 		}
 		drawThumbnail(tabId);
 	}
