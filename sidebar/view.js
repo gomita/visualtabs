@@ -717,7 +717,7 @@ function elementForTab(aTab) {
 	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {
 		// get context for container tab async
 		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
-			elt.style.setProperty("--active-color", ctx.colorCode);
+			elt.style.setProperty("--context-color", ctx.colorCode);
 			elt.setAttribute("data-context", aTab.cookieStoreId);
 		});
 	}
