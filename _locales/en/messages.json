@@ -1,6 +1,6 @@
 {
 	// manifest
-	"extensionDescription": { "message": "Visualizes tabs as thumbnails." },
+	"extensionDescription": { "message": "Shows tabs in sidebar with tab previews." },
 	// sidebar
 	"newtab": { "message": "Open a new tab" },
 	// popup
@@ -25,24 +25,26 @@
 	"closeConfirm": { "message": "You are about to close $1 tabs. Are you sure you want to continue?" },
 	// menu
 	"menu_toggle": { "message": "Menu" },
-	"menu_mode": { "message": "Change display mode" },
+	"menu_mode": { "message": "Change preview mode" },
 	"menu_options": { "message": "Options" },
 	"menu_contexts": { "message": "Open a new container tab" },
 	// options
+	"general": { "message": "General" },
 	"theme": { "message": "Theme: " },
 	"default": { "message": "Default" },
+	"activeLine": { "message": "Show highlight (blue line) for the selected tab: " },
+	"left": { "message": "Left-side" },
+	"right": { "message": "Right-side" },
+	"hideScroll": { "message": "Hide scrollbar" },
+	"scrollWidth": { "message": "Width of scrollbar (in pixel): " },
+	"stacking": { "message": "Open a new tab in the top-most position." },
+	"preview": { "message": "Tab Preview" },
 	"mode": { "message": "Display mode: " },
 	"minimal": { "message": "Minimal" },
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },
 	"effect": { "message": "Enable visual effect for previews" },
-	"autoUpdate": { "message": "Automatically redraw preview while the mouse pointer is hovering over." },
-	"activeLine": { "message": "Show highlight (blue line) for the selected tab: " },
-	"left": { "message": "Left-side" },
-	"right": { "message": "Right-side" },
 	"previewHeight": { "message": "Height of previews (in pixel): " },
-	"hideScroll": { "message": "Hide scrollbar" },
-	"scrollWidth": { "message": "Width of scrollbar (in pixel): " },
-	"stacking": { "message": "Open a new tab in the top-most position." },
+	"autoUpdate": { "message": "Automatically redraw preview while the mouse pointer is hovering over." },
 	"void": { "message": "" }
 }

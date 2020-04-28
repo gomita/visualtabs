@@ -1,6 +1,6 @@
 {
 	// manifest
-	"extensionDescription": { "message": "タブをサムネイルで一覧表示します。" },
+	"extensionDescription": { "message": "サイドバーでタブを一覧表示します。タブのプレビューも表示可能です。" },
 	// sidebar
 	"newtab": { "message": "新しいタブを開きます" },
 	// popup
@@ -25,24 +25,26 @@
 	"closeConfirm": { "message": "複数 ($1) のタブを閉じようとしています。すべてのタブを閉じてよろしいですか？" },
 	// menu
 	"menu_toggle": { "message": "メニュー" },
-	"menu_mode": { "message": "表示モードを切替" },
+	"menu_mode": { "message": "プレビュー表示モードを切替" },
 	"menu_options": { "message": "設定" },
 	"menu_contexts": { "message": "新しいコンテナータブを開く" },
 	// options
+	"general": { "message": "一般" },
 	"theme": { "message": "テーマ: " },
 	"default": { "message": "デフォルト" },
+	"activeLine": { "message": "選択しているタブの強調表示（青色の線）: " },
+	"left": { "message": "左側" },
+	"right": { "message": "右側" },
+	"hideScroll": { "message": "スクロールバーを非表示にする" },
+	"scrollWidth": { "message": "スクロールバーの幅（単位はピクセル）: " },
+	"stacking": { "message": "新しいタブを一番上に開く" },
+	"preview": { "message": "タブのプレビュー" },
 	"mode": { "message": "表示モード: " },
 	"minimal": { "message": "ミニマル" },
 	"compact": { "message": "コンパクト" },
 	"full": { "message": "フル" },
 	"effect": { "message": "視覚効果を有効にする" },
-	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で再描画する" },
-	"activeLine": { "message": "選択しているタブの強調表示（青色の線）: " },
-	"left": { "message": "左側" },
-	"right": { "message": "右側" },
 	"previewHeight": { "message": "プレビューの高さ（単位はピクセル）: " },
-	"hideScroll": { "message": "スクロールバーを非表示にする" },
-	"scrollWidth": { "message": "スクロールバーの幅（単位はピクセル）: " },
-	"stacking": { "message": "新しいタブを一番上に開く" },
+	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で再描画する" },
 	"void": { "message": "" }
 }

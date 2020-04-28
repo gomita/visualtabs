@@ -8,21 +8,27 @@
 			:root {
 				background: #202023;
 			}
-			label {
+			h2, label {
 				color: rgb(249, 249, 250);
 			}
 		}
 		* {
 			font-size: 1em;
-			line-height: 1.8em;
+			line-height: 1.6em;
+		}
+		h2 {
+			font-weight: bold;
+		}
+		h2:not(:first-child) {
+			margin-top: 2em;
 		}
 		input[type="number"] {
-			line-height: 1em;
+			line-height: 1.2em;
 		}
 		.hbox {
 			display: flex;
 			align-items: center;
-			margin: 4px;
+			margin: 4px 4px 4px 16px;
 		}
 		.hbox > * + input {
 			margin-left: 20px;
@@ -36,6 +42,7 @@
 	</style>
 </head>
 <body>
+<h2 i18n="text:general"></h2>
 <div class="hbox">
 	<label i18n="text:theme"></label>
 	<input id="theme:default" type="radio" name="theme">
@@ -45,6 +52,26 @@
 	<input id="theme:dark" type="radio" name="theme">
 	<label for="theme:dark">Dark</label>
 </div>
+<div class="hbox">
+	<label i18n="text:activeLine"></label>
+	<input id="activeLine:left" type="radio" name="activeLine">
+	<label for="activeLine:left" i18n="text:left"></label>
+	<input id="activeLine:right" type="radio" name="activeLine">
+	<label for="activeLine:right" i18n="text:right"></label>
+</div>
+<div class="hbox">
+	<input id="hideScroll" type="checkbox">
+	<label for="hideScroll" i18n="text:hideScroll"></label>
+</div>
+<div class="hbox indent">
+	<label for="scrollWidth" i18n="text:scrollWidth"></label>
+	<input id="scrollWidth" type="number" min="1" max="99" step="1" style="width: 4em;">
+</div>
+<div class="hbox">
+	<input id="stacking" type="checkbox">
+	<label for="stacking" i18n="text:stacking"></label>
+</div>
+<h2 i18n="text:preview"></h2>
 <div class="hbox">
 	<label i18n="text:mode"></label>
 	<input id="mode:minimal" type="radio" name="mode">
@@ -59,31 +86,12 @@
 	<label for="effect" i18n="text:effect"></label>
 </div>
 <div class="hbox">
-	<input id="autoUpdate" type="checkbox">
-	<label for="autoUpdate" i18n="text:autoUpdate"></label>
-</div>
-<div class="hbox">
-	<label i18n="text:activeLine"></label>
-	<input id="activeLine:left" type="radio" name="activeLine">
-	<label for="activeLine:left" i18n="text:left"></label>
-	<input id="activeLine:right" type="radio" name="activeLine">
-	<label for="activeLine:right" i18n="text:right"></label>
-</div>
-<div class="hbox">
 	<label for="previewHeight" i18n="text:previewHeight"></label>
 	<input id="previewHeight" type="number" min="10" max="200" step="10" style="width: 5em;">
 </div>
 <div class="hbox">
-	<input id="hideScroll" type="checkbox">
-	<label for="hideScroll" i18n="text:hideScroll"></label>
-</div>
-<div class="hbox indent">
-	<label for="scrollWidth" i18n="text:scrollWidth"></label>
-	<input id="scrollWidth" type="number" min="1" max="99" step="1" style="width: 4em;">
-</div>
-<div class="hbox">
-	<input id="stacking" type="checkbox">
-	<label for="stacking" i18n="text:stacking"></label>
+	<input id="autoUpdate" type="checkbox">
+	<label for="autoUpdate" i18n="text:autoUpdate"></label>
 </div>
 <script src="options.js"></script>
 </body>
