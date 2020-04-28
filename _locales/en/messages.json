@@ -40,6 +40,7 @@
 	"stacking": { "message": "Open a new tab in the top-most position." },
 	"preview": { "message": "Tab Preview" },
 	"mode": { "message": "Display mode: " },
+	"none": { "message": "None" },
 	"minimal": { "message": "Minimal" },
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },

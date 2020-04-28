@@ -62,6 +62,7 @@ function onChange(event) {
 		case "theme:default"   : gPrefs.theme = "default"; break;
 		case "theme:light"     : gPrefs.theme = "light"; break;
 		case "theme:dark"      : gPrefs.theme = "dark"; break;
+		case "mode:none"       : gPrefs.mode = "none"; break;
 		case "mode:minimal"    : gPrefs.mode = "minimal"; break;
 		case "mode:compact"    : gPrefs.mode = "compact"; break;
 		case "mode:full"       : gPrefs.mode = "full"; break;

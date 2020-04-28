@@ -40,6 +40,7 @@
 	"stacking": { "message": "新しいタブを一番上に開く" },
 	"preview": { "message": "タブのプレビュー" },
 	"mode": { "message": "表示モード: " },
+	"none": { "message": "なし" },
 	"minimal": { "message": "ミニマル" },
 	"compact": { "message": "コンパクト" },
 	"full": { "message": "フル" },

@@ -120,6 +120,8 @@ function onMouseDown(event) {
 }
 
 function onMouseOver(event) {
+	if (gPrefs.mode == "none")
+		return;
 	if (gPrefs.mode == "full" && gPrefs.autoUpdate == 0)
 		return;
 	// do nothing when mouse is over blank area or same tab
@@ -139,7 +141,7 @@ function onMouseOver(event) {
 	elt.setAttribute("focus", "true");
 	if (!elt.hasAttribute("data-draw-age"))
 		drawThumbnail(tabId);
-	if (gPrefs.mode != "full") {
+	if (gPrefs.mode == "minimal" || gPrefs.mode == "compact") {
 		setTimeout(() => { elt.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 300);
 	}
 	// set repeating timer
@@ -219,9 +221,10 @@ function onClick(event) {
 	// clicks on menu_mode button
 	else if (target.id == "menu_mode") {
 		switch (gPrefs.mode) {
+			case "none"   : gPrefs.mode = "minimal"; break;
 			case "minimal": gPrefs.mode = "compact"; break;
 			case "compact": gPrefs.mode = "full"; break;
-			case "full"   : gPrefs.mode = "minimal"; break;
+			case "full"   : gPrefs.mode = "none"; break;
 		}
 		browser.storage.local.set(gPrefs);
 		rebuildList();
@@ -642,9 +645,6 @@ async function rebuildContexts() {
 async function rebuildList() {
 	// read prefs
 	gPrefs = await browser.storage.local.get();
-	// for compatibility with ver 0.9 or former
-	if (gPrefs.mode == "normal")
-		gPrefs.mode = "full";
 	const getPref = function(aName, aDefaultValue) {
 		return aName in gPrefs ? gPrefs[aName] : aDefaultValue;
 	}
@@ -685,8 +685,8 @@ async function rebuildList() {
 	let elt = gTabList.parentNode.querySelector("[selected]");
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
-	if (gPrefs.mode != "minimal")
-		tabs.map(tab => drawThumbnail(tab.id));
+	if (gPrefs.mode == "compact" || gPrefs.mode == "full")
+		tabs.forEach(tab => drawThumbnail(tab.id));
 	// finally, rebuild menu
 	rebuildMenu();
 }
@@ -726,7 +726,7 @@ function elementForTab(aTab) {
 
 async function drawThumbnail(aTabId) {
 	let elt = getElementByTabId(aTabId);
-	if (gPrefs.mode != "minimal" && elt.getAttribute("pinned") == "true")
+	if (elt.getAttribute("pinned") == "true")
 		return;
 	let data = await browser.tabs.captureTab(aTabId);
 	elt.querySelector(".thumbnail").style.backgroundImage = `url("${data}")`;
