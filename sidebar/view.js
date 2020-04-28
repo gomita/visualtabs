@@ -490,7 +490,7 @@ function onUpdated(tabId, changeInfo, tab) {
 		}
 		else {
 			elt.removeAttribute("pinned");
-			gTabList.insertBefore(elt, [...gTabList.childNodes][tab.index]);
+			gTabList.insertBefore(elt, [...gTabList.childNodes][tab.index - gPinList.childNodes.length + 1]);
 		}
 		drawThumbnail(tabId);
 	}
