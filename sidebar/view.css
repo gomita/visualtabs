@@ -37,12 +37,16 @@ img, label {
 	background-color: var(--background-color);
 }
 
-:root[theme="light"] .tab[selected] {
+:root[theme="light"] .tab:hover {
+	background-color: #fcfcfd;
+}
+
+:root[theme="light"] .tab[highlighted] {
 	background-color: #f9f9fa;
 }
 
-:root[theme="light"] .tab:hover {
-	background-color: #fcfcfd;
+:root[theme="light"] .tab[selected] {
+	background-color: #e9e9ee;
 }
 
 :root[theme="light"] .title {
@@ -69,12 +73,16 @@ img, label {
 	background-color: var(--background-color);
 }
 
-:root[theme="dark"] .tab[selected] {
-	background-color: #4a4a4f;
-}
-
 :root[theme="dark"] .tab:hover {
 	background-color: #373954;
+}
+
+:root[theme="dark"] .tab[highlighted] {
+	background-color: #303035;
+}
+
+:root[theme="dark"] .tab[selected] {
+	background-color: #4a4a4f;
 }
 
 :root[theme="dark"] .title {
@@ -336,6 +344,7 @@ button:active, button[checked] {
 	border-left-color: var(--hover-color);
 }
 
+#container[activeline="left"] .tab[highlighted], 
 #container[activeline="left"] .tab[selected] {
 	border-left-color: var(--active-color);
 }
@@ -354,6 +363,7 @@ button:active, button[checked] {
 	border-right-color: var(--hover-color);
 }
 
+#container[activeline="right"] .tab[highlighted], 
 #container[activeline="right"] .tab[selected] {
 	border-right-color: var(--active-color);
 }

@@ -13,6 +13,7 @@ var gDragOverString = "";
 var gDragLeaveTimer = 0;
 var gMouseOverTabId;
 var gMouseOverTimer;
+var gHlightTabIds = [];
 
 function init() {
 	gPinList = document.getElementById("pinList");
@@ -43,6 +44,7 @@ function init() {
 	browser.tabs.onDetached.addListener(onDetached);
 	browser.tabs.onReplaced.addListener(onReplaced);
 	browser.tabs.onZoomChange.addListener(onZoomChange);
+	browser.tabs.onHighlighted.addListener(onHighlighted);
 	browser.runtime.onMessage.addListener(onMessage);
 	browser.contextualIdentities.onCreated.addListener(onContextChanged);
 	browser.contextualIdentities.onRemoved.addListener(onContextChanged);
@@ -77,6 +79,7 @@ function uninit() {
 	browser.tabs.onDetached.removeListener(onDetached);
 	browser.tabs.onReplaced.removeListener(onReplaced);
 	browser.tabs.onZoomChange.removeListener(onZoomChange);
+	browser.tabs.onHighlighted.removeListener(onHighlighted);
 	browser.runtime.onMessage.removeListener(onMessage);
 	browser.contextualIdentities.onCreated.removeListener(onContextChanged);
 	browser.contextualIdentities.onRemoved.removeListener(onContextChanged);
@@ -561,6 +564,27 @@ function onZoomChange(ZoomChangeInfo) {
 	drawThumbnail(ZoomChangeInfo.tabId);
 }
 
+function onHighlighted(highlightInfo) {
+	if (highlightInfo.windowId != gWindowId)
+		return;
+//	console.log("onHighlighted: " + JSON.stringify(highlightInfo));
+	[...gTabList.parentNode.querySelectorAll("[highlighted]")].map(elt => {
+		elt.removeAttribute("highlighted");
+	});
+	for (let tabId of highlightInfo.tabIds) {
+		let tab = getElementByTabId(tabId);
+		if (tab)
+			tab.setAttribute("highlighted", "true");
+		// see below
+		if (!gHlightTabIds.includes(tabId))
+			gHlightTabIds.push(tabId);
+	}
+	// gHlightTabIds is array of tabId which is sorted by user selection, 
+	// while highlightInfo.tabIds is sorted by the actual visible order.
+	gHlightTabIds = gHlightTabIds.filter(tabId => highlightInfo.tabIds.includes(tabId));
+//	console.log("onHighlighted: gHlightTabIds = " + JSON.stringify(gHlightTabIds));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // other listeners
 
@@ -677,6 +701,9 @@ async function rebuildList() {
 	let tabs = await browser.tabs.query({ currentWindow: true });
 	gWindowId = tabs[0].windowId;
 	gIncognito = tabs[0].incognito;
+	// gHlightTabIds is array of highlighted tabs, note that the first element is of active tab
+	gHlightTabIds = tabs.filter(tab => tab.highlighted && !tab.active).map(tab => tab.id);
+	gHlightTabIds.unshift(tabs.filter(tab => tab.active)[0].id);
 	// first, create list without thumbnails
 	tabs.map(tab => (tab.pinned ? gPinList : gTabList).appendChild(elementForTab(tab)));
 	// show new tab button after building all tabs
@@ -714,6 +741,8 @@ function elementForTab(aTab) {
 		elt.setAttribute("discarded", "true");
 	if (aTab.muted)
 		elt.setAttribute("muted", "true");
+	if (aTab.highlighted)
+		elt.setAttribute("highlighted", "true");
 	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {
 		// get context for container tab async
 		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
