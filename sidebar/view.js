@@ -13,6 +13,7 @@ var gDragOverString = "";
 var gDragLeaveTimer = 0;
 var gMouseOverTabId;
 var gMouseOverTimer;
+var gMouseDownFlag = false;
 var gHlightTabIds = [];
 
 function init() {
@@ -20,8 +21,8 @@ function init() {
 	gTabList = document.getElementById("tabList");
 	gTabElt  = document.getElementById("tab");
 	gPopup   = document.getElementById("popup");
-	document.addEventListener("mousedown", onMouseDown);
-	document.addEventListener("mouseover", onMouseOver);
+	gTabList.parentNode.addEventListener("mousedown", onMouseDown);
+	gTabList.parentNode.addEventListener("mouseover", onMouseOver);
 	document.addEventListener("contextmenu", onContextMenu);
 	document.addEventListener("click", onClick);
 	document.addEventListener("dblclick", onDblClick);
@@ -55,8 +56,8 @@ function init() {
 }
 
 function uninit() {
-	document.removeEventListener("mousedown", onMouseDown);
-	document.removeEventListener("mouseover", onMouseOver);
+	gTabList.parentNode.removeEventListener("mousedown", onMouseDown);
+	gTabList.parentNode.removeEventListener("mouseover", onMouseOver);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
 	document.removeEventListener("dblclick", onDblClick);
@@ -110,9 +111,30 @@ function localizeUI() {
 // DOM event handlers
 
 function onMouseDown(event) {
-	// select tab on mouse down
+	// select tabs on mouse down
 	if (event.button == 0 && gPopup.hidden) {
-		doCommand("select", getTabIdByElement(event.target));
+		let cmd;
+		let tabId = getTabIdByElement(event.target);
+		if (event.ctrlKey && event.shiftKey) {
+			cmd = "hlightAdditionalRange";
+		}
+		else if (event.shiftKey) {
+			cmd = "hlightRange";
+		}
+		else if (event.ctrlKey) {
+			cmd = "hlight";
+		}
+		else if (gHlightTabIds.length == 1 || !gHlightTabIds.includes(tabId)) {
+			// mousedown on a tab outside of the highlighted tabs
+			gMouseDownFlag = false;
+			cmd = "select";
+		}
+		else {
+			// mousedown on a tab inside of the highlighted tabs
+			gMouseDownFlag = true;
+			cmd = "activeChange";
+		}
+		doCommand(cmd, tabId);
 	}
 	// prevent autoscroll with middle-button
 	else if (event.button == 1) {
@@ -212,6 +234,15 @@ function onClick(event) {
 	// clicks on tab close button
 	else if (target.classList.contains("close")) {
 		doCommand("close", getTabIdByElement(target));
+	}
+	// click on tab
+	else if (target.closest(".tab")) {
+		// when clicks on a tab inside the highlighted tabs, 
+		// reset all highlights and select only the clicked tab
+		if (gMouseDownFlag) {
+			gMouseDownFlag = false;
+			doCommand("activeReset", getTabIdByElement(target));
+		}
 	}
 	// clicks on new tab button
 	else if (target.id == "newTab") {
@@ -605,6 +636,65 @@ async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
 		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
+		case "activeChange": 
+			// select the tab with aTabId and keep all highlights
+			var idxs = [];
+			for (let id of gHlightTabIds) {
+				let tab = await browser.tabs.get(id);
+				tab.id == aTabId ? idxs.unshift(tab.index) : idxs.push(tab.index);
+			}
+			browser.tabs.highlight({ tabs: idxs }); 
+			break;
+		case "activeReset": 
+			// select the tab with aTabId and reset all highlights
+			var tab = await browser.tabs.get(aTabId);
+			browser.tabs.highlight({ tabs: [tab.index] }); 
+			break;
+		case "hlight": 
+			var idxs = [];
+			for (let id of gHlightTabIds) {
+				let tab = await browser.tabs.get(id);
+				idxs.push(tab.index);
+			}
+			var tab = await browser.tabs.get(aTabId);
+			let found = idxs.indexOf(tab.index);
+			found < 0 ? idxs.push(tab.index) : idxs.splice(found, 1);
+			browser.tabs.highlight({ tabs: idxs }); 
+			break;
+		case "hlightRange": 
+			// fromTab is the active tab, toTab is the clicked tab
+			var fromTab = await browser.tabs.get(gHlightTabIds[0]);
+			var fromIdx = fromTab.index;
+			var toTab = await browser.tabs.get(aTabId);
+			var toIdx = toTab.index;
+			var idxs = [];
+			if (fromIdx < toIdx)
+				for (let idx = fromIdx; idx <= toIdx; idx++) idxs.push(idx);
+			else
+				for (let idx = toIdx; idx <= fromIdx; idx++) idxs.push(idx);
+			browser.tabs.highlight({ tabs: idxs });
+			break;
+		case "hlightAdditionalRange": 
+			// fromTab is the last highlighted tab, toTab is the clicked tab
+			var fromTab = await browser.tabs.get(gHlightTabIds[gHlightTabIds.length - 1]);
+			var fromIdx = fromTab.index;
+			var toTab = await browser.tabs.get(aTabId);
+			var toIdx = toTab.index;
+			var idxs = [];
+			// first, idxs is array of indexes where the current highlighted tabs
+			for (let id of gHlightTabIds) {
+				let tab = await browser.tabs.get(id);
+				idxs.push(tab.index);
+			}
+			// second, add the range of fromIdx...toIdx
+			if (fromIdx < toIdx)
+				for (let idx = fromIdx; idx <= toIdx; idx++) idxs.push(idx);
+			else
+				for (let idx = toIdx; idx <= fromIdx; idx++) idxs.push(idx);
+			// third, remove duplicated indexes
+			idxs = idxs.filter((idx, i, self) => self.indexOf(idx) == i);
+			browser.tabs.highlight({ tabs: idxs });
+			break;
 		case "selectAll": 
 			var tabs = await browser.tabs.query({ currentWindow: true, active: false });
 			var idxs = tabs.filter(tab => !tab.hidden).map(tab => tab.index);
