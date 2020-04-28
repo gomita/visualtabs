@@ -115,13 +115,13 @@ function onMouseDown(event) {
 	if (event.button == 0 && gPopup.hidden) {
 		let cmd;
 		let tabId = getTabIdByElement(event.target);
-		if (event.ctrlKey && event.shiftKey) {
+		if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
 			cmd = "hlightAdditionalRange";
 		}
 		else if (event.shiftKey) {
 			cmd = "hlightRange";
 		}
-		else if (event.ctrlKey) {
+		else if (event.ctrlKey || event.metaKey) {
 			cmd = "hlight";
 		}
 		else if (gHlightTabIds.length == 1 || !gHlightTabIds.includes(tabId)) {
