@@ -454,15 +454,15 @@ function onCreated(tab) {
 		return;
 //	console.log("onCreated: " + JSON.stringify(tab));
 	// if stacking option is enabled and tab has no opener, move it at the top
-	let moveToTop = gPrefs.stacking && tab.openerTabId === undefined;
-	if (moveToTop) {
+	let stacking = gPrefs.stacking && tab.openerTabId === undefined;
+	if (stacking) {
 		browser.tabs.move(tab.id, { index: gPinList.childNodes.length });
 	}
 	let elt;
 	if (tab.pinned) {
 		elt = gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
 	}
-	else if (moveToTop) {
+	else if (stacking) {
 		elt = gTabList.insertBefore(elementForTab(tab), gTabList.firstChild);
 		gTabList.scrollTo(0, 0);
 	}
@@ -481,6 +481,8 @@ function onCreated(tab) {
 }
 
 function onRemoved(tabId, removeInfo) {
+	if (removeInfo.windowId != gWindowId)
+		return;
 	let elt = getElementByTabId(tabId);
 	if (!elt)
 		return;
@@ -548,6 +550,8 @@ function onUpdated(tabId, changeInfo, tab) {
 }
 
 function onMoved(tabId, moveInfo) {
+	if (moveInfo.windowId != gWindowId)
+		return;
 	let elt = getElementByTabId(tabId);
 	if (!elt)
 		return;
