@@ -321,15 +321,17 @@ function onAnimationEnd(event) {
 
 function onDragStart(event) {
 	hidePopup();
-	let tabId = getTabIdByElement(event.target);
-	if (!tabId)
-		return;
+	let pinned = gPinList.querySelector("[highlighted]") != null;
+	// array of tabId which is soretd by the actual visible order
+	let tabIds = [...gTabList.parentNode.querySelectorAll("[highlighted]")].
+	             map(elt => elt.getAttribute("tabId"));
 	let dt = event.dataTransfer;
-	let elt = getElementByTabId(tabId);
-	let pinned = elt.getAttribute("pinned") == "true";
-	let title = elt.querySelector(".title").getAttribute("title");
-	dt.setData("text/x-visualtabs", [gWindowId, tabId, pinned].join("|"));
-	dt.setData("text/x-moz-url", elt.getAttribute("url") + "\n" + title);
+	dt.setData("text/x-visualtabs", [gWindowId, tabIds.join(","), pinned].join("|"));
+	if (tabIds.length == 1) {
+		let title = event.target.querySelector(".title").getAttribute("title");
+		let url   = event.target.getAttribute("url");
+		dt.setData("text/x-moz-url", url + "\n" + title);
+	}
 	dt.dropEffect = "move";
 }
 
@@ -338,9 +340,8 @@ function onDragOver(event) {
 		clearTimeout(gDragLeaveTimer);
 	event.preventDefault();
 	let dt = event.dataTransfer;
-	// [...dt.mozTypesAt(0)].map(type => console.log(type + "\t" + dt.getData(type)));
 	let type = "text/x-visualtabs", data = dt.getData(type);
-	if (!data && !dt.mozTypesAt(0).contains("text/x-moz-url"))
+	if (!data)
 		return;
 	// target tabId
 	let targetTabId = getTabIdByElement(event.target);
@@ -349,9 +350,9 @@ function onDragOver(event) {
 	let target = getElementByTabId(targetTabId);
 	if (data) {
 		// source tabId
-		let [sourceWinId, sourceTabId, sourcePinned] = data.split("|");
+		let [sourceWinId, sourceTabIds, sourcePinned] = data.split("|");
 		sourceWinId = parseInt(sourceWinId, 10);
-		sourceTabId = parseInt(sourceTabId, 10);
+		sourceTabIds = sourceTabIds.split().map(tabId => parseInt(tabId, 10));
 		sourcePinned = sourcePinned == "true";
 		// cannot drop unpinned tab into pinned tab
 		if (!sourcePinned && target.getAttribute("pinned") == "true")
@@ -405,20 +406,25 @@ async function onDrop(event) {
 		targetIndex++;
 	if (type == "text/x-visualtabs") {
 		// source
-		let [sourceWinId, sourceTabId, sourcePinned] = data.split("|");
-		sourceTabId = parseInt(sourceTabId, 10);
+		let [sourceWinId, sourceTabIds, sourcePinned] = data.split("|");
 		sourceWinId = parseInt(sourceWinId, 10);
+		sourceTabIds = sourceTabIds.split(",").map(tabId => parseInt(tabId, 10));
 		sourcePinned = sourcePinned == "true";
-		let sourceTab = await browser.tabs.get(sourceTabId);
 		if (sourceWinId == gWindowId) {
-			// move a tab in same window
-			if (sourceTab.index < targetIndex)
+			// move tabs in same window
+			let sourceTabIndexes = [];
+			for (let sourceTabId of sourceTabIds) {
+				let sourceTab = await browser.tabs.get(sourceTabId);
+				sourceTabIndexes.push(sourceTab.index);
+			}
+			let minSourceTabIndex = sourceTabIndexes.reduce((a, b) => a < b ? a : b);
+			if (minSourceTabIndex < targetIndex)
 				targetIndex--;
-			browser.tabs.move(sourceTabId, { index: targetIndex });
+			browser.tabs.move(sourceTabIds, { index: targetIndex });
 		}
 		else {
-			// attach a tab from another window
-			browser.tabs.move(sourceTabId, { windowId: gWindowId, index: targetIndex });
+			// attach tabs from another window
+			browser.tabs.move(sourceTabIds.reverse(), { windowId: gWindowId, index: targetIndex });
 		}
 	}
 	else if (type == "text/x-moz-url") {
