@@ -567,14 +567,14 @@ function onMoved(tabId, moveInfo) {
 async function onAttached(tabId, attachInfo) {
 	if (attachInfo.newWindowId != gWindowId)
 		return;
+	let tab = await browser.tabs.get(tabId);
 //	console.log("onAttached: " + tabId + " " + JSON.stringify(attachInfo));
-	let tabs = await browser.tabs.query({ currentWindow: true });
-	let tab = tabs[attachInfo.newPosition];
 	if (tab.pinned) {
-		gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
+		let index = attachInfo.newPosition;
+		gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][index]);
 	}
 	else {
-		let index = tab.index - gPinList.childNodes.length;
+		let index = attachInfo.newPosition - gPinList.childNodes.length;
 		gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
 		drawThumbnail(tab.id);
 	}
