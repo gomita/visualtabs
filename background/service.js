@@ -9,6 +9,7 @@ var gMenuDefs = [
 	{ id: "unpin" },
 	{ id: "duplicate" },
 	{ id: "sep1", type: "separator" },
+	{ id: "selectAll" },
 	{ id: "reopen" },
 	{ id: "reopen:default", parentId: "reopen" },
 	{ id: "reopen:sep", type: "separator", parentId: "reopen" },
@@ -30,7 +31,7 @@ async function init() {
 	for (let def of gMenuDefs) {
 		browser.menus.create({
 			id: def.id,
-			title: browser.i18n.getMessage(def.id),
+			title: def.type == "separator" ? undefined : browser.i18n.getMessage(def.id),
 			type: def.type || "normal",
 			parentId: def.parentId,
 			contexts: ["tab"],
@@ -89,11 +90,14 @@ async function handleMenuShown(info, tab) {
 	let pins = tabs.filter(_tab => _tab.pinned);
 	let top    = tab.index == 0 || tab.index == pins.length;
 	let bottom = tab.index == pins.length -1 || tab.index == tabs.length - 1;
+	let selAll = tabs.filter(_tab => !_tab.hidden).every(_tab => _tab.highlighted);
+	browser.menus.update("selectAll",     { enabled: !selAll });
+	browser.menus.update("move",          { enabled: !selAll });
 	browser.menus.update("moveToTop",     { enabled: !top });
 	browser.menus.update("moveToBottom",  { enabled: !bottom });
-	browser.menus.update("closeToTop",    { enabled: tab.index > pins.length });
-	browser.menus.update("closeToBottom", { enabled: tab.index < tabs.length - 1 });
-	browser.menus.update("closeOther",    { enabled: tabs.length > 1 });
+	browser.menus.update("closeToTop",    { enabled: !selAll && tab.index > pins.length });
+	browser.menus.update("closeToBottom", { enabled: !selAll && tab.index < tabs.length - 1 });
+	browser.menus.update("closeOther",    { enabled: !selAll && tabs.length > 1 });
 	// finally refresh menu
 	browser.menus.refresh();
 }
@@ -191,6 +195,13 @@ async function handleMenuClick(info, tab) {
 			browser.sessions.restore(sessionInfos[0].tab.sessionId);
 			break;
 		case "close": tabs.map(_tab => browser.tabs.remove(_tab.id)); break;
+		case "selectAll": 
+			let allTabs = await browser.tabs.query({ currentWindow: true, active: false });
+			let allIdxs = allTabs.filter(_tab => !_tab.hidden).map(_tab => _tab.index);
+			allTabs = await browser.tabs.query({ currentWindow: true, active: true });
+			allIdxs.unshift(allTabs[0].index);
+			browser.tabs.highlight({ tabs: allIdxs });
+			break;
 		default: 
 			if (!/^reopen:(.+)$/.test(info.menuItemId))
 				break;

@@ -605,6 +605,13 @@ async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
 		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
+		case "selectAll": 
+			var tabs = await browser.tabs.query({ currentWindow: true, active: false });
+			var idxs = tabs.filter(tab => !tab.hidden).map(tab => tab.index);
+			tabs = await browser.tabs.query({ currentWindow: true, active: true });
+			idxs.unshift(tabs[0].index);
+			browser.tabs.highlight({ tabs: idxs });
+			break;
 		case "close"    : browser.tabs.remove(aTabId); break;
 		case "undoClose": 
 			let sessionInfos = await browser.sessions.getRecentlyClosed({ maxResults: 1 });
