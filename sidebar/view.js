@@ -411,16 +411,27 @@ async function onDrop(event) {
 		sourceTabIds = sourceTabIds.split(",").map(tabId => parseInt(tabId, 10));
 		sourcePinned = sourcePinned == "true";
 		if (sourceWinId == gWindowId) {
-			// move tabs in same window
-			let sourceTabIndexes = [];
-			for (let sourceTabId of sourceTabIds) {
-				let sourceTab = await browser.tabs.get(sourceTabId);
-				sourceTabIndexes.push(sourceTab.index);
+			if ((event.ctrlKey || event.cmdKey) & !event.shiftKey) {
+				// duplicate tabs in same window
+				let dupTabIds = [];
+				for (let sourceTabId of sourceTabIds) {
+					let dupTab = await browser.tabs.duplicate(sourceTabId);
+					dupTabIds.push(dupTab.id);
+				}
+				browser.tabs.move(dupTabIds, { index: targetIndex });
 			}
-			let minSourceTabIndex = sourceTabIndexes.reduce((a, b) => a < b ? a : b);
-			if (minSourceTabIndex < targetIndex)
-				targetIndex--;
-			browser.tabs.move(sourceTabIds, { index: targetIndex });
+			else {
+				// move tabs in same window
+				let sourceTabIndexes = [];
+				for (let sourceTabId of sourceTabIds) {
+					let sourceTab = await browser.tabs.get(sourceTabId);
+					sourceTabIndexes.push(sourceTab.index);
+				}
+				let minSourceTabIndex = sourceTabIndexes.reduce((a, b) => a < b ? a : b);
+				if (minSourceTabIndex < targetIndex)
+					targetIndex--;
+				browser.tabs.move(sourceTabIds, { index: targetIndex });
+			}
 		}
 		else {
 			// attach tabs from another window
