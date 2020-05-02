@@ -125,10 +125,16 @@ img, label {
 	box-shadow: inset 0px 2px 4px var(--shadow-color);
 }
 
+#pinList:not(:empty) {
+	border-bottom: 1px solid var(--separator-color);
+}
+
+/* ::::: tabs ::::: */
+
 .tab {
 	position: relative;
 	border-bottom: 1px solid var(--separator-color);
-	padding: 4px 0px 4px 2px;
+	padding: 4px 4px 4px 7px;
 }
 
 #container[stacking="false"] #tabList .tab:last-child {
@@ -200,7 +206,20 @@ button:active, button[checked] {
 	background-color: var(--shadow-color2);
 }
 
-.tab[pinned] button {
+/* ::::: pinned tabs ::::: */
+
+#pinList .tab {
+	display: inline-block;
+	border-bottom: none;
+	border-right: 1px solid var(--separator-color);
+	background-repeat: no-repeat;
+	padding: 7px 8px 7px 10px;
+	flex-direction: row;
+}
+
+#pinList .tab .title,
+#pinList .tab .close,
+#pinList .tab .thumbnail {
 	display: none;
 }
 
@@ -251,10 +270,6 @@ button:active, button[checked] {
 /* workaround for issue #1 */
 .tab .thumbnail {
 	z-index: unset;
-}
-
-.tab[pinned] .thumbnail {
-	height: 0;
 }
 
 #tabList[mode="minimal"] .tab .thumbnail {
@@ -334,42 +349,65 @@ button:active, button[checked] {
 
 /* ::::: active line ::::: */
 
-#container[activeline="left"] .tab {
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	background-repeat: no-repeat;
+.tab .line1,
+.tab .line2 {
+	position: absolute;
+	z-index: 6;
 }
 
-#container[activeline="left"] .tab:hover {
-	border-left-color: var(--hover-color);
+#tabList .tab .line1 {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 5px;
+	transform: scaleY(1);
 }
 
-#container[activeline="left"] .tab[highlighted], 
-#container[activeline="left"] .tab[selected] {
-	border-left-color: var(--active-color);
+#tabList .tab .line2 {
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 4px;
+	transform: scaleY(1);
 }
 
-#container[activeline="left"] .tab[data-context] {
-	border-right-color: var(--context-color);
+#pinList .tab .line1 {
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 4px;
+	transform: scaleX(1);
 }
 
-#container[activeline="right"] .tab {
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	background-repeat: no-repeat;
+#pinList .tab .line2 {
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	transform: scaleX(1);
 }
 
-#container[activeline="right"] .tab:hover {
-	border-right-color: var(--hover-color);
+.tab:hover .line1 {
+	background-color: var(--hover-color);
 }
 
-#container[activeline="right"] .tab[highlighted], 
-#container[activeline="right"] .tab[selected] {
-	border-right-color: var(--active-color);
+.tab[highlighted] .line1, 
+.tab[selected] .line1 {
+	background-color: var(--active-color);
 }
 
-#container[activeline="right"] .tab[data-context] {
-	border-left-color: var(--context-color);
+.tab[data-context] .line2 {
+	background-color: var(--context-color);
+}
+
+#tabList[activeline="right"] .tab .line1 {
+	left: unset;
+	right: 0;
+}
+
+#tabList[activeline="right"] .tab .line2 {
+	left: 0;
+	right: unset;
 }
 
 /* ::::: hide scrollbar ::::: */

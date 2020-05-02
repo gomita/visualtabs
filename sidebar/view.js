@@ -810,7 +810,7 @@ async function rebuildList() {
 	gTabList.setAttribute("effect", gPrefs.effect);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
 	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
-	gTabList.parentNode.setAttribute("activeline", gPrefs.activeLine);
+	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	// remove all elements
 	while (gPinList.lastChild)
 		gPinList.removeChild(gPinList.lastChild);
@@ -843,8 +843,13 @@ function elementForTab(aTab) {
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
 	elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(aTab) + "')";
-	elt.querySelector(".title").textContent = aTab.title;
-	elt.querySelector(".title").setAttribute("title", aTab.title);
+	if (aTab.pinned) {
+		elt.setAttribute("title", aTab.title);
+	}
+	else {
+		elt.querySelector(".title").textContent = aTab.title;
+		elt.querySelector(".title").setAttribute("title", aTab.title);
+	}
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
 		// remove [selected] from current selected element
