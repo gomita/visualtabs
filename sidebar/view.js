@@ -348,6 +348,7 @@ function onDragOver(event) {
 	if (!targetTabId)
 		return;
 	let target = getElementByTabId(targetTabId);
+	let targetPinned = target.getAttribute("pinned") == "true";
 	if (data) {
 		// source tabId
 		let [sourceWinId, sourceTabIds, sourcePinned] = data.split("|");
@@ -355,15 +356,17 @@ function onDragOver(event) {
 		sourceTabIds = sourceTabIds.split().map(tabId => parseInt(tabId, 10));
 		sourcePinned = sourcePinned == "true";
 		// cannot drop unpinned tab into pinned tab
-		if (!sourcePinned && target.getAttribute("pinned") == "true")
+		if (!sourcePinned && targetPinned)
 			return;
 		// cannot drop pinned tab into unpinned tab
-		if (sourcePinned && target.getAttribute("pinned") != "true")
+		if (sourcePinned && !targetPinned)
 			return;
 	}
 	// orient
 	let rect = target.getBoundingClientRect();
-	let orient = event.clientY < rect.top + rect.height / 2 ? "before" : "after";
+	let orient = targetPinned
+	           ? (event.clientX < rect.left + rect.width / 2 ? "before" : "after")
+	           : (event.clientY < rect.top + rect.height / 2 ? "before" : "after");
 	// avoid too much call, by comparing last drag over string
 	let dragOverString = `drop|${orient}|${targetTabId}`;
 	if (gDragOverString == dragOverString)
@@ -372,7 +375,18 @@ function onDragOver(event) {
 	// show drop indicator
 	let dropline = document.getElementById("dropline");
 	dropline.hidden = false;
-	dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) + "px";
+	if (targetPinned) {
+		dropline.style.top = rect.top + "px";
+		dropline.style.left = (orient == "before" ? rect.left : rect.left + rect.width) + "px";
+		dropline.style.width = "2px";
+		dropline.style.height = rect.height + "px";
+	}
+	else {
+		dropline.style.top = (orient == "before" ? rect.top : rect.top + rect.height) + "px";
+		dropline.style.left = "0px";
+		dropline.style.width = "100vw";
+		dropline.style.height = "2px";
+	}
 //	console.log(gDragOverString);
 }
 

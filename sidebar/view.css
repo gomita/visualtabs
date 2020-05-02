@@ -338,9 +338,8 @@ button:active, button[checked] {
 
 #dropline {
 	position: absolute;
-	width: 100vw;
-	height: 2px;
 	background-color: #000;
+	z-index: 10;
 }
 
 :root[theme="dark"] #dropline {
