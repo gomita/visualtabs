@@ -6,7 +6,7 @@ html, body {
 	cursor: default;
 	display: flex;
 	flex-direction: column;
-	font: caption;
+	font: message-box;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
