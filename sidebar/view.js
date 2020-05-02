@@ -481,19 +481,19 @@ function onCreated(tab) {
 	// if stacking option is enabled and tab has no opener, move it at the top
 	let stacking = gPrefs.stacking && tab.openerTabId === undefined;
 	if (stacking) {
-		browser.tabs.move(tab.id, { index: gPinList.childNodes.length });
+		browser.tabs.move(tab.id, { index: gPinList.childElementCount });
 	}
 	let elt;
 	if (tab.pinned) {
-		elt = gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][tab.index]);
+		elt = gPinList.insertBefore(elementForTab(tab), gPinList.children[tab.index]);
 	}
 	else if (stacking) {
 		elt = gTabList.insertBefore(elementForTab(tab), gTabList.firstChild);
 		gTabList.scrollTo(0, 0);
 	}
 	else {
-		let index = tab.index - gPinList.childNodes.length;
-		elt = gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
+		let index = tab.index - gPinList.childElementCount;
+		elt = gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
 		let sel = gTabList.parentNode.querySelector("[selected]");
 		sel.scrollIntoView({ block: "start", behavior: "smooth" });
 	}
@@ -550,11 +550,11 @@ function onUpdated(tabId, changeInfo, tab) {
 	else if (changeInfo.pinned !== undefined) {
 		if (changeInfo.pinned) {
 			elt.setAttribute("pinned", "true");
-			gPinList.insertBefore(elt, [...gPinList.childNodes][tab.index]);
+			gPinList.insertBefore(elt, gPinList.children[tab.index]);
 		}
 		else {
 			elt.removeAttribute("pinned");
-			gTabList.insertBefore(elt, [...gTabList.childNodes][tab.index - gPinList.childNodes.length + 1]);
+			gTabList.insertBefore(elt, gTabList.children[tab.index - gPinList.childElementCount + 1]);
 		}
 		drawThumbnail(tabId);
 	}
@@ -585,11 +585,11 @@ function onMoved(tabId, moveInfo) {
 	if (moveInfo.fromIndex < moveInfo.toIndex)
 		refIndex++;
 	if (elt.getAttribute("pinned") == "true") {
-		gPinList.insertBefore(elt, [...gPinList.childNodes][refIndex]);
+		gPinList.insertBefore(elt, gPinList.children[refIndex]);
 	}
 	else {
-		refIndex -= gPinList.childNodes.length;
-		gTabList.insertBefore(elt, [...gTabList.childNodes][refIndex]);
+		refIndex -= gPinList.childElementCount;
+		gTabList.insertBefore(elt, gTabList.children[refIndex]);
 	}
 }
 
@@ -600,11 +600,11 @@ async function onAttached(tabId, attachInfo) {
 //	console.log("onAttached: " + tabId + " " + JSON.stringify(attachInfo));
 	if (tab.pinned) {
 		let index = attachInfo.newPosition;
-		gPinList.insertBefore(elementForTab(tab), [...gPinList.childNodes][index]);
+		gPinList.insertBefore(elementForTab(tab), gPinList.children[index]);
 	}
 	else {
-		let index = attachInfo.newPosition - gPinList.childNodes.length;
-		gTabList.insertBefore(elementForTab(tab), [...gTabList.childNodes][index]);
+		let index = attachInfo.newPosition - gPinList.childElementCount;
+		gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
 		drawThumbnail(tab.id);
 	}
 }
