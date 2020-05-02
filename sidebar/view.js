@@ -823,8 +823,8 @@ async function rebuildList() {
 	gTabList.setAttribute("mode", gPrefs.mode);
 	gTabList.setAttribute("effect", gPrefs.effect);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
-	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
+	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
 	// remove all elements
 	while (gPinList.lastChild)
 		gPinList.removeChild(gPinList.lastChild);
