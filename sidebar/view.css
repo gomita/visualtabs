@@ -125,6 +125,14 @@ img, label {
 	box-shadow: inset 0px 2px 4px var(--shadow-color);
 }
 
+:root[theme="dark"] #tabList[overflow] {
+	box-shadow: inset 0px 2px 4px rgba(243,243,242,0.3);
+}
+
+#tabList:empty {
+	overflow-y: hidden !important;
+}
+
 #pinList:not(:empty) {
 	border-bottom: 1px solid var(--separator-color);
 }
@@ -332,6 +340,10 @@ button:active, button[checked] {
 
 #container[stacking="true"] #tabList {
 	order: 3;
+}
+
+#container[stacking="true"] #newTab {
+	border-top-width: 0px;
 }
 
 /* ::::: drop feedback ::::: */
