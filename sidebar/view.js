@@ -857,13 +857,8 @@ function elementForTab(aTab) {
 	elt.setAttribute("tabId", aTab.id.toString());
 	elt.setAttribute("url", aTab.url);
 	elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(aTab) + "')";
-	if (aTab.pinned) {
-		elt.setAttribute("title", aTab.title);
-	}
-	else {
-		elt.querySelector(".title").textContent = aTab.title;
-		elt.querySelector(".title").setAttribute("title", aTab.title);
-	}
+	elt.querySelector(".title").textContent = aTab.title;
+	(aTab.pinned ? elt : elt.querySelector(".title")).setAttribute("title", aTab.title);
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
 		// remove [selected] from current selected element
