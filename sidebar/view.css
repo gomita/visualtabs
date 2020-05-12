@@ -167,7 +167,9 @@ img, label {
 	background-image: url("/icons/tab-connecting.png");
 }
 
-:root[theme="dark"] .tab[loading] .favicon {
+:root[theme="dark"] .tab[loading] .favicon,
+:root[theme="dark"] .tab[url^="about:preferences"] .favicon,
+:root[theme="dark"] .tab[url^="about:debugging"] .favicon {
 	filter: invert(1);
 }
 
