@@ -142,7 +142,7 @@ async function handleMenuClick(info, tab) {
 					browser.tabs.move(_tab.id, { index: 0 });
 				}
 				else {
-					let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
+					let pins = await browser.tabs.query({ currentWindow: true, hidden: false, pinned: true });
 					browser.tabs.move(_tab.id, { index: pins.length });
 				}
 			}
@@ -150,7 +150,7 @@ async function handleMenuClick(info, tab) {
 		case "moveToBottom" : 
 			for (let _tab of tabs) {
 				if (_tab.pinned) {
-					let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
+					let pins = await browser.tabs.query({ currentWindow: true, hidden: false, pinned: true });
 					browser.tabs.move(_tab.id, { index: pins.length - 1 });
 				}
 				else {
@@ -167,8 +167,7 @@ async function handleMenuClick(info, tab) {
 		case "closeToTop"   : 
 		case "closeToBottom": 
 		case "closeOther"   : 
-			let remTabs = await browser.tabs.query({ currentWindow: true });
-			remTabs = remTabs.filter(_tab => !_tab.hidden && !_tab.pinned);
+			let remTabs = await browser.tabs.query({ currentWindow: true, hidden: false, pinned: false });
 			if (info.menuItemId == "closeToBottom") {
 				if (!tab.highlighted)
 					// 0 [1] 2 [3] 4 [5] 6 --> context on 2 --> removing 3,4,5,6
