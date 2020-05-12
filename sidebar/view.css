@@ -100,7 +100,8 @@ img, label {
 }
 
 :root[theme="dark"] button img,
-:root[theme="dark"] #newTab img {
+:root[theme="dark"] #newTab img,
+:root[theme="dark"] .audio {
 	filter: invert(1);
 }
 
@@ -214,6 +215,42 @@ button:hover {
 
 button:active, button[checked] {
 	background-color: var(--shadow-color2);
+}
+
+/* ::::: audio button ::::: */
+
+.tab .audio {
+	z-index: 6;
+	display: none;
+	width: 16px;
+	height: 16px;
+	margin-left: 2px;
+}
+
+.tab[playing] .audio {
+	display: block;
+	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-playing.svg");
+}
+
+.tab[muted] .audio {
+	display: block;
+	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-muted.svg");
+}
+
+.tab[pinned] .audio {
+	position: absolute;
+	top: 4px;
+	right: 0px;
+}
+
+.tab[pinned][playing] .audio {
+	display: block;
+	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-playing-small.svg");
+}
+
+.tab[pinned][muted] .audio {
+	display: block;
+	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-muted-small.svg");
 }
 
 /* ::::: pinned tabs ::::: */
@@ -365,7 +402,7 @@ button:active, button[checked] {
 .tab .line1,
 .tab .line2 {
 	position: absolute;
-	z-index: 6;
+	z-index: 7;
 }
 
 #tabList .tab .line1 {

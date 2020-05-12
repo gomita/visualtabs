@@ -235,7 +235,11 @@ function onClick(event) {
 	else if (target.classList.contains("close")) {
 		doCommand("close", getTabIdByElement(target));
 	}
-	// click on tab
+	// clicks on audio button
+	else if (target.classList.contains("audio")) {
+		doCommand("toggleAudio", getTabIdByElement(target));
+	}
+	// clicks on tab
 	else if (target.closest(".tab")) {
 		// when clicks on a tab inside the highlighted tabs, 
 		// reset all highlights and select only the clicked tab
@@ -569,8 +573,15 @@ function onUpdated(tabId, changeInfo, tab) {
 		else
 			elt.removeAttribute("discarded");
 	}
+	// change audible status
+	else if (changeInfo.audible !== undefined) {
+		if (changeInfo.audible)
+			elt.setAttribute("playing", "true");
+		else
+			elt.removeAttribute("playing");
+	}
 	// change muted status
-	else if (changeInfo.mutedInfo !== undefined) {
+	else if (changeInfo.mutedInfo) {
 		if (changeInfo.mutedInfo.muted)
 			elt.setAttribute("muted", "true");
 		else
@@ -748,6 +759,10 @@ async function doCommand(aCommand, aTabId) {
 				return;
 			browser.sessions.restore(sessionInfos[0].tab.sessionId);
 			break;
+		case "toggleAudio": 
+			var tab = await browser.tabs.get(aTabId);
+			browser.tabs.update(aTabId, { muted: !tab.mutedInfo.muted });
+			break;
 		case "menu_toggle": 
 			gPrefs.menu = !gPrefs.menu;
 			browser.storage.local.set(gPrefs);
@@ -875,7 +890,9 @@ function elementForTab(aTab) {
 		elt.setAttribute("pinned", "true");
 	if (aTab.discarded)
 		elt.setAttribute("discarded", "true");
-	if (aTab.muted)
+	if (aTab.audible)
+		elt.setAttribute("playing", "true");
+	if (aTab.mutedInfo.muted)
 		elt.setAttribute("muted", "true");
 	if (aTab.highlighted)
 		elt.setAttribute("highlighted", "true");
