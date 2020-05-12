@@ -95,7 +95,7 @@ function uninit() {
 }
 
 function localizeUI() {
-	[...document.querySelectorAll("[i18n]")].map(elt => {
+	document.querySelectorAll("[i18n]").forEach(elt => {
 		elt.getAttribute("i18n").split(",").map(val => {
 			let [attr, msg] = val.split(":");
 			if (attr == "text")
@@ -634,7 +634,7 @@ function onHighlighted(highlightInfo) {
 	if (highlightInfo.windowId != gWindowId)
 		return;
 //	console.log("onHighlighted: " + JSON.stringify(highlightInfo));
-	[...gTabList.parentNode.querySelectorAll("[highlighted]")].map(elt => {
+	gTabList.parentNode.querySelectorAll("[highlighted]").forEach(elt => {
 		elt.removeAttribute("highlighted");
 	});
 	for (let tabId of highlightInfo.tabIds) {

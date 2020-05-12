@@ -35,7 +35,7 @@ function uninit() {
 }
 
 function localizeUI() {
-	[...document.querySelectorAll("[i18n]")].map(elt => {
+	document.querySelectorAll("[i18n]").forEach(elt => {
 		elt.getAttribute("i18n").split(",").map(val => {
 			let [attr, msg] = val.split(":");
 			if (attr == "text")
@@ -49,7 +49,7 @@ function localizeUI() {
 
 function updateUI() {
 	// if hide scroll is enabled, make scroll width option grayed-out
-	[...document.querySelectorAll('#scrollWidth, [for="scrollWidth"]')].map(elt => {
+	document.querySelectorAll('#scrollWidth, [for="scrollWidth"]').forEach(elt => {
 		if (gPrefs.hideScroll)
 			elt.removeAttribute("disabled");
 		else
