@@ -212,6 +212,7 @@ function onContextMenu(event) {
 	if (tabId) {
 		// show built-in tab context menu
 		browser.menus.overrideContext({ context: "tab", tabId });
+		hidePopup();
 	}
 	else {
 		// show popup
