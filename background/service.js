@@ -11,8 +11,8 @@ var gMenuDefs = [
 	{ id: "sep1", type: "separator" },
 	{ id: "selectAll" },
 	{ id: "reopen" },
-	{ id: "reopen:default", parentId: "reopen" },
-	{ id: "reopen:sep", type: "separator", parentId: "reopen" },
+	{ id: "reopen_default", parentId: "reopen" },
+	{ id: "reopen_sep", type: "separator", parentId: "reopen" },
 	{ id: "move" },
 	{ id: "moveToTop", parentId: "move" },
 	{ id: "moveToBottom", parentId: "move" },
@@ -55,7 +55,7 @@ function uninit() {
 	browser.menus.onShown.removeListener(handleMenuShown);
 	browser.menus.onClicked.removeListener(handleMenuClick);
 	for (let id of gCookieStoreIds) {
-		browser.menus.remove("reopen:" + id);
+		browser.menus.remove("reopen_" + id);
 	}
 	browser.contextualIdentities.onCreated.removeListener(rebuildReopenMenu);
 	browser.contextualIdentities.onRemoved.removeListener(rebuildReopenMenu);
@@ -75,15 +75,15 @@ async function handleMenuShown(info, tab) {
 	browser.menus.update("unmute", { visible: tab.mutedInfo.muted });
 	browser.menus.update("pin",    { visible: !tab.pinned });
 	browser.menus.update("unpin",  { visible: tab.pinned });
-	browser.menus.update("reopen:default", { visible: tab.cookieStoreId != "firefox-default" });
-	browser.menus.update("reopen:sep",     { visible: tab.cookieStoreId != "firefox-default" });
+	browser.menus.update("reopen_default", { visible: tab.cookieStoreId != "firefox-default" });
+	browser.menus.update("reopen_sep",     { visible: tab.cookieStoreId != "firefox-default" });
 	// disable reopen menu items for privileged URL
 	let enabled = tab.url.startsWith("http") || tab.url == "about:blank" || tab.url == "about:newtab";
 	browser.menus.update("reopen", { enabled });
 	// hide reopen menu items in private-browsing
 	browser.menus.update("reopen", { visible: !tab.incognito });
 	for (let id of gCookieStoreIds) {
-		browser.menus.update("reopen:" + id, { visible: id != tab.cookieStoreId });
+		browser.menus.update("reopen_" + id, { visible: id != tab.cookieStoreId });
 	}
 	// enable/disable move and close menu items
 	let tabs = await browser.tabs.query({ currentWindow: true });
@@ -196,7 +196,7 @@ async function handleMenuClick(info, tab) {
 			browser.runtime.sendMessage({ value: "visualtabs:selectAll" });
 			break;
 		default: 
-			if (!/^reopen:(.+)$/.test(info.menuItemId))
+			if (!/^reopen_(.+)$/.test(info.menuItemId))
 				break;
 			tabs.reverse().map(_tab => browser.tabs.create({
 				url: _tab.url, index: ++_tab.index, pinned: _tab.pinned, active: true, 
@@ -209,7 +209,7 @@ async function handleMenuClick(info, tab) {
 async function rebuildReopenMenu() {
 	// remove reopen menu items
 	for (let id of gCookieStoreIds) {
-		browser.menus.remove("reopen:" + id);
+		browser.menus.remove("reopen_" + id);
 	}
 	gCookieStoreIds = [];
 	// create reopen menu items
@@ -217,7 +217,7 @@ async function rebuildReopenMenu() {
 	for (let detail of details) {
 		gCookieStoreIds.push(detail.cookieStoreId);
 		browser.menus.create({
-			id: "reopen:" + detail.cookieStoreId,
+			id: "reopen_" + detail.cookieStoreId,
 			title: detail.name,
 			type: "normal",
 			icons: { "16": detail.iconUrl },

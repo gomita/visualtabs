@@ -12,7 +12,7 @@
 	"duplicate": { "message": "Duplicate Tab" },
 	"selectAll": { "message": "Select All Tabs" },
 	"reopen": { "message": "Reopen in Container" },
-	"reopen:default": { "message": "No Container" },
+	"reopen_default": { "message": "No Container" },
 	"move": { "message": "Move Tab" },
 	"moveToTop": { "message": "Move to Top" },
 	"moveToBottom": { "message": "Move to Bottom" },
