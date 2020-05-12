@@ -125,6 +125,10 @@ function onMouseDown(event) {
 			cmd = "hlight";
 		}
 		else if (gHlightTabIds.length == 1 || !gHlightTabIds.includes(tabId)) {
+			// do not select tab when clicking on close button etc.
+			let classes = event.target.classList;
+			if (classes.contains("close") || classes.contains("audio"))
+				return;
 			// mousedown on a tab outside of the highlighted tabs
 			gMouseDownFlag = false;
 			cmd = "select";
