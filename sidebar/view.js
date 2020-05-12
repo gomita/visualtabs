@@ -546,6 +546,10 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.removeAttribute("loading");
 		drawThumbnail(tabId);
 	}
+	// change favicon
+	else if (changeInfo.favIconUrl) {
+		elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(tab) + "')";
+	}
 	// change pinned status
 	else if (changeInfo.pinned !== undefined) {
 		if (changeInfo.pinned) {
