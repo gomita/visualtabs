@@ -759,10 +759,15 @@ async function doCommand(aCommand, aTabId) {
 			browser.tabs.highlight({ tabs: idxs });
 			break;
 		case "selectAll": 
-			var tabs = await browser.tabs.query({ currentWindow: true, active: false });
-			var idxs = tabs.filter(tab => !tab.hidden).map(tab => tab.index);
-			tabs = await browser.tabs.query({ currentWindow: true, active: true });
-			idxs.unshift(tabs[0].index);
+			var tabs = [];
+			// first, add the selected tab
+			var _tabs = await browser.tabs.query({ currentWindow: true, active: true });
+			tabs.push(_tabs[0]);
+			// second, add the highlighted tabs
+			var _tabs = await browser.tabs.query({ currentWindow: true, active: false, hidden: false });
+			tabs = tabs.concat(_tabs);
+			// make array of indexes and highlight them
+			var idxs = tabs.map(tab => tab.index);
 			browser.tabs.highlight({ tabs: idxs });
 			break;
 		case "close"    : browser.tabs.remove(aTabId); break;
@@ -909,10 +914,10 @@ function elementForTab(aTab) {
 	if (aTab.highlighted)
 		elt.setAttribute("highlighted", "true");
 	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {
-		// get context for container tab async
+		elt.setAttribute("data-context", aTab.cookieStoreId);
+		// get context color for container tab async
 		browser.contextualIdentities.get(aTab.cookieStoreId).then(ctx => {
 			elt.style.setProperty("--context-color", ctx.colorCode);
-			elt.setAttribute("data-context", aTab.cookieStoreId);
 		});
 	}
 	return elt;

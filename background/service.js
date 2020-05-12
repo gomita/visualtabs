@@ -26,7 +26,7 @@ var gMenuDefs = [
 ];
 var gCookieStoreIds = [];
 
-async function init() {
+function init() {
 	browser.browserAction.onClicked.addListener(handleBrowserAction);
 	for (let def of gMenuDefs) {
 		browser.menus.create({
@@ -247,5 +247,5 @@ async function rebuildReopenMenu() {
 
 // entry point
 window.addEventListener("load", init, { once: true });
-window.addEventListener("pagehide", uninit, { once: true });
+window.addEventListener("unload", uninit, { once: true });
 
