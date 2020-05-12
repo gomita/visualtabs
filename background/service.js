@@ -86,18 +86,28 @@ async function handleMenuShown(info, tab) {
 		browser.menus.update("reopen_" + id, { visible: id != tab.cookieStoreId });
 	}
 	// enable/disable move and close menu items
-	let tabs = await browser.tabs.query({ currentWindow: true });
-	let pins = tabs.filter(_tab => _tab.pinned);
-	let top    = tab.index == 0 || tab.index == pins.length;
-	let bottom = tab.index == pins.length -1 || tab.index == tabs.length - 1;
-	let selAll = tabs.filter(_tab => !_tab.hidden).every(_tab => _tab.highlighted);
+	let allTabs = await browser.tabs.query({ currentWindow: true, hidden: false });
+	let pins = allTabs.filter(_tab => _tab.pinned);
+	let tabs = allTabs.filter(_tab => !_tab.pinned);
+	let selAll   = allTabs.every(_tab => _tab.highlighted);
+	let selMulti = allTabs.filter(_tab => _tab.highlighted).length > 1;
+	let top, bottom, other;
+	if (tab.pinned) {
+		top    = tab.index == 0;
+		bottom = tab.index == pins.length - 1;
+		other  = tabs.length >= 1;
+	}
+	else {
+		top    = tab.index == tabs[0].index;
+		bottom = tab.index == tabs[tabs.length - 1].index;
+		other  = tabs.some(_tab => !_tab.highlighted);
+	}
 	browser.menus.update("selectAll",     { enabled: !selAll });
-	browser.menus.update("move",          { enabled: !selAll });
-	browser.menus.update("moveToTop",     { enabled: !top });
-	browser.menus.update("moveToBottom",  { enabled: !bottom });
-	browser.menus.update("closeToTop",    { enabled: !selAll && tab.index > pins.length });
-	browser.menus.update("closeToBottom", { enabled: !selAll && tab.index < tabs.length - 1 });
-	browser.menus.update("closeOther",    { enabled: !selAll && tabs.length > 1 });
+	browser.menus.update("moveToTop",     { enabled: !selAll && (selMulti || !top) });
+	browser.menus.update("moveToBottom",  { enabled: !selAll && (selMulti || !bottom) });
+	browser.menus.update("closeToTop",    { enabled: !selAll && !tab.pinned && !top });
+	browser.menus.update("closeToBottom", { enabled: !selAll && (tab.pinned || !bottom) });
+	browser.menus.update("closeOther",    { enabled: !selAll && other });
 	// finally refresh menu
 	browser.menus.refresh();
 }
