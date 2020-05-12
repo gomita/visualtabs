@@ -186,6 +186,10 @@ img, label {
 	font-weight: bold;
 }
 
+.tab[collapsed] {
+	display: none;
+}
+
 button {
 	border: unset;
 	background: unset;
@@ -516,6 +520,11 @@ button:active, button[checked] {
 	display: block;
 	margin: 1px;
 	line-height: unset;
+}
+
+#menu hr {
+	border: none;
+	border-top: 1px solid var(--separator-color);
 }
 
 #menu[open="false"] button:not(#menu_toggle),

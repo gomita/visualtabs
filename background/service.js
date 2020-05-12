@@ -25,6 +25,7 @@ var gMenuDefs = [
 	{ id: "close" }
 ];
 var gCookieStoreIds = [];
+var gPrefs = {};
 
 function init() {
 	browser.browserAction.onClicked.addListener(handleBrowserAction);
@@ -45,6 +46,7 @@ function init() {
 	browser.contextualIdentities.onCreated.addListener(rebuildReopenMenu);
 	browser.contextualIdentities.onRemoved.addListener(rebuildReopenMenu);
 	browser.contextualIdentities.onUpdated.addListener(rebuildReopenMenu);
+	cleanUpPrefs();
 }
 
 function uninit() {
@@ -91,6 +93,12 @@ async function handleMenuShown(info, tab) {
 	let tabs = allTabs.filter(_tab => !_tab.pinned);
 	let selAll   = allTabs.every(_tab => _tab.highlighted);
 	let selMulti = allTabs.filter(_tab => _tab.highlighted).length > 1;
+	// filter out invisible tabs
+	gPrefs = await browser.storage.local.get();
+	if (gPrefs.context[tab.windowId]) {
+		tabs = tabs.filter(_tab => _tab.cookieStoreId == gPrefs.context[tab.windowId]);
+		selAll = tabs.every(_tab => _tab.highlighted);
+	}
 	let top, bottom, other;
 	if (tab.pinned) {
 		top    = tab.index == 0;
@@ -131,8 +139,7 @@ async function handleMenuClick(info, tab) {
 				dupTabIds.push(dupTab.id);
 			}
 			// move duplicated tabs to the next of last context tab
-			let prefs = await browser.storage.local.get();
-			if (!prefs.stacking)
+			if (!gPrefs.stacking)
 				browser.tabs.move(dupTabIds, { index: tabs[tabs.length - 1].index + 1 });
 			break;
 		case "moveToTop"    : 
@@ -192,6 +199,9 @@ async function handleMenuClick(info, tab) {
 					// 0 [1] 2 [3] 4 [5] 6 --> context on 3 --> removing 0,2,4,6
 					remTabs = remTabs.filter(_tab => _tab.index != tab.index && !_tab.highlighted);
 			}
+			// filter out invisible tabs
+			if (gPrefs.context[tab.windowId])
+				remTabs = remTabs.filter(_tab => _tab.cookieStoreId == gPrefs.context[tab.windowId]);
 //			if (remTabs.length > 1 && 
 //			    !window.confirm(browser.i18n.getMessage("closeConfirm", [remTabs.length])))
 //				return;
@@ -243,6 +253,22 @@ async function rebuildReopenMenu() {
 			documentUrlPatterns: [`moz-extension://${location.host}/*`]
 		});
 	}
+}
+
+async function cleanUpPrefs() {
+	gPrefs = await browser.storage.local.get();
+	let wins = await browser.windows.getAll();
+	let winIds = wins.map(win => win.id);
+	let save = false;
+	for (let id in gPrefs.context) {
+		if (!winIds.includes(parseInt(id, 10))) {
+//			console.log("*** clean up: gPrefs.context." + id);
+			delete gPrefs.context[id];
+			save = true;
+		}
+	}
+	if (save)
+		await browser.storage.local.set(gPrefs);
 }
 
 // entry point

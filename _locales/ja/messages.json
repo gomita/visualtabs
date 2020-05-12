@@ -2,7 +2,7 @@
 	// manifest
 	"extensionDescription": { "message": "サイドバーでタブを一覧表示します。タブのプレビューも表示可能です。" },
 	// sidebar
-	"newtab": { "message": "新しいタブを開きます" },
+	"newtab": { "message": "新しいタブを開く" },
 	// popup
 	"reload": { "message": "タブを再読み込み" },
 	"mute": { "message": "タブをミュート" },
@@ -27,7 +27,8 @@
 	"menu_toggle": { "message": "メニュー" },
 	"menu_mode": { "message": "プレビュー表示モードを切替" },
 	"menu_options": { "message": "設定" },
-	"menu_contexts": { "message": "新しいコンテナータブを開く" },
+	"menu_contexts": { "message": "コンテナータブの表示を切替" },
+	"menu_alltabs": { "message": "すべてのタブ" },
 	// options
 	"general": { "message": "一般" },
 	"theme": { "message": "テーマ: " },
