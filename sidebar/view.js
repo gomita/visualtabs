@@ -425,7 +425,7 @@ async function onDrop(event) {
 	if (!gDragOverString) {
 		// drop on blank space
 		orient = "after";
-		targetTabId = gTabList.lastChild.getAttribute("tabId");
+		targetTabId = (gTabList.lastChild || gPinList.lastChild).getAttribute("tabId");
 	}
 	targetTabId = parseInt(targetTabId, 10);
 	let targetTab = await browser.tabs.get(targetTabId);
