@@ -189,18 +189,11 @@ async function handleMenuClick(info, tab) {
 			remTabs.map(_tab => browser.tabs.remove(_tab.id));
 			break;
 		case "undoClose": 
-			let sessionInfos = await browser.sessions.getRecentlyClosed({ maxResults: 1 });
-			if (sessionInfos.length == 0)
-				return;
-			browser.sessions.restore(sessionInfos[0].tab.sessionId);
+			browser.runtime.sendMessage({ value: "visualtabs:undoClose" });
 			break;
 		case "close": tabs.map(_tab => browser.tabs.remove(_tab.id)); break;
 		case "selectAll": 
-			let allTabs = await browser.tabs.query({ currentWindow: true, active: false });
-			let allIdxs = allTabs.filter(_tab => !_tab.hidden).map(_tab => _tab.index);
-			allTabs = await browser.tabs.query({ currentWindow: true, active: true });
-			allIdxs.unshift(allTabs[0].index);
-			browser.tabs.highlight({ tabs: allIdxs });
+			browser.runtime.sendMessage({ value: "visualtabs:selectAll" });
 			break;
 		default: 
 			if (!/^reopen:(.+)$/.test(info.menuItemId))

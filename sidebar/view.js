@@ -682,6 +682,8 @@ async function onMessage(request, sender, sendResponse) {
 			await rebuildList();
 			await rebuildMenu();
 			break;
+		case "visualtabs:selectAll": doCommand("selectAll"); break;
+		case "visualtabs:undoClose": doCommand("undoClose"); break;
 	}
 }
 
