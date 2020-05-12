@@ -281,9 +281,9 @@ function onClick(event) {
 	else if (target.id == "menu_contexts") {
 		doCommand("menu_contexts");
 	}
-	// clicks on menu_contexts button
-	else if (target.id.startsWith("firefox-container-")) {
-		doCommand("container", target.id);
+	// clicks on context button
+	else if (target.id.startsWith("context_")) {
+		doCommand("create_container", target.id.replace("context_", ""));
 	}
 }
 
@@ -782,13 +782,13 @@ async function doCommand(aCommand, aTabId) {
 			rebuildMenu();
 			break;
 		case "menu_contexts": 
-			let list = document.getElementById("ctxList");
+			let list = document.getElementById("contexts");
 			list.hidden = !list.hidden;
 			rebuildContexts();
 			break;
-		case "container": 
+		case "create_container": 
 			browser.tabs.create({ active: true, cookieStoreId: aTabId });
-			document.getElementById("ctxList").hidden = true;
+			document.getElementById("contexts").hidden = true;
 			break;
 	}
 }
@@ -810,16 +810,16 @@ function rebuildMenu() {
 }
 
 async function rebuildContexts() {
-	let list = document.getElementById("ctxList");
+	let list = document.getElementById("contexts");
 	if (list.hidden)
 		return;
 	while (list.lastChild)
 		list.removeChild(list.lastChild);
 	let ctxs = await browser.contextualIdentities.query({});
 	for (let ctx of ctxs) {
-		let elt = document.getElementById("ctx").cloneNode(true);
+		let elt = document.getElementById("context").cloneNode(true);
 		elt.hidden = false;
-		elt.id = ctx.cookieStoreId;
+		elt.id = "context_" + ctx.cookieStoreId;
 		elt.querySelector("img").src = ctx.iconUrl;
 		elt.querySelector("img").style.fill = ctx.colorCode;
 		elt.querySelector("label").textContent = ctx.name;

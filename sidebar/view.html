@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="view.css" />
 </head>
 <body>
-<div id="container">
+<div id="tabbox">
 	<div id="pinList"></div>
 	<div id="tabList"></div>
 	<div id="newTab" style="visibility: hidden;" i18n="title:newtab">
@@ -37,8 +37,9 @@
 		<button id="menu_mode" i18n="title:menu_mode"><img src="/icons/menu-16.svg" /></button>
 		<button id="menu_toggle" i18n="title:menu_toggle"><img src="/icons/arrowhead-up-16.svg" /></button>
 	</div>
-	<div id="ctxList" hidden="true"></div>
-	<button id="ctx" hidden="true"><img /><label /></button>
+	<div id="contexts">
+	</div>
+	<button id="context" hidden="true"><img /><label /></button>
 </div>
 <script src="view.js"></script>
 </body>

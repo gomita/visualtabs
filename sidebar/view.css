@@ -105,13 +105,13 @@ img, label {
 	filter: invert(1);
 }
 
-:root[theme="dark"] #ctxList button img {
+:root[theme="dark"] #contexts button img {
 	filter: unset;
 }
 
 /* ::::: list ::::: */
 
-#container {
+#tabbox {
 	display: flex;
 	flex-direction: column;
 	max-height: 100vh;
@@ -146,7 +146,7 @@ img, label {
 	padding: 4px 4px 4px 7px;
 }
 
-#container[stacking="false"] #tabList .tab:last-child {
+#tabbox[stacking="false"] #tabList .tab:last-child {
 	border-bottom-width: 0px;
 }
 
@@ -369,19 +369,19 @@ button:active, button[checked] {
 	opacity: 1;
 }
 
-#container[stacking="true"] #newTab {
+#tabbox[stacking="true"] #newTab {
 	order: 1;
 }
 
-#container[stacking="true"] #pinList {
+#tabbox[stacking="true"] #pinList {
 	order: 2;
 }
 
-#container[stacking="true"] #tabList {
+#tabbox[stacking="true"] #tabList {
 	order: 3;
 }
 
-#container[stacking="true"] #newTab {
+#tabbox[stacking="true"] #newTab {
 	border-top-width: 0px;
 }
 
@@ -519,7 +519,7 @@ button:active, button[checked] {
 }
 
 #menu[open="false"] button:not(#menu_toggle),
-#menu[open="false"] #ctxList {
+#menu[open="false"] #contexts {
 	display: none;
 }
 
@@ -532,31 +532,35 @@ button:active, button[checked] {
 	opacity: 1;
 }
 
-#ctxList {
+#contexts {
 	align-self: flex-start;
 	margin-left: 2px;
 	padding: 0px 2px;
 	border-left: 1px solid var(--separator-color);
 }
 
-#ctxList button {
+#contexts button {
 	width: 100%;
 }
 
-#ctxList button img {
+#contexts button img {
 	width: 16px;
 	height: 16px;
 	-moz-context-properties: fill;
 	opacity: unset;
 }
 
-#ctxList button label {
+#contexts button label {
 	font: caption;
 	opacity: 0.7;
 	margin: 0px 4px;
 }
 
-#ctx {
+#contexts button[checked] {
+	font-weight: bold;
+}
+
+#context {
 	display: none !important;
 }
 
