@@ -908,7 +908,7 @@ function getElementByTabId(aTabId) {
 function getFaviconForTab(aTab) {
 	if ("favIconUrl" in aTab === false)
 		return "/icons/defaultFavicon.svg";
-	if (aTab.favIconUrl == "chrome://mozapps/skin/extensions/extensionGeneric-16.svg")
+	if (aTab.favIconUrl == "chrome://mozapps/skin/extensions/extension.svg")
 		return "/icons/extensions-16.svg";
 	return aTab.favIconUrl;
 }
