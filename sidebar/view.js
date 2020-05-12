@@ -782,8 +782,8 @@ async function doCommand(aCommand, aTabId) {
 			rebuildMenu();
 			break;
 		case "menu_contexts": 
-			let list = document.getElementById("contexts");
-			list.hidden = !list.hidden;
+			gPrefs.menuContexts = !gPrefs.menuContexts;
+			browser.storage.local.set(gPrefs);
 			rebuildContexts();
 			break;
 		case "create_container": 
@@ -811,6 +811,7 @@ function rebuildMenu() {
 
 async function rebuildContexts() {
 	let list = document.getElementById("contexts");
+	list.hidden = !gPrefs.menuContexts;
 	if (list.hidden)
 		return;
 	while (list.lastChild)
