@@ -130,8 +130,12 @@ img, label {
 	box-shadow: inset 0px 2px 4px rgba(243,243,242,0.3);
 }
 
-#tabList:empty {
+#tabList[empty] {
 	overflow-y: hidden !important;
+}
+
+#tabList:not([empty]) + #newTab {
+	border-top-width: 0px;
 }
 
 #pinList:not(:empty) {
@@ -144,10 +148,6 @@ img, label {
 	position: relative;
 	border-bottom: 1px solid var(--separator-color);
 	padding: 4px 4px 4px 7px;
-}
-
-#tabbox[stacking="false"] #tabList .tab:last-child {
-	border-bottom-width: 0px;
 }
 
 .tab .bar {

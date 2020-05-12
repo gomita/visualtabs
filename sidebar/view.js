@@ -513,6 +513,7 @@ function onCreated(tab) {
 		let sel = gTabList.parentNode.querySelector("[selected]");
 		sel.scrollIntoView({ block: "start", behavior: "smooth" });
 	}
+	updateTabsIsEmpty();
 	let newTab = document.querySelector("#newTab");
 	if (newTab.getBoundingClientRect().top <= elt.getBoundingClientRect().top) {
 		newTab.removeAttribute("flash");
@@ -530,6 +531,7 @@ function onRemoved(tabId, removeInfo) {
 //	console.log("onRemoved: " + tabId + " " + JSON.stringify(removeInfo));
 	let list = elt.getAttribute("pinned") == "true" ? gPinList : gTabList;
 	list.removeChild(elt);
+	updateTabsIsEmpty();
 }
 
 function onUpdated(tabId, changeInfo, tab) {
@@ -577,6 +579,7 @@ function onUpdated(tabId, changeInfo, tab) {
 			gTabList.insertBefore(elt, gTabList.children[tab.index - gPinList.childElementCount + 1]);
 		}
 		drawThumbnail(tabId);
+		updateTabsIsEmpty();
 	}
 	// change discarded status
 	else if (changeInfo.discarded !== undefined) {
@@ -634,6 +637,7 @@ async function onAttached(tabId, attachInfo) {
 		gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
 		drawThumbnail(tab.id);
 	}
+	updateTabsIsEmpty();
 }
 
 function onDetached(tabId, detachInfo) {
@@ -643,6 +647,7 @@ function onDetached(tabId, detachInfo) {
 	let elt = getElementByTabId(tabId);
 	let list = elt.getAttribute("pinned") == "true" ? gPinList : gTabList;
 	list.removeChild(elt);
+	updateTabsIsEmpty();
 }
 
 function onReplaced(addedTabId, removedTabId) {
@@ -928,6 +933,7 @@ async function rebuildList() {
 	gHlightTabIds.unshift(tabs.filter(tab => tab.active)[0].id);
 	// first, create list without thumbnails
 	tabs.map(tab => (tab.pinned ? gPinList : gTabList).appendChild(elementForTab(tab)));
+	updateTabsIsEmpty();
 	// show new tab button after building all tabs
 	document.getElementById("newTab").style.visibility = "visible";
 	// ensure the selected tab is visible
@@ -975,6 +981,13 @@ function elementForTab(aTab) {
 	if (!aTab.pinned && gPrefs.context[gWindowId] && gPrefs.context[gWindowId] != aTab.cookieStoreId)
 		elt.setAttribute("collapsed", "true");
 	return elt;
+}
+
+function updateTabsIsEmpty() {
+	if (gTabList.querySelector(".tab:not([collapsed])"))
+		gTabList.removeAttribute("empty");
+	else
+		gTabList.setAttribute("empty", "true");
 }
 
 async function drawThumbnail(aTabId) {
