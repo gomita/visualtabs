@@ -207,10 +207,17 @@ async function handleMenuClick(info, tab) {
 		default: 
 			if (!/^reopen_(.+)$/.test(info.menuItemId))
 				break;
-			tabs.reverse().map(_tab => browser.tabs.create({
-				url: _tab.url, index: ++_tab.index, pinned: _tab.pinned, active: true, 
-				cookieStoreId: RegExp.$1 == "default" ? undefined : RegExp.$1
-			}));
+			let context = RegExp.$1 == "default" ? null : RegExp.$1;
+			tabs.reverse();
+			let newTab;
+			for (let _tab of tabs) {
+				newTab = await browser.tabs.create({
+					url: _tab.url, index: ++_tab.index, pinned: _tab.pinned, active: false, 
+					cookieStoreId: context
+				});
+			}
+			// select the last duplicated tab
+			browser.tabs.update(newTab.id, { active: true });
 			break;
 	}
 }
