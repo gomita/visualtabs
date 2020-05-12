@@ -16,7 +16,7 @@ var gMouseOverTimer;
 var gMouseDownFlag = false;
 var gHlightTabIds = [];
 
-function init() {
+async function init() {
 	gPinList = document.getElementById("pinList");
 	gTabList = document.getElementById("tabList");
 	gTabElt  = document.getElementById("tab");
@@ -51,7 +51,8 @@ function init() {
 	browser.contextualIdentities.onRemoved.addListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.addListener(onContextChanged);
 	window.matchMedia("(prefers-color-scheme: dark)").addListener(rebuildList);
-	rebuildList();
+	await rebuildList();
+	await rebuildMenu();
 	setTimeout(() => localizeUI(), 0);
 }
 
@@ -674,14 +675,19 @@ function onHighlighted(highlightInfo) {
 ////////////////////////////////////////////////////////////////////////////////
 // other listeners
 
-function onMessage(request, sender, sendResponse) {
-	if (request.value == "visualtabs:rebuild")
-		rebuildList();
+async function onMessage(request, sender, sendResponse) {
+//	console.log("onMessage: " + request.value);
+	switch (request.value) {
+		case "visualtabs:rebuild": 
+			await rebuildList();
+			await rebuildMenu();
+			break;
+	}
 }
 
 async function onContextChanged(ctx) {
 //	console.log("context changed: " + JSON.stringify(ctx));
-	rebuildList();
+	rebuildContexts();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -870,8 +876,6 @@ async function rebuildList() {
 	// then, update thumbnails async
 	if (gPrefs.mode == "compact" || gPrefs.mode == "full")
 		tabs.forEach(tab => drawThumbnail(tab.id));
-	// finally, rebuild menu
-	rebuildMenu();
 }
 
 function elementForTab(aTab) {
