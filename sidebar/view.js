@@ -561,7 +561,8 @@ function onUpdated(tabId, changeInfo, tab) {
 	}
 	// change favicon
 	else if (changeInfo.favIconUrl) {
-		elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(tab) + "')";
+		if (tab.status == "complete")
+			elt.querySelector(".favicon").style.backgroundImage = "url('" + getFaviconForTab(tab) + "')";
 	}
 	// change pinned status
 	else if (changeInfo.pinned !== undefined) {
