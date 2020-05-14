@@ -843,14 +843,11 @@ function rebuildMenu() {
 	else {
 		img.src = "/icons/arrowhead-up-16.svg";
 	}
-	// if in-private-browsing, hide menu_contexts button
-	if (gIncognito)
-		document.getElementById("menu_contexts").style.display = "none";
 }
 
 async function rebuildContexts() {
 	let list = document.getElementById("contexts");
-	list.hidden = !gPrefs.menuContexts;
+	list.hidden = gIncognito || !gPrefs.menuContexts;
 	if (list.hidden)
 		return;
 	// '3' contains #context_all, hr, #context_firefox-default
