@@ -27,8 +27,7 @@
 	"menu_toggle": { "message": "Menu" },
 	"menu_mode": { "message": "Change preview mode" },
 	"menu_options": { "message": "Options" },
-	"menu_contexts": { "message": "Switch between container tabs" },
-	"menu_alltabs": { "message": "All Tabs" },
+	"menu_contexts": { "message": "Open a new container tab" },
 	// options
 	"general": { "message": "General" },
 	"theme": { "message": "Theme: " },

@@ -281,13 +281,10 @@ function onClick(event) {
 	else if (target.id == "menu_contexts") {
 		doCommand("menu_contexts");
 	}
-	// clicks on context_all button
-	else if (target.id == "context_all") {
-		switchContext();
-	}
 	// clicks on context button
 	else if (target.id.startsWith("context_")) {
-		switchContext(target.id.replace("context_", ""));
+		doCommand("create_container", target.id.replace("context_", ""));
+		doCommand("menu_contexts");
 	}
 }
 
@@ -484,8 +481,6 @@ function onActivated(activeInfo) {
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
-	if (elt.hasAttribute("collapsed"))
-		switchContext(elt.getAttribute("data-context") || "firefox-default");
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
 	drawThumbnail(activeInfo.tabId);
 }
@@ -708,9 +703,7 @@ async function onContextChanged(ctx) {
 
 async function doCommand(aCommand, aTabId) {
 	switch (aCommand) {
-		case "create"   : 
-			browser.tabs.create({ active: true, cookieStoreId: gPrefs.context[gWindowId] });
-			break;
+		case "create"   : browser.tabs.create({ active: true }); break;
 		case "select"   : browser.tabs.update(aTabId, { active: true }); break;
 		case "activeChange": 
 			// select the tab with aTabId and keep all highlights
@@ -748,15 +741,6 @@ async function doCommand(aCommand, aTabId) {
 				for (let idx = fromIdx; idx <= toIdx; idx++) idxs.push(idx);
 			else
 				for (let idx = toIdx; idx <= fromIdx; idx++) idxs.push(idx);
-			// if context is enabled, filter out invisible tabs
-			if (gPrefs.context[gWindowId]) {
-				idxs = idxs.filter(idx => {
-					if (idx < gPinList.childElementCount)
-						return true;
-					let elt = gTabList.children[idx - gPinList.childElementCount];
-					return !elt.hasAttribute("collapsed");
-				});
-			}
 			browser.tabs.highlight({ tabs: idxs });
 			break;
 		case "hlightAdditionalRange": 
@@ -778,15 +762,6 @@ async function doCommand(aCommand, aTabId) {
 				for (let idx = toIdx; idx <= fromIdx; idx++) idxs.push(idx);
 			// third, remove duplicated indexes
 			idxs = idxs.filter((idx, i, self) => self.indexOf(idx) == i);
-			// fourth, if context is enabled, filter out invisible tabs
-			if (gPrefs.context[gWindowId]) {
-				idxs = idxs.filter(idx => {
-					if (idx < gPinList.childElementCount)
-						return true;
-					let elt = gTabList.children[idx - gPinList.childElementCount];
-					return !elt.hasAttribute("collapsed");
-				});
-			}
 			browser.tabs.highlight({ tabs: idxs });
 			break;
 		case "selectAll": 
@@ -797,9 +772,6 @@ async function doCommand(aCommand, aTabId) {
 			// second, add the highlighted tabs
 			var _tabs = await browser.tabs.query({ currentWindow: true, active: false, hidden: false });
 			tabs = tabs.concat(_tabs);
-			// third, if context is enabled, filter pinned tabs and invisible tabs
-			if (gPrefs.context[gWindowId])
-				tabs = tabs.filter(tab => !tab.pinned && tab.cookieStoreId == gPrefs.context[gWindowId]);
 			// make array of indexes and highlight them
 			var idxs = tabs.map(tab => tab.index);
 			browser.tabs.highlight({ tabs: idxs });
@@ -827,7 +799,6 @@ async function doCommand(aCommand, aTabId) {
 			break;
 		case "create_container": 
 			browser.tabs.create({ active: true, cookieStoreId: aTabId });
-			switchContext(aTabId);
 			break;
 	}
 }
@@ -850,8 +821,7 @@ async function rebuildContexts() {
 	list.hidden = gIncognito || !gPrefs.menuContexts;
 	if (list.hidden)
 		return;
-	// '3' contains #context_all, hr, #context_firefox-default
-	while (list.childElementCount > 3)
+	while (list.lastChild)
 		list.removeChild(list.lastChild);
 	let ctxs = await browser.contextualIdentities.query({});
 	for (let ctx of ctxs) {
@@ -863,27 +833,6 @@ async function rebuildContexts() {
 		elt.querySelector("label").textContent = ctx.name;
 		list.appendChild(elt);
 	}
-	// change checked state of the context buttons
-	let ctxElt = document.querySelector("#contexts [checked]");
-	if (ctxElt)
-		ctxElt.removeAttribute("checked");
-	ctxElt = document.querySelector("#context_" + (gPrefs.context[gWindowId] || "all"));
-	if (!ctxElt)
-		ctxElt = document.querySelector("#context_all");
-	ctxElt.setAttribute("checked", "checked");
-}
-
-async function switchContext(aContext) {
-	// change checked state of the context buttons
-	document.querySelector("#contexts [checked]").removeAttribute("checked");
-	document.querySelector("#context_" + (aContext || "all")).setAttribute("checked", "checked");
-	// persist the selected context to pref and rebuild list
-	// should get prefs before setting, since gPrefs.context may be changed in another window
-	gPrefs = await browser.storage.local.get();
-	gPrefs.context[gWindowId] = aContext;
-	await browser.storage.local.set(gPrefs);
-//	console.log("gPrefs.context:\n" + JSON.stringify(gPrefs.context).replace(/,/g, ",\n"));
-	rebuildList();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -905,7 +854,6 @@ async function rebuildList() {
 	gPrefs.hideScroll    = getPref("hideScroll", false);
 	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
 	gPrefs.menu          = getPref("menu", true);
-	if (gPrefs.context === undefined) gPrefs.context = {};
 	let theme = gPrefs.theme;
 	if (theme == "default")
 		theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -975,8 +923,6 @@ function elementForTab(aTab) {
 			elt.style.setProperty("--context-color", ctx.colorCode);
 		});
 	}
-	if (!aTab.pinned && gPrefs.context[gWindowId] && gPrefs.context[gWindowId] != aTab.cookieStoreId)
-		elt.setAttribute("collapsed", "true");
 	return elt;
 }
 

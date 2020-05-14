@@ -27,8 +27,7 @@
 	"menu_toggle": { "message": "メニュー" },
 	"menu_mode": { "message": "プレビュー表示モードを切替" },
 	"menu_options": { "message": "設定" },
-	"menu_contexts": { "message": "コンテナータブの表示を切替" },
-	"menu_alltabs": { "message": "すべてのタブ" },
+	"menu_contexts": { "message": "新しいコンテナータブを開く" },
 	// options
 	"general": { "message": "一般" },
 	"theme": { "message": "テーマ: " },
