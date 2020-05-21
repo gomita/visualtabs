@@ -78,7 +78,7 @@ async function handleMenuShown(info, tab) {
 	browser.menus.update("reopen_default", { visible: tab.cookieStoreId != "firefox-default" });
 	browser.menus.update("reopen_sep",     { visible: tab.cookieStoreId != "firefox-default" });
 	// disable reopen menu items for privileged URL
-	let enabled = tab.url.startsWith("http") || tab.url == "about:blank" || tab.url == "about:newtab";
+	let enabled = tab.url.startsWith("http") || tab.url == "about:blank";
 	browser.menus.update("reopen", { enabled });
 	// hide reopen menu items in private-browsing
 	browser.menus.update("reopen", { visible: !tab.incognito });
