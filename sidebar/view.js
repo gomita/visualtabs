@@ -484,8 +484,10 @@ function onActivated(activeInfo) {
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
 	if (gPrefs.mode != "none")
 		drawThumbnail(activeInfo.tabId);
-	if (gPrefs.backMonitor)
+	if (gPrefs.backMonitor) {
 		elt.removeAttribute("unread");
+		browser.sessions.removeTabValue(activeInfo.tabId, "unread");
+	}
 }
 
 function onCreated(tab) {
@@ -513,6 +515,7 @@ function onCreated(tab) {
 	}
 	if (gPrefs.backMonitor && !tab.active) {
 		elt.setAttribute("unread", "true");
+		browser.sessions.setTabValue(tab.id, "unread", true);
 		setTimeout(() => { elt.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 300);
 	}
 	updateTabsIsEmpty();
@@ -553,8 +556,10 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.querySelector(".favicon").style.backgroundImage = "";
 		elt.querySelector(".burst").removeAttribute("bursting");
 		elt.setAttribute("loading", "true");
-		if (gPrefs.backMonitor && !tab.active)
+		if (gPrefs.backMonitor && !tab.active) {
 			elt.setAttribute("unread", "true");
+			browser.sessions.setTabValue(tabId, "unread", true);
+		}
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
 			if (gPrefs.mode != "none" || elt.hasAttribute("unread"))
@@ -567,8 +572,10 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.setAttribute("url", tab.url);
 		elt.querySelector(".burst").setAttribute("bursting", "true");
 		elt.removeAttribute("loading");
-		if (gPrefs.backMonitor && !tab.active)
+		if (gPrefs.backMonitor && !tab.active) {
 			elt.setAttribute("unread", "true");
+			browser.sessions.setTabValue(tabId, "unread", true);
+		}
 		if (gPrefs.mode != "none" || elt.hasAttribute("unread"))
 			drawThumbnail(tabId);
 	}
@@ -913,6 +920,16 @@ async function rebuildList() {
 	// then, update thumbnails async
 	if (gPrefs.mode == "compact" || gPrefs.mode == "full")
 		tabs.forEach(tab => drawThumbnail(tab.id));
+	// finally, restore unread attribute and update thumbnails async
+	if (gPrefs.backMonitor) {
+		for (let tab of tabs) {
+			let unread = await browser.sessions.getTabValue(tab.id, "unread");
+			if (unread === undefined)
+				continue;
+			getElementByTabId(tab.id).setAttribute("unread", unread);
+			drawThumbnail(tab.id);
+		}
+	}
 }
 
 function elementForTab(aTab) {
