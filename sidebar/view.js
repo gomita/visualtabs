@@ -584,6 +584,14 @@ function onUpdated(tabId, changeInfo, tab) {
 		else
 			elt.removeAttribute("discarded");
 	}
+	// change hidden status
+	else if (changeInfo.hidden !== undefined) {
+		if (changeInfo.hidden)
+			elt.setAttribute("collapsed", "true");
+		else
+			elt.removeAttribute("collapsed");
+		updateTabsIsEmpty();
+	}
 	// change audible status
 	else if (changeInfo.audible !== undefined) {
 		if (changeInfo.audible)
@@ -871,7 +879,7 @@ async function rebuildList() {
 		gPinList.removeChild(gPinList.lastChild);
 	while (gTabList.lastChild)
 		gTabList.removeChild(gTabList.lastChild);
-	let tabs = await browser.tabs.query({ currentWindow: true, hidden: false });
+	let tabs = await browser.tabs.query({ currentWindow: true });
 	gWindowId = tabs[0].windowId;
 	gIncognito = tabs[0].incognito;
 	// gHlightTabIds is array of highlighted tabs, note that the first element is of active tab
@@ -917,6 +925,8 @@ function elementForTab(aTab) {
 		elt.setAttribute("muted", "true");
 	if (aTab.highlighted)
 		elt.setAttribute("highlighted", "true");
+	if (aTab.hidden)
+		elt.setAttribute("collapsed", "true");
 	if (aTab.cookieStoreId && aTab.cookieStoreId.startsWith("firefox-container-")) {
 		elt.setAttribute("data-context", aTab.cookieStoreId);
 		// get context color for container tab async

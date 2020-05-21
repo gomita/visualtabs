@@ -142,7 +142,7 @@ async function handleMenuClick(info, tab) {
 					browser.tabs.move(_tab.id, { index: 0 });
 				}
 				else {
-					let pins = await browser.tabs.query({ currentWindow: true, hidden: false, pinned: true });
+					let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
 					browser.tabs.move(_tab.id, { index: pins.length });
 				}
 			}
@@ -150,7 +150,7 @@ async function handleMenuClick(info, tab) {
 		case "moveToBottom" : 
 			for (let _tab of tabs) {
 				if (_tab.pinned) {
-					let pins = await browser.tabs.query({ currentWindow: true, hidden: false, pinned: true });
+					let pins = await browser.tabs.query({ currentWindow: true, pinned: true });
 					browser.tabs.move(_tab.id, { index: pins.length - 1 });
 				}
 				else {
