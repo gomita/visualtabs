@@ -346,6 +346,11 @@ button:active, button[checked] {
 	transform: skew(0deg);
 }
 
+/* temporary disable animation */
+#tabList[firsttime] .tab .thumbnail {
+	transition: unset !important;
+}
+
 /* ::::: new tab button ::::: */
 
 #newTab {

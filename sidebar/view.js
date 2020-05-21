@@ -51,8 +51,10 @@ async function init() {
 	browser.contextualIdentities.onRemoved.addListener(onContextChanged);
 	browser.contextualIdentities.onUpdated.addListener(onContextChanged);
 	window.matchMedia("(prefers-color-scheme: dark)").addListener(rebuildList);
+	gTabList.setAttribute("firsttime", "true");
 	await rebuildList();
 	await rebuildMenu();
+	setTimeout(() => gTabList.removeAttribute("firsttime"), 1000);
 	setTimeout(() => localizeUI(), 0);
 }
 
