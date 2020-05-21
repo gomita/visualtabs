@@ -639,7 +639,8 @@ async function onAttached(tabId, attachInfo) {
 	else {
 		let index = attachInfo.newPosition - gPinList.childElementCount;
 		gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
-		drawThumbnail(tab.id);
+		if (gPrefs.mode != "none")
+			drawThumbnail(tab.id);
 	}
 	updateTabsIsEmpty();
 }
@@ -663,7 +664,8 @@ function onZoomChange(ZoomChangeInfo) {
 	if (!elt)
 		return;
 //	console.log("onZoomChange: " + JSON.stringify(ZoomChangeInfo));
-	drawThumbnail(ZoomChangeInfo.tabId);
+	if (gPrefs.mode != "none")
+		drawThumbnail(ZoomChangeInfo.tabId);
 }
 
 function onHighlighted(highlightInfo) {
