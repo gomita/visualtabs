@@ -44,6 +44,7 @@
 	"minimal": { "message": "Minimal" },
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },
+	"backMonitor": { "message": "Show previews of tabs which are opened in background" },
 	"effect": { "message": "Enable visual effect for previews" },
 	"previewHeight": { "message": "Height of previews (in pixel): " },
 	"autoUpdate": { "message": "Automatically redraw preview while the mouse pointer is hovering over." },

@@ -323,16 +323,18 @@ button:active, button[checked] {
 	z-index: unset;
 }
 
+#tabList[mode="none"] .tab .thumbnail,
 #tabList[mode="minimal"] .tab .thumbnail {
 	height: 0;
 	transition: 0.2s ease-out 0.1s;
 }
 
-#tabList[mode="compact"] .tab:not([pinned]) .thumbnail {
+#tabList[mode="compact"] .tab:not([pinned]):not([unread]) .thumbnail {
 	height: calc(var(--preview-height) * 0.2);
 	transition: 0.2s ease-out 0.1s;
 }
 
+#tabList .tab[unread] .thumbnail,
 #tabList[mode="minimal"] .tab[focus]:not([discarded]):not([url="about:blank"]) .thumbnail,
 #tabList[mode="compact"] .tab[focus]:not([pinned]):not([discarded]):not([url="about:blank"]) .thumbnail,
 #tabList[mode="full"] .tab:not([pinned]) .thumbnail {
@@ -344,6 +346,7 @@ button:active, button[checked] {
 	transform: skew(45deg);
 }
 
+#tabList[effect="true"] .tab[unread] .thumbnail,
 #tabList:not([mode="full"])[effect="true"] .tab[focus] .thumbnail {
 	transform: skew(0deg);
 }

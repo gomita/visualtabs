@@ -484,6 +484,8 @@ function onActivated(activeInfo) {
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
 	if (gPrefs.mode != "none")
 		drawThumbnail(activeInfo.tabId);
+	if (gPrefs.backMonitor)
+		elt.removeAttribute("unread");
 }
 
 function onCreated(tab) {
@@ -508,6 +510,10 @@ function onCreated(tab) {
 		elt = gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
 		let sel = gTabList.parentNode.querySelector("[selected]");
 		sel.scrollIntoView({ block: "start", behavior: "smooth" });
+	}
+	if (gPrefs.backMonitor && !tab.active) {
+		elt.setAttribute("unread", "true");
+		setTimeout(() => { elt.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 300);
 	}
 	updateTabsIsEmpty();
 	let newTab = document.querySelector("#newTab");
@@ -547,9 +553,11 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.querySelector(".favicon").style.backgroundImage = "";
 		elt.querySelector(".burst").removeAttribute("bursting");
 		elt.setAttribute("loading", "true");
+		if (gPrefs.backMonitor && !tab.active)
+			elt.setAttribute("unread", "true");
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
-			if (gPrefs.mode != "none")
+			if (gPrefs.mode != "none" || elt.hasAttribute("unread"))
 				drawThumbnail(tabId);
 		}
 	}
@@ -559,7 +567,9 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.setAttribute("url", tab.url);
 		elt.querySelector(".burst").setAttribute("bursting", "true");
 		elt.removeAttribute("loading");
-		if (gPrefs.mode != "none")
+		if (gPrefs.backMonitor && !tab.active)
+			elt.setAttribute("unread", "true");
+		if (gPrefs.mode != "none" || elt.hasAttribute("unread"))
 			drawThumbnail(tabId);
 	}
 	// change favicon
@@ -862,6 +872,7 @@ async function rebuildList() {
 	gPrefs.theme         = getPref("theme", "default");
 	gPrefs.mode          = getPref("mode", "compact");
 	gPrefs.stacking      = getPref("stacking", false);
+	gPrefs.backMonitor   = getPref("backMonitor", false);
 	gPrefs.effect        = getPref("effect", true);
 	gPrefs.autoUpdate    = getPref("autoUpdate", 0);
 	gPrefs.activeLine    = getPref("activeLine", "left");
