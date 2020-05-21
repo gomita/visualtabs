@@ -482,7 +482,8 @@ function onActivated(activeInfo) {
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
 	elt.scrollIntoView({ block: "nearest", behavior: "smooth" });
-	drawThumbnail(activeInfo.tabId);
+	if (gPrefs.mode != "none")
+		drawThumbnail(activeInfo.tabId);
 }
 
 function onCreated(tab) {
@@ -548,7 +549,8 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.setAttribute("loading", "true");
 		if (changeInfo.url && changeInfo.url != elt.getAttribute("url")) {
 			elt.setAttribute("url", changeInfo.url);
-			drawThumbnail(tabId);
+			if (gPrefs.mode != "none")
+				drawThumbnail(tabId);
 		}
 	}
 	// refresh a tab after loading complete
@@ -557,7 +559,8 @@ function onUpdated(tabId, changeInfo, tab) {
 		elt.setAttribute("url", tab.url);
 		elt.querySelector(".burst").setAttribute("bursting", "true");
 		elt.removeAttribute("loading");
-		drawThumbnail(tabId);
+		if (gPrefs.mode != "none")
+			drawThumbnail(tabId);
 	}
 	// change favicon
 	else if (changeInfo.favIconUrl) {
@@ -574,7 +577,8 @@ function onUpdated(tabId, changeInfo, tab) {
 			elt.removeAttribute("pinned");
 			gTabList.insertBefore(elt, gTabList.children[tab.index - gPinList.childElementCount + 1]);
 		}
-		drawThumbnail(tabId);
+		if (gPrefs.mode != "none")
+			drawThumbnail(tabId);
 		updateTabsIsEmpty();
 	}
 	// change discarded status
