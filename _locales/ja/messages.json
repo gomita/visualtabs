@@ -11,6 +11,7 @@
 	"unpin": { "message": "タブのピン留めを外す" },
 	"duplicate": { "message": "タブを複製" },
 	"selectAll": { "message": "すべてのタブを選択" },
+	"bookmark": { "message": "タブをブックマーク" },
 	"reopen": { "message": "コンテナーを開きなおす" },
 	"reopen_default": { "message": "コンテナーなし" },
 	"move": { "message": "タブを移動" },

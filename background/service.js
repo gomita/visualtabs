@@ -10,6 +10,7 @@ var gMenuDefs = [
 	{ id: "duplicate" },
 	{ id: "sep1", type: "separator" },
 	{ id: "selectAll" },
+	{ id: "bookmark" },
 	{ id: "reopen" },
 	{ id: "reopen_default", parentId: "reopen" },
 	{ id: "reopen_sep", type: "separator", parentId: "reopen" },
@@ -205,6 +206,11 @@ async function handleMenuClick(info, tab) {
 		case "close": tabs.map(_tab => browser.tabs.remove(_tab.id)); break;
 		case "selectAll": 
 			browser.runtime.sendMessage({ value: "visualtabs:selectAll" });
+			break;
+		case "bookmark": 
+			for (let _tab of tabs) {
+				await browser.bookmarks.create({ title: _tab.title, url: _tab.url });
+			}
 			break;
 		default: 
 			if (!/^reopen_(.+)$/.test(info.menuItemId))

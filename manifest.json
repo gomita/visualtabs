@@ -46,6 +46,7 @@
 		"contextualIdentities",
 		"menus",
 		"menus.overrideContext",
+		"bookmarks",
 		"<all_urls>"
 	]
 }

@@ -11,6 +11,7 @@
 	"unpin": { "message": "Unpin Tab" },
 	"duplicate": { "message": "Duplicate Tab" },
 	"selectAll": { "message": "Select All Tabs" },
+	"bookmark": { "message": "Bookmark Tab" },
 	"reopen": { "message": "Reopen in Container" },
 	"reopen_default": { "message": "No Container" },
 	"move": { "message": "Move Tab" },
