@@ -71,6 +71,8 @@ async function handleBrowserAction(tab) {
 
 async function handleMenuShown(info, tab) {
 //	console.log("onShown: " + JSON.stringify(info) + "\n\n"+ JSON.stringify(tab));
+	if (info.contexts && !info.contexts.includes("tab"))
+		return;
 	browser.menus.update("mute",   { visible: !tab.mutedInfo.muted });
 	browser.menus.update("unmute", { visible: tab.mutedInfo.muted });
 	browser.menus.update("pin",    { visible: !tab.pinned });
