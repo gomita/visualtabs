@@ -15,6 +15,7 @@ var gMouseOverTabId;
 var gMouseOverTimer;
 var gMouseDownFlag = false;
 var gHlightTabIds = [];
+var gRebuildingList = false;
 
 async function init() {
 	gPinList = document.getElementById("pinList");
@@ -873,6 +874,9 @@ async function rebuildContexts() {
 // list
 
 async function rebuildList() {
+	if (gRebuildingList)
+		return;
+	gRebuildingList = true;
 	// read prefs
 	gPrefs = await browser.storage.local.get();
 	const getPref = function(aName, aDefaultValue) {
@@ -932,6 +936,7 @@ async function rebuildList() {
 			drawThumbnail(tab.id);
 		}
 	}
+	gRebuildingList = false;
 }
 
 function elementForTab(aTab) {
