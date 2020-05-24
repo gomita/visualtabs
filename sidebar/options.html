@@ -63,7 +63,7 @@
 	<input id="hideScroll" type="checkbox">
 	<label for="hideScroll" i18n="text:hideScroll"></label>
 </div>
-<div class="hbox indent">
+<div id="scrollWidthBox" class="hbox indent">
 	<label for="scrollWidth" i18n="text:scrollWidth"></label>
 	<input id="scrollWidth" type="number" min="1" max="99" step="1" style="width: 4em;">
 </div>
@@ -83,21 +83,21 @@
 	<input id="mode:full" type="radio" name="mode">
 	<label for="mode:full" i18n="text:full"></label>
 </div>
-<div class="hbox indent">
+<div id="backMonitorBox" class="hbox">
 	<input id="backMonitor" type="checkbox">
 	<label for="backMonitor" i18n="text:backMonitor"></label>
 </div>
-<div class="hbox indent">
+<div class="hbox">
+	<input id="autoUpdate" type="checkbox">
+	<label for="autoUpdate" i18n="text:autoUpdate"></label>
+</div>
+<div id="effectBox" class="hbox">
 	<input id="effect" type="checkbox">
 	<label for="effect" i18n="text:effect"></label>
 </div>
 <div class="hbox">
 	<label for="previewHeight" i18n="text:previewHeight"></label>
 	<input id="previewHeight" type="number" min="10" max="200" step="10" style="width: 5em;">
-</div>
-<div class="hbox">
-	<input id="autoUpdate" type="checkbox">
-	<label for="autoUpdate" i18n="text:autoUpdate"></label>
 </div>
 <script src="options.js"></script>
 </body>

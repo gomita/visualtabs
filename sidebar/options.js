@@ -50,9 +50,14 @@ function localizeUI() {
 }
 
 function updateUI() {
-	// if hide scroll is enabled, make scroll width option grayed-out
-	document.querySelectorAll('#scrollWidth, [for="scrollWidth"]').forEach(elt => {
-		if (gPrefs.hideScroll)
+	_syncToPref("scrollWidthBox", gPrefs.hideScroll);
+	_syncToPref("backMonitorBox", gPrefs.mode != "full");
+	_syncToPref("effectBox",      gPrefs.mode != "full");
+}
+
+function _syncToPref(aId, aEnable) {
+	[...document.getElementById(aId).children].forEach(elt => {
+		if (aEnable)
 			elt.removeAttribute("disabled");
 		else
 			elt.setAttribute("disabled", "true");
@@ -64,10 +69,10 @@ function onChange(event) {
 		case "theme:default"   : gPrefs.theme = "default"; break;
 		case "theme:light"     : gPrefs.theme = "light"; break;
 		case "theme:dark"      : gPrefs.theme = "dark"; break;
-		case "mode:none"       : gPrefs.mode = "none"; break;
-		case "mode:minimal"    : gPrefs.mode = "minimal"; break;
-		case "mode:compact"    : gPrefs.mode = "compact"; break;
-		case "mode:full"       : gPrefs.mode = "full"; break;
+		case "mode:none"       : gPrefs.mode = "none";    updateUI(); break;
+		case "mode:minimal"    : gPrefs.mode = "minimal"; updateUI(); break;
+		case "mode:compact"    : gPrefs.mode = "compact"; updateUI(); break;
+		case "mode:full"       : gPrefs.mode = "full";    updateUI(); break;
 		case "stacking"        : gPrefs.stacking = event.target.checked; break;
 		case "backMonitor"     : gPrefs.backMonitor = event.target.checked; break;
 		case "effect"          : gPrefs.effect = event.target.checked; break;
