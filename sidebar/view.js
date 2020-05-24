@@ -717,7 +717,7 @@ function onHighlighted(highlightInfo) {
 // other listeners
 
 async function onMessage(request, sender, sendResponse) {
-//	console.log("onMessage: " + request.value);
+//	console.log("onMessage: " + JSON.stringify(request));
 	switch (request.value) {
 		case "visualtabs:rebuild": 
 			await rebuildList();

@@ -4,9 +4,6 @@ async function init() {
 	localizeUI();
 	document.body.onchange = onChange;
 	gPrefs = await browser.storage.local.get();
-	// for compatibility with ver 0.9 or former
-	if (gPrefs.mode == "normal")
-		gPrefs.mode = "full";
 	const getPref = function(aName, aDefaultValue) {
 		return aName in gPrefs ? gPrefs[aName] : aDefaultValue;
 	}
