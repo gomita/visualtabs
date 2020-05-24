@@ -892,6 +892,8 @@ async function rebuildList() {
 	gPrefs.previewHeight = getPref("previewHeight", 80);
 	gPrefs.hideScroll    = getPref("hideScroll", false);
 	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
+	gPrefs.edge          = getPref("edge", false);
+	gPrefs.edgeWidth     = getPref("edgeWidth", 30);
 	gPrefs.menu          = getPref("menu", true);
 	let theme = gPrefs.theme;
 	if (theme == "default")

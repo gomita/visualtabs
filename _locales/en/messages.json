@@ -45,6 +45,8 @@
 	"minimal": { "message": "Minimal" },
 	"compact": { "message": "Compact" },
 	"full": { "message": "Full" },
+	"edge": { "message": "Show previews when the mouse pointer enters the specified zone." },
+	"pixel": { "message": "pixel" },
 	"backMonitor": { "message": "Show previews of tabs which are opened in background" },
 	"effect": { "message": "Enable visual effect for previews" },
 	"previewHeight": { "message": "Height of previews (in pixel): " },
