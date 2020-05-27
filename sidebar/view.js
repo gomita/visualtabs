@@ -157,6 +157,11 @@ function onMouseOver(event) {
 		return;
 	if (gPrefs.mode == "full" && gPrefs.autoUpdate == 0)
 		return;
+	// do nothing when mouse is outside the edge if edge is enabled
+	if (gPrefs.edge && !event.target.classList.contains("edge"))
+		return;
+	if (gPrefs.edge && gTabList.parentNode.hasAttribute("edgeshow"))
+		gTabList.parentNode.removeAttribute("edgeshow");
 	// do nothing when mouse is over blank area or same tab
 	let tabId = getTabIdByElement(event.target);
 	if (!tabId || tabId == gMouseOverTabId)
@@ -722,6 +727,8 @@ async function onMessage(request, sender, sendResponse) {
 		case "visualtabs:rebuild": 
 			await rebuildList();
 			await rebuildMenu();
+			if (request.edgeUpdated)
+				gTabList.parentNode.setAttribute("edgeshow", gPrefs.edge);
 			break;
 		case "visualtabs:selectAll": doCommand("selectAll"); break;
 		case "visualtabs:undoClose": doCommand("undoClose"); break;
@@ -906,6 +913,8 @@ async function rebuildList() {
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
 	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
+	gTabList.parentNode.setAttribute("edgealign", gPrefs.edgeWidth >= 0 ? "left" : "right");
+	gTabList.parentNode.style.setProperty("--edge-width", Math.abs(gPrefs.edgeWidth) + "px");
 	// remove all elements
 	while (gPinList.lastChild)
 		gPinList.removeChild(gPinList.lastChild);

@@ -161,7 +161,7 @@ img, label {
 	width: 16px; height: 16px;
 	background-image: url("/icons/defaultFavicon.svg");
 	background-size: 16px 16px;
-	z-index: 5;
+	z-index: 3;
 }
 
 .tab[loading] .favicon {
@@ -179,7 +179,7 @@ img, label {
 	padding-left: 4px;
 	overflow: hidden;
 	white-space: nowrap;
-	z-index: 4;
+	z-index: 3;
 }
 
 .tab[selected] .title {
@@ -204,7 +204,7 @@ button > * {
 }
 
 button.close {
-	z-index: 3;
+	z-index: 6;
 }
 
 button.close img {
@@ -409,7 +409,7 @@ button:active, button[checked] {
 .tab .line1,
 .tab .line2 {
 	position: absolute;
-	z-index: 7;
+	z-index: 4;
 }
 
 #tabList .tab .line1 {
@@ -465,6 +465,41 @@ button:active, button[checked] {
 #tabList[activeline="right"] .tab .line2 {
 	left: 0;
 	right: unset;
+}
+
+/* ::::: edge ::::: */
+
+#pinList .edge {
+	display: none;
+}
+
+#tabList .edge {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--edge-width);
+	transform: scaleY(1);
+	z-index: 5;
+}
+
+#tabbox[edgealign="left"] .edge {
+	left: 0;
+	right: unset;
+}
+
+#tabbox[edgealign="right"] .edge {
+	left: unset;
+	right: 0;
+}
+
+#tabbox[edgeshow="true"] .edge {
+	background-color: lightgreen;
+	opacity: 0.5;
+}
+
+#tabbox:not([edgeshow]) .edge {
+	opacity: 0;
+	transition: 1s;
 }
 
 /* ::::: hide scrollbar ::::: */
