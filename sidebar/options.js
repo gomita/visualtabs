@@ -18,7 +18,7 @@ async function init() {
 	let hideScroll    = getPref("hideScroll", false);
 	let scrollWidth   = getPref("scrollWidth", 16);
 	let edge          = getPref("edge", false);
-	let edgeWidth     = getPref("edgeWidth", 30);
+	let edgeWidth     = getPref("edgeWidth", 50);
 	document.getElementById(`theme:${theme}`).checked = true;
 	document.getElementById(`mode:${mode}`).checked = true;
 	document.getElementById(`stacking`).checked = stacking;
