@@ -3,6 +3,7 @@
 
 var gWindowId;
 var gIncognito;
+var gTabBox;
 var gPinList;
 var gTabList;
 var gTabElt;
@@ -18,12 +19,13 @@ var gHlightTabIds = [];
 var gRebuildingList = false;
 
 async function init() {
+	gTabBox  = document.getElementById("tabbox");
 	gPinList = document.getElementById("pinList");
 	gTabList = document.getElementById("tabList");
 	gTabElt  = document.getElementById("tab");
 	gPopup   = document.getElementById("popup");
-	gTabList.parentNode.addEventListener("mousedown", onMouseDown);
-	gTabList.parentNode.addEventListener("mouseover", onMouseOver);
+	gTabBox.addEventListener("mousedown", onMouseDown);
+	gTabBox.addEventListener("mouseover", onMouseOver);
 	document.addEventListener("contextmenu", onContextMenu);
 	document.addEventListener("click", onClick);
 	document.addEventListener("dblclick", onDblClick);
@@ -60,8 +62,8 @@ async function init() {
 }
 
 function uninit() {
-	gTabList.parentNode.removeEventListener("mousedown", onMouseDown);
-	gTabList.parentNode.removeEventListener("mouseover", onMouseOver);
+	gTabBox.removeEventListener("mousedown", onMouseDown);
+	gTabBox.removeEventListener("mouseover", onMouseOver);
 	document.removeEventListener("contextmenu", onContextMenu);
 	document.removeEventListener("click", onClick);
 	document.removeEventListener("dblclick", onDblClick);
@@ -91,6 +93,7 @@ function uninit() {
 	browser.contextualIdentities.onUpdated.removeListener(onContextChanged);
 	window.matchMedia("(prefers-color-scheme: dark)").removeListener(rebuildList);
 	clearInterval(gMouseOverTimer);
+	gTabBox  = null;
 	gPinList = null;
 	gTabList = null;
 	gTabElt  = null;
@@ -160,15 +163,15 @@ function onMouseOver(event) {
 	// do nothing when mouse is outside the edge if edge is enabled
 	if (gPrefs.edge && !event.target.classList.contains("edge"))
 		return;
-	if (gPrefs.edge && gTabList.parentNode.hasAttribute("edgeshow"))
-		gTabList.parentNode.removeAttribute("edgeshow");
+	if (gPrefs.edge && gTabBox.hasAttribute("edgeshow"))
+		gTabBox.removeAttribute("edgeshow");
 	// do nothing when mouse is over blank area or same tab
 	let tabId = getTabIdByElement(event.target);
 	if (!tabId || tabId == gMouseOverTabId)
 		return;
 	// mouse is over on different tab
 	gMouseOverTabId = tabId;
-	let oldElt = gTabList.parentNode.querySelector(".tab[focus]");
+	let oldElt = gTabBox.querySelector(".tab[focus]");
 	if (oldElt) {
 		oldElt.removeAttribute("focus");
 		oldElt.setAttribute("data-draw-age", 0);
@@ -189,7 +192,7 @@ function onMouseOver(event) {
 		if (!gPopup.hidden)
 			return;
 		// keep previewing while mouse points to the same tab
-		let elt = gTabList.parentNode.querySelector(".tab:hover");
+		let elt = gTabBox.querySelector(".tab:hover");
 		if (elt && getTabIdByElement(elt) == gMouseOverTabId) {
 			if (gPrefs.autoUpdate > 0) {
 				// add elapsed time to age and redraw thumbnail at specified interval
@@ -203,7 +206,7 @@ function onMouseOver(event) {
 			return;
 		}
 		// stop previewing and cancel timer when outside the tab
-		let oldElt = gTabList.parentNode.querySelector(".tab[focus]");
+		let oldElt = gTabBox.querySelector(".tab[focus]");
 		if (oldElt) {
 			oldElt.removeAttribute("focus");
 			oldElt.setAttribute("data-draw-age", 0);
@@ -342,7 +345,7 @@ function onDragStart(event) {
 	hidePopup();
 	let pinned = gPinList.querySelector("[highlighted]") != null;
 	// array of tabId which is soretd by the actual visible order
-	let tabIds = [...gTabList.parentNode.querySelectorAll("[highlighted]")].
+	let tabIds = [...gTabBox.querySelectorAll("[highlighted]")].
 	             map(elt => elt.getAttribute("tabId"));
 	let dt = event.dataTransfer;
 	dt.setData("text/x-visualtabs", [gWindowId, tabIds.join(","), pinned].join("|"));
@@ -485,7 +488,7 @@ function onActivated(activeInfo) {
 	if (!elt)
 		return;
 //	console.log("onActivated: " + JSON.stringify(activeInfo));
-	let old = gTabList.parentNode.querySelector("[selected]");
+	let old = gTabBox.querySelector("[selected]");
 	if (old)
 		old.removeAttribute("selected");
 	elt.setAttribute("selected", "true");
@@ -518,7 +521,7 @@ function onCreated(tab) {
 	else {
 		let index = tab.index - gPinList.childElementCount;
 		elt = gTabList.insertBefore(elementForTab(tab), gTabList.children[index]);
-		let sel = gTabList.parentNode.querySelector("[selected]");
+		let sel = gTabBox.querySelector("[selected]");
 		sel.scrollIntoView({ block: "start", behavior: "smooth" });
 	}
 	if (gPrefs.backMonitor && !tab.active) {
@@ -701,7 +704,7 @@ function onHighlighted(highlightInfo) {
 	if (highlightInfo.windowId != gWindowId)
 		return;
 //	console.log("onHighlighted: " + JSON.stringify(highlightInfo));
-	gTabList.parentNode.querySelectorAll("[highlighted]").forEach(elt => {
+	gTabBox.querySelectorAll("[highlighted]").forEach(elt => {
 		elt.removeAttribute("highlighted");
 	});
 	for (let tabId of highlightInfo.tabIds) {
@@ -728,7 +731,7 @@ async function onMessage(request, sender, sendResponse) {
 			await rebuildList();
 			await rebuildMenu();
 			if (request.edgeUpdated)
-				gTabList.parentNode.setAttribute("edgeshow", gPrefs.edge);
+				gTabBox.setAttribute("edgeshow", gPrefs.edge);
 			break;
 		case "visualtabs:selectAll": doCommand("selectAll"); break;
 		case "visualtabs:undoClose": doCommand("undoClose"); break;
@@ -912,9 +915,9 @@ async function rebuildList() {
 	gTabList.setAttribute("effect", gPrefs.effect);
 	gTabList.setAttribute("hidescroll", gPrefs.hideScroll);
 	gTabList.setAttribute("activeline", gPrefs.activeLine);
-	gTabList.parentNode.setAttribute("stacking", gPrefs.stacking);
-	gTabList.parentNode.setAttribute("edgealign", gPrefs.edgeWidth >= 0 ? "left" : "right");
-	gTabList.parentNode.style.setProperty("--edge-width", Math.abs(gPrefs.edgeWidth) + "px");
+	gTabBox.setAttribute("stacking", gPrefs.stacking);
+	gTabBox.setAttribute("edgealign", gPrefs.edgeWidth >= 0 ? "left" : "right");
+	gTabBox.style.setProperty("--edge-width", Math.abs(gPrefs.edgeWidth) + "px");
 	// remove all elements
 	while (gPinList.lastChild)
 		gPinList.removeChild(gPinList.lastChild);
@@ -932,7 +935,7 @@ async function rebuildList() {
 	// show new tab button after building all tabs
 	document.getElementById("newTab").style.visibility = "visible";
 	// ensure the selected tab is visible
-	let elt = gTabList.parentNode.querySelector("[selected]");
+	let elt = gTabBox.querySelector("[selected]");
 	elt.scrollIntoView({ block: "nearest" });
 	// then, update thumbnails async
 	if (gPrefs.mode == "compact" || gPrefs.mode == "full")
@@ -962,7 +965,7 @@ function elementForTab(aTab) {
 	elt.setAttribute("draggable", "true");
 	if (aTab.active) {
 		// remove [selected] from current selected element
-		let old = gTabList.parentNode.querySelector("[selected]");
+		let old = gTabBox.querySelector("[selected]");
 		if (old)
 			old.removeAttribute("selected");
 		elt.setAttribute("selected", "true");
@@ -1013,7 +1016,7 @@ function getTabIdByElement(aElt) {
 }
 
 function getElementByTabId(aTabId) {
-	return gTabList.parentNode.querySelector(`[tabId="${aTabId}"]`);
+	return gTabBox.querySelector(`[tabId="${aTabId}"]`);
 }
 
 function getFaviconForTab(aTab) {
