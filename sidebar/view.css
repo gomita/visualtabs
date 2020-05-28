@@ -270,6 +270,7 @@ button:active, button[checked] {
 
 #pinList .tab .title,
 #pinList .tab .close,
+#pinList .tab .edge,
 #pinList .tab .thumbnail {
 	display: none;
 }
@@ -469,10 +470,6 @@ button:active, button[checked] {
 
 /* ::::: edge ::::: */
 
-#pinList .edge {
-	display: none;
-}
-
 #tabList .edge {
 	position: absolute;
 	top: 0;
@@ -492,7 +489,8 @@ button:active, button[checked] {
 	right: 0;
 }
 
-#tabbox[edgeshow="true"] .edge {
+#tabbox[edgeshow="true"] #tabList[mode="minimal"] .edge,
+#tabbox[edgeshow="true"] #tabList[mode="compact"] .edge {
 	background-color: lightgreen;
 	opacity: 0.5;
 }
