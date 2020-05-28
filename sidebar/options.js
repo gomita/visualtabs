@@ -7,31 +7,31 @@ async function init() {
 	const getPref = function(aName, aDefaultValue) {
 		return aName in gPrefs ? gPrefs[aName] : aDefaultValue;
 	}
-	let theme         = getPref("theme", "default");
-	let mode          = getPref("mode", "compact");
-	let stacking      = getPref("stacking", false);
-	let backMonitor   = getPref("backMonitor", false);
-	let effect        = getPref("effect", true);
-	let autoUpdate    = getPref("autoUpdate", 0);
-	let activeLine    = getPref("activeLine", "left");
-	let previewHeight = getPref("previewHeight", 80);
-	let hideScroll    = getPref("hideScroll", false);
-	let scrollWidth   = getPref("scrollWidth", 16);
-	let edge          = getPref("edge", false);
-	let edgeWidth     = getPref("edgeWidth", 50);
-	document.getElementById(`theme:${theme}`).checked = true;
-	document.getElementById(`mode:${mode}`).checked = true;
-	document.getElementById(`stacking`).checked = stacking;
-	document.getElementById(`backMonitor`).checked = backMonitor;
-	document.getElementById(`effect`).checked = effect;
-	document.getElementById(`autoUpdate`).checked = autoUpdate > 0;
-	document.getElementById(`activeLine:${activeLine}`).checked = true;
-	document.getElementById(`previewHeight`).value = previewHeight;
-	document.getElementById(`hideScroll`).checked = hideScroll;
-	document.getElementById(`scrollWidth`).value = scrollWidth;
-	document.getElementById(`edge`).checked = edge;
-	document.getElementById(`edgeWidth:` + (edgeWidth >= 0 ? "left" : "right")).checked = true;
-	document.getElementById(`edgeWidth`).value = Math.abs(edgeWidth);
+	gPrefs.theme         = getPref("theme", "default");
+	gPrefs.mode          = getPref("mode", "compact");
+	gPrefs.stacking      = getPref("stacking", false);
+	gPrefs.backMonitor   = getPref("backMonitor", false);
+	gPrefs.effect        = getPref("effect", true);
+	gPrefs.autoUpdate    = getPref("autoUpdate", 0);
+	gPrefs.activeLine    = getPref("activeLine", "left");
+	gPrefs.previewHeight = getPref("previewHeight", 80);
+	gPrefs.hideScroll    = getPref("hideScroll", false);
+	gPrefs.scrollWidth   = getPref("scrollWidth", 16);
+	gPrefs.edge          = getPref("edge", false);
+	gPrefs.edgeWidth     = getPref("edgeWidth", 50);
+	document.getElementById(`theme:${gPrefs.theme}`).checked = true;
+	document.getElementById(`mode:${gPrefs.mode}`).checked = true;
+	document.getElementById(`stacking`).checked = gPrefs.stacking;
+	document.getElementById(`backMonitor`).checked = gPrefs.backMonitor;
+	document.getElementById(`effect`).checked = gPrefs.effect;
+	document.getElementById(`autoUpdate`).checked = gPrefs.autoUpdate > 0;
+	document.getElementById(`activeLine:${gPrefs.activeLine}`).checked = true;
+	document.getElementById(`previewHeight`).value = gPrefs.previewHeight;
+	document.getElementById(`hideScroll`).checked = gPrefs.hideScroll;
+	document.getElementById(`scrollWidth`).value = gPrefs.scrollWidth;
+	document.getElementById(`edge`).checked = gPrefs.edge;
+	document.getElementById(`edgeWidth:` + (gPrefs.edgeWidth >= 0 ? "left" : "right")).checked = true;
+	document.getElementById(`edgeWidth`).value = Math.abs(gPrefs.edgeWidth);
 	updateUI();
 }
 
