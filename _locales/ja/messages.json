@@ -37,7 +37,7 @@
 	"left": { "message": "左側" },
 	"right": { "message": "右側" },
 	"hideScroll": { "message": "スクロールバーを非表示にする" },
-	"scrollWidth": { "message": "スクロールバーの幅（単位はピクセル）: " },
+	"scrollWidth": { "message": "スクロールバーの幅: " },
 	"stacking": { "message": "新しいタブを一番上に開く" },
 	"preview": { "message": "タブのプレビュー" },
 	"mode": { "message": "表示モード: " },
@@ -49,7 +49,7 @@
 	"pixel": { "message": "ピクセル" },
 	"backMonitor": { "message": "バックグラウンドで開いたタブのプレビューを表示する" },
 	"effect": { "message": "視覚効果を有効にする" },
-	"previewHeight": { "message": "プレビューの高さ（単位はピクセル）: " },
+	"previewHeight": { "message": "プレビューの高さ: " },
 	"autoUpdate": { "message": "マウスポインタが指し示すタブのプレビューを自動で再描画する" },
 	"void": { "message": "" }
 }
