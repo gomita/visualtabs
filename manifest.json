@@ -38,6 +38,13 @@
 		"page": "sidebar/options.html",
 		"open_in_tab": false
 	},
+	"commands": {
+		"_execute_sidebar_action": {
+			"suggested_key": {
+				"default": "F1"
+			}
+		}
+	},
 	"permissions": [
 		"tabs",
 		"sessions",
