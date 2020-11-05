@@ -944,7 +944,7 @@ async function rebuildList() {
 	if (gPrefs.backMonitor) {
 		for (let tab of tabs) {
 			let unread = await browser.sessions.getTabValue(tab.id, "unread");
-			if (unread === undefined)
+			if (unread === undefined || tab.discarded)
 				continue;
 			getElementByTabId(tab.id).setAttribute("unread", unread);
 			drawThumbnail(tab.id);
