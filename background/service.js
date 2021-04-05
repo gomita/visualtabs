@@ -19,9 +19,10 @@ var gMenuDefs = [
 	{ id: "moveToBottom", parentId: "move" },
 	{ id: "detach", parentId: "move" },
 	{ id: "sep2", type: "separator" },
-	{ id: "closeToTop" },
-	{ id: "closeToBottom" },
-	{ id: "closeOther" },
+	{ id: "closeTabs" },
+	{ id: "closeToTop", parentId: "closeTabs" },
+	{ id: "closeToBottom", parentId: "closeTabs" },
+	{ id: "closeOther", parentId: "closeTabs" },
 	{ id: "undoClose" },
 	{ id: "close" }
 ];
