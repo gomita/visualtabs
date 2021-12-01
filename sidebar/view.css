@@ -228,23 +228,29 @@ button:active, button[checked] {
 	display: none;
 	width: 16px;
 	height: 16px;
-	margin-left: 2px;
+	position: absolute;
 }
 
 .tab[playing] .audio {
 	display: block;
-	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-playing.svg");
+	background-image: url("chrome://global/skin/media/audio.svg");
 }
 
 .tab[muted] .audio {
 	display: block;
-	background-image: url("chrome://browser/skin/tabbrowser/tab-audio-muted.svg");
+	background-image: url("chrome://global/skin/media/audio-muted.svg");
+}
+
+.tab:not([pinned])[playing] .favicon,
+.tab:not([pinned])[muted]  .favicon {
+	background-image: unset !important;
 }
 
 .tab[pinned] .audio {
-	position: absolute;
 	top: 4px;
-	right: 0px;
+	right: 4px;
+	width: 12px;
+	height: 12px;
 }
 
 .tab[pinned][playing] .audio {
