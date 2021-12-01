@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Visual Tabs",
-	"version": "0.82",
+	"version": "0.90",
 	"description": "__MSG_extensionDescription__",
 //	"icons": {
 //		"48": "icons/icon-48.png",
@@ -11,7 +11,7 @@
 	"applications": {
 		"gecko": {
 			"id": "visualtab@xuldev.org",
-			"strict_min_version": "64.0"
+			"strict_min_version": "94.0"
 		}
 	},
 	"background": {
